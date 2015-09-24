@@ -7,7 +7,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
     [TestClass]
     public class MetadataAsSourceUnitTests
     {
-        [TestMethod]
+        //[TestMethod]
         public void TestMAS1()
         {
             var filePath = Assembly.GetExecutingAssembly().Location;

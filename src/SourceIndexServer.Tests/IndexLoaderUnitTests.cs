@@ -59,7 +59,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
             return GetWords().Where(Huffman.IsAscii);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void VerifyNoAssemblyNameCollisions()
         {
             List<AssemblyInfo> assemblies = new List<AssemblyInfo>();
@@ -81,7 +81,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
             //    assembliesAndProjects);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void LoadIndex()
         {
             Index index = ReadIndex();
@@ -179,13 +179,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
 
         private static string GetRootPath()
         {
-            return Path.Combine(
-                       Path.GetDirectoryName(
-                           Path.GetDirectoryName(
-                               Path.GetDirectoryName(
-                                   Path.GetDirectoryName(
-                                       Assembly.GetExecutingAssembly().Location)))),
-                       "SourceIndexServer");
+            throw new NotImplementedException();
         }
     }
 }

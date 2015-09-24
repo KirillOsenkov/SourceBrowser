@@ -155,7 +155,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
 <p>Try also searching on:</p>
 <ul>
 <li><a href=""http://www.bing.com/search?q=%7bab%7d"" target=""_blank"">http://www.bing.com/search?q=%7bab%7d</a></li>
-<li><a href=""https://www.google.com/#q=%7bab%7d"" target=""_blank"">https://www.google.com/#q=%7bab%7d</a></li>
+<li><a href=""http://social.msdn.microsoft.com/Search/en-US?query=%7bab%7d"" target=""_blank"">http://social.msdn.microsoft.com/Search/en-US?query=%7bab%7d</a></li>
+<li><a href=""http://stackoverflow.com/search?q=%7bab%7d"" target=""_blank"">http://stackoverflow.com/search?q=%7bab%7d</a></li>
 </ul>
 ");
         }
