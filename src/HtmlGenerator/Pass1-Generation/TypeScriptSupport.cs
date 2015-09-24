@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 libFile = Path.Combine(Common.Paths.BaseAppFolder, "TypeScriptSupport", "lib.d.ts");
             }
 
-            GenerateCore(list, libFile);
+            try
+            {
+                GenerateCore(list, libFile);
+            }
+            catch (Exception ex)
+            {
+                Log.Exception(ex, "Error when generating TypeScript files");
+                return;
+            }
 
             ProjectGenerator.GenerateReferencesDataFilesToAssembly(
                 Paths.SolutionDestinationFolder,
@@ -81,7 +90,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             File.WriteAllText(argumentsJson, json);
 
             var analyzerJs = Path.Combine(Common.Paths.BaseAppFolder, @"TypeScriptSupport\analyzer.js");
-            var result = new ProcessLaunchService().RunAndRedirectOutput("node", string.Format("\"{0}\" {1}", analyzerJs, argumentsJson));
+            var arguments = string.Format("\"{0}\" {1}", analyzerJs, argumentsJson);
+
+            ProcessLaunchService.ProcessRunResult result;
+            try
+            {
+                result = new ProcessLaunchService().RunAndRedirectOutput("node", arguments);
+            }
+            catch (Win32Exception)
+            {
+                Log.Write("Warning: Node.js is required to generate TypeScript files. Skipping generation. Download Node.js from https://nodejs.org.", ConsoleColor.Yellow);
+                Log.Exception("Node.js is not installed.");
+                return;
+            }
 
             foreach (var file in Directory.GetFiles(output))
             {

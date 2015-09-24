@@ -14,14 +14,15 @@ namespace Microsoft.SourceBrowser.Common
         public static string ErrorLogFilePath = ErrorLogFile;
         public static string MessageLogFilePath = MessageLogFile;
 
-        public static void Exception(Exception e, string message)
+        public static void Exception(Exception e, string message, bool isSevere = true)
         {
-            WriteToFile(message + Environment.NewLine + e.ToString(), ErrorLogFilePath);
+            var text = message + Environment.NewLine + e.ToString();
+            Exception(text, isSevere);
         }
 
-        public static void Exception(string message)
+        public static void Exception(string message, bool isSevere = true)
         {
-            Write(message, ConsoleColor.Red);
+            Write(message, isSevere ? ConsoleColor.Red : ConsoleColor.Yellow);
             WriteToFile(message, ErrorLogFilePath);
         }
 

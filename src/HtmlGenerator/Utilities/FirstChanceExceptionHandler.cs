@@ -125,7 +125,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
                 }
 
-                Log.Exception(ex, message);
+                Log.Exception(ex, message, isSevere: false);
             }
             finally
             {
