@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{F13CD277-E86B-4BC6-9E93-39ED055A46DB}</ProjectGuid>
+    <AssemblyName>Microsoft.SourceBrowser.Common</AssemblyName>
+  </PropertyGroup>
+  <Import Project="..\..\Common.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssertTraceListener.cs" />
+    <Compile Include="Disposable.cs" />
+    <Compile Include="FileUtilities.cs" />
+    <Compile Include="Huffman.cs" />
+    <Compile Include="IsManagedAssembly.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Measure.cs" />
+    <Compile Include="MultiDictionary.cs" />
+    <Compile Include="Paths.cs" />
+    <Compile Include="PriorityQueue.cs" />
+    <Compile Include="ProcessLaunchService.cs" />
+    <Compile Include="RangeUtilities.cs" />
+    <Compile Include="TextUtilities.cs" />
+  </ItemGroup>
+  <Import Project="..\..\Common.targets" />
+</Project>

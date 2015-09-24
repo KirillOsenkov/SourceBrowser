@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{57002F26-8D15-4CF7-A53D-61AE8CC5E836}</ProjectGuid>
+    <AssemblyName>Microsoft.SourceBrowser.BuildLogParser</AssemblyName>
+  </PropertyGroup>
+  <Import Project="..\..\Common.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CompilerInvocation.cs" />
+    <Compile Include="LogAnalyzer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{f13cd277-e86b-4bc6-9e93-39ed055a46db}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\Common.targets" />
+</Project>

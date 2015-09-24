@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Source Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js"></script>
+</head>
+<frameset rows="58,*"
+          border="0"
+          onload="onPageLoaded();">
+    <frame name="h"
+           src="header.html"
+           scrolling="no"
+           noresize="noresize">
+        <frameset id="splitter"
+                  cols="504,*"
+                  frameborder="1"
+                  border="20"
+                  bordercolor="#EEEEEE"
+                  framespacing="20">
+            <frame name="n"
+                   id="n"
+                   src="results.html"
+                   border="0"
+                   frameborder="0">
+            <frame name="s"
+                   id="s"
+                   src="overview.html"
+                   border="0"
+                   frameborder="0">
+        </frameset>
+</frameset>
+</html>
