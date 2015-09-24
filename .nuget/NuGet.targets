@@ -55,6 +55,7 @@
 
     <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
         <Exec Command="$(RestoreCommand)"
+              Condition="Exists('$(PackagesConfig)')"
               LogStandardErrorAsError="true" />
     </Target>
 
