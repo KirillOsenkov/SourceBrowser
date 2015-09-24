@@ -170,6 +170,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string GetHyperlink(string document)
         {
+            if (document.EndsWith(".ts", StringComparison.OrdinalIgnoreCase))
+            {
+                var fullPath = Path.Combine(Path.GetDirectoryName(this.ProjectFilePath), document);
+                var destination = TypeScriptSupport.GetDestinationFilePath(fullPath);
+                destination = destination.Substring(this.SolutionGenerator.SolutionDestinationFolder.Length + 1);
+                destination = destination.Replace('\\', '/');
+                destination = "/" + destination;
+                return destination;
+            }
+
             string localPath = document + ".html";
             localPath = localPath.Replace('\\', '/');
             return localPath;

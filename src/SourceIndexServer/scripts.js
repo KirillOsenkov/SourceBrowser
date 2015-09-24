@@ -374,7 +374,9 @@ function rewriteSolutionExplorerLink(link) {
         link.textContent = getFileName(url);
         var assembly = getAssemblyFromExplorerFile(link);
         if (assembly) {
-            link.href = assembly + pathname;
+            if (extension != "ts") {
+                link.href = assembly + pathname;
+            }
         }
     }
 }

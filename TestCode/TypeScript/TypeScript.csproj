@@ -40,9 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="analyzer.ts" />
     <TypeScriptCompile Include="analyzerEnv.ts" />
     <TypeScriptCompile Include="shims.ts" />

@@ -420,6 +420,26 @@ a i {
         color: white;
     }
 
+.ts {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/typescript.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .ts:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
 .selectedFilename {
     background-color: #3399ff;
     color: white;

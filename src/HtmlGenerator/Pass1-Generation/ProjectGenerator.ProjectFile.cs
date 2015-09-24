@@ -82,6 +82,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             SolutionGenerator.AddTypeScriptFile(filePath);
+
+            var relativePath = Paths.MakeRelativeToFile(filePath, ProjectFilePath);
+            relativePath = relativePath.Replace("..", "parent");
+            OtherFiles.Add(relativePath);
         }
 
         private void GenerateXamlFiles(Project msbuildProject)
