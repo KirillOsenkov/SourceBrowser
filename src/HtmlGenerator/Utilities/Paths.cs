@@ -17,7 +17,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             get
             {
-                return Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, @"ProcessedAssemblies.txt");
+                var root = SolutionDestinationFolder;
+                if (root == null)
+                {
+                    root = Common.Paths.BaseAppFolder;
+                }
+
+                return Path.Combine(root, @"ProcessedAssemblies.txt");
             }
         }
 
