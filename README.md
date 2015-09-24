@@ -3,6 +3,9 @@ Source browser website generator that powers http://referencesource.microsoft.co
 
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code.
 
+Of course Source Browser allows you to browse its own source code:
+[http://sourcebrowser.azurewebsites.net](http://sourcebrowser.azurewebsites.net)
+
 ##Instructions:
  1. git clone https://github.com/KirillOsenkov/SourceBrowser.git
  2. cd SourceBrowser
