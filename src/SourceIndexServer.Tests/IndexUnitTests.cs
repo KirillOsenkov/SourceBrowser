@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.SourceBrowser.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.SourceBrowser.SourceIndexServer;
 using Microsoft.SourceBrowser.SourceIndexServer.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
 {
