@@ -17,3 +17,17 @@ Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeSc
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to
  5. Edit .vs\config\applicationhost.config line 166 so that physicalPath points to \<virtualDirectory path="/" physicalPath="C:\SourceBrowser\bin\debug\HtmlGenerator\Index" />. Then you can set SourceIndexServer project as startup and run/debug the website.
+
+##Conceptual design
+
+At indexing time, C# and VB source code is analyzed using Roslyn and a lot of static hyperlinked HTML files are generated into the output directory. There is no database. The website is mostly static HTML where all the links, source code coloring etc. are precalculated at indexing time. All the hyperlinks are hardwired to be simple links bypassing the server. 
+
+The only component that runs on the webserver is a service that given a search query does the lookup and returns a list of matching types and members, which are hyperlinks into the static HTML. The webservice keeps a list of all declared types and members in memory, this list is also precalculated at indexing time. All services, such as Find All References, Project Explorer, etc. are all pre-rendered. 
+
+The website is designed to run from the root of the domain \. Making it run from a subdirectory is non-trivial.
+
+##Project status and contributions
+
+This is a reference implementation that showcases the concepts and Roslyn usage. It comes with no guarantees, use at your own risk. We will consider accepting high-quality pull requests that add non-trivial value, however we have no plans to do significant work on the application in its current form. Any significant rearchitecture, adding large features, big refactorings won't be accepted because of resource constraints. Feel free to use it to generate websites for your own code, integrate in your CI servers etc. Feel free to do whatever you want in your own forks. Bug reports are gratefully accepted.
+
+For any questions, feel free to reach out to [@KirillOsenkov](https://twitter.com/KirillOsenkov) on Twitter. Thanks!
