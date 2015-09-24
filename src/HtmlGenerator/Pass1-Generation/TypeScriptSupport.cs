@@ -31,7 +31,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var list = new List<string>();
             string libFile = null;
 
-            foreach(var file in typeScriptFiles)
+            foreach (var file in typeScriptFiles)
             {
                 if (!alreadyProcessed.Contains(file))
                 {
@@ -95,7 +95,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             ProcessLaunchService.ProcessRunResult result;
             try
             {
-                result = new ProcessLaunchService().RunAndRedirectOutput("node", arguments);
+                using (Disposable.Timing("Calling Node.js to process TypeScript"))
+                {
+                    result = new ProcessLaunchService().RunAndRedirectOutput("node", arguments);
+                }
             }
             catch (Win32Exception)
             {
@@ -104,24 +107,27 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            foreach (var file in Directory.GetFiles(output))
+            using (Disposable.Timing("Generating TypeScript files"))
             {
-                if (Path.GetFileNameWithoutExtension(file) == "ok")
+                foreach (var file in Directory.GetFiles(output))
                 {
-                    continue;
+                    if (Path.GetFileNameWithoutExtension(file) == "ok")
+                    {
+                        continue;
+                    }
+
+                    if (Path.GetFileNameWithoutExtension(file) == "error")
+                    {
+                        var errorContent = File.ReadAllText(file);
+                        Log.Exception(DateTime.Now.ToString() + " " + errorContent);
+                        return;
+                    }
+
+                    var text = File.ReadAllText(file);
+                    AnalyzedFile analysis = JsonConvert.DeserializeObject<AnalyzedFile>(text);
+
+                    EnsureFileGeneratedAndGetUrl(analysis);
                 }
-
-                if (Path.GetFileNameWithoutExtension(file) == "error")
-                {
-                    var errorContent = File.ReadAllText(file);
-                    Log.Exception(DateTime.Now.ToString() + " " + errorContent);
-                    return;
-                }
-
-                var text = File.ReadAllText(file);
-                AnalyzedFile analysis = JsonConvert.DeserializeObject<AnalyzedFile>(text);
-
-                EnsureFileGeneratedAndGetUrl(analysis);
             }
         }
 
