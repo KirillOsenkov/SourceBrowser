@@ -16,4 +16,4 @@ Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeSc
  2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to
- 5. Edit .vs\config\applicationhost.config line 166 so that physicalPath points to <virtualDirectory path="/" physicalPath="C:\SourceBrowser\bin\debug\HtmlGenerator\Index" />. Then you can set SourceIndexServer project as startup and run/debug the website.
+ 5. Edit .vs\config\applicationhost.config line 166 so that physicalPath points to \<virtualDirectory path="/" physicalPath="C:\SourceBrowser\bin\debug\HtmlGenerator\Index" />. Then you can set SourceIndexServer project as startup and run/debug the website.
