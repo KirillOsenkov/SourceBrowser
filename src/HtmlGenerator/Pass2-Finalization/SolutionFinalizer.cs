@@ -288,17 +288,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var files = new[]
             {
                 "Microsoft.SourceBrowser.Common.dll",
+                "Microsoft.SourceBrowser.SourceIndexServer.dll",
                 "Microsoft.Web.Infrastructure.dll",
                 "Newtonsoft.Json.dll",
-                "SourceIndexServer.dll",
                 "System.Net.Http.Formatting.dll",
                 "System.Web.Helpers.dll",
                 "System.Web.Http.dll",
                 "System.Web.Http.WebHost.dll",
                 "System.Web.Mvc.dll",
                 "System.Web.Razor.dll",
-                "System.Web.WebPages.Deployment.dll",
                 "System.Web.WebPages.dll",
+                "System.Web.WebPages.Deployment.dll",
                 "System.Web.WebPages.Razor.dll",
             };
 
@@ -308,14 +308,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Path.Combine(sourcePath, file),
                     Path.Combine(destinationFolder, "bin", file));
             }
-
-            // CreateSentinelFile(destinationFolder);
-        }
-
-        private void CreateSentinelFile(string destinationFolder)
-        {
-            var file = Path.Combine(destinationFolder, "bin", "sentinel.txt");
-            File.WriteAllText(file, DateTime.UtcNow.ToString());
         }
 
         public void CreateProjectMap(string outputPath = null)
