@@ -23,28 +23,34 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            var libdts = Path.Combine(Common.Paths.BaseAppFolder, "TypeScript", "lib.d.ts");
-
             declarations = new List<string>();
             references = new Dictionary<string, List<Reference>>(StringComparer.OrdinalIgnoreCase);
             SymbolIDToListOfLocationsMap = new Dictionary<string, List<Tuple<string, long>>>();
 
             var list = new List<string>();
+            string libFile = null;
 
-            if (!typeScriptFiles.Any(f => string.Equals(Path.GetFileName(f), "lib.d.ts", StringComparison.OrdinalIgnoreCase)))
-            {
-                list.Add(libdts);
-            }
-
-            foreach (var file in typeScriptFiles)
+            foreach(var file in typeScriptFiles)
             {
                 if (!alreadyProcessed.Contains(file))
                 {
-                    list.Add(file);
+                    if (libFile == null && string.Equals(Path.GetFileName(file), "lib.d.ts", StringComparison.OrdinalIgnoreCase))
+                    {
+                        libFile = file;
+                    }
+                    else
+                    {
+                        list.Add(file);
+                    }
                 }
             }
 
-            GenerateCore(list);
+            if (libFile == null)
+            {
+                libFile = Path.Combine(Common.Paths.BaseAppFolder, "TypeScriptSupport", "lib.d.ts");
+            }
+
+            GenerateCore(list, libFile);
 
             ProjectGenerator.GenerateReferencesDataFilesToAssembly(
                 Paths.SolutionDestinationFolder,
@@ -62,7 +68,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 SymbolIDToListOfLocationsMap);
         }
 
-        private void GenerateCore(IEnumerable<string> typeScriptFiles)
+        private void GenerateCore(IEnumerable<string> fileNames, string libFile)
         {
             var output = Path.Combine(Common.Paths.BaseAppFolder, "output");
             if (Directory.Exists(output))
@@ -70,13 +76,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Directory.Delete(output, recursive: true);
             }
 
-            var json = JsonConvert.SerializeObject(typeScriptFiles);
+            var json = JsonConvert.SerializeObject(new { fileNames, libFile });
             var argumentsJson = Path.Combine(Common.Paths.BaseAppFolder, "TypeScriptAnalyzerArguments.json");
             File.WriteAllText(argumentsJson, json);
 
-            var analyzerJs = Path.Combine(Common.Paths.BaseAppFolder, @"TypeScript\analyzer.js");
-
-            var result = new ProcessLaunchService().RunAndRedirectOutput("Microsoft.SourceBrowser.TypeScriptAnalyzer.exe", argumentsJson);
+            var analyzerJs = Path.Combine(Common.Paths.BaseAppFolder, @"TypeScriptSupport\analyzer.js");
+            var result = new ProcessLaunchService().RunAndRedirectOutput("node", string.Format("\"{0}\" {1}", analyzerJs, argumentsJson));
 
             foreach (var file in Directory.GetFiles(output))
             {

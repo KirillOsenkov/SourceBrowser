@@ -156,7 +156,11 @@
     <Compile Include="Pass1-Generation\ProjectGenerator.References.Pass1.cs" />
     <Compile Include="Pass1-Generation\SolutionGenerator.cs" />
     <Compile Include="Pass1-Generation\SolutionGenerator.SolutionExplorer.cs" />
+    <Compile Include="Pass1-Generation\TypeScriptSupport.AnalysisError.cs" />
+    <Compile Include="Pass1-Generation\TypeScriptSupport.AnalyzedFile.cs" />
+    <Compile Include="Pass1-Generation\TypeScriptSupport.ClassifiedRange.cs" />
     <Compile Include="Pass1-Generation\TypeScriptSupport.cs" />
+    <Compile Include="Pass1-Generation\TypeScriptSupport.Hyperlink.cs" />
     <Compile Include="Pass1-Generation\XamlSupport.cs" />
     <Compile Include="Pass1-Generation\XmlSupport.cs" />
     <Compile Include="Pass2-Finalization\NamespaceExplorer.cs" />
@@ -196,10 +200,6 @@
     <ProjectReference Include="..\SourceIndexServer\SourceIndexServer.csproj">
       <Project>{1ae38cc6-18c6-4ab7-8fe3-feeb33329952}</Project>
       <Name>SourceIndexServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TypeScriptAnalyzer\TypeScriptAnalyzer.csproj">
-      <Project>{85e7c8fc-1cab-41eb-8631-6cd4260a4ec9}</Project>
-      <Name>TypeScriptAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -1242,6 +1242,16 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TypeScriptSupport\analyzer.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TypeScriptSupport\lib.d.ts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="..\..\Common.targets" />
 </Project>

@@ -89,10 +89,6 @@
       <Project>{1ae38cc6-18c6-4ab7-8fe3-feeb33329952}</Project>
       <Name>SourceIndexServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TypeScriptAnalyzer\TypeScriptAnalyzer.csproj">
-      <Project>{85E7C8FC-1CAB-41EB-8631-6CD4260A4EC9}</Project>
-      <Name>TypeScriptAnalyzer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
