@@ -24,7 +24,7 @@ At indexing time, C# and VB source code is analyzed using Roslyn and a lot of st
 
 The only component that runs on the webserver is a service that given a search query does the lookup and returns a list of matching types and members, which are hyperlinks into the static HTML. The webservice keeps a list of all declared types and members in memory, this list is also precalculated at indexing time. All services, such as Find All References, Project Explorer, etc. are all pre-rendered. 
 
-The website is designed to run from the root of the domain \\. Making it run from a subdirectory is non-trivial.
+The website is designed to run from the root of the domain /. Making it run from a subdirectory is non-trivial.
 
 ##Project status and contributions
 
