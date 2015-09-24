@@ -8,7 +8,7 @@ Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeSc
  2. cd SourceBrowser
  3. msbuild
  4. cd bin\Debug\HtmlGenerator
- 5. HtmlGenerator.exe ..\..\..\TestCode\TestSolution.sln
+ 5. HtmlGenerator.exe ..\\..\\..\\TestCode\TestSolution.sln
  6. the website in bin\Debug\HtmlGenerator\Index is ready to be served
 
 ##In Visual Studio 2015:
