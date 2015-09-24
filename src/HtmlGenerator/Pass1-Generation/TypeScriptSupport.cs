@@ -76,7 +76,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var analyzerJs = Path.Combine(Common.Paths.BaseAppFolder, @"TypeScript\analyzer.js");
 
-            var result = new ProcessLaunchService().RunAndRedirectOutput("TypeScriptAnalyzer.exe", argumentsJson);
+            var result = new ProcessLaunchService().RunAndRedirectOutput("Microsoft.SourceBrowser.TypeScriptAnalyzer.exe", argumentsJson);
 
             foreach (var file in Directory.GetFiles(output))
             {
