@@ -6,6 +6,8 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
+    using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
+
     class Program
     {
         static void Main(string[] args)
@@ -15,6 +17,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 PrintUsage();
                 return;
             }
+
+            WebProxyAuthenticator.Authenticate("http://referencesource.microsoft.com");
 
             var projects = new List<string>();
             foreach (var arg in args)

@@ -185,6 +185,7 @@
     <Compile Include="Utilities\SymbolIdService.cs" />
     <Compile Include="Utilities\SymbolKindText.cs" />
     <Compile Include="Utilities\SymbolSorter.cs" />
+    <Compile Include="Utilities\WebProxyAuthenticator.cs" />
     <Compile Include="Utilities\WorkspaceHacks.cs" />
     <Compile Include="Utilities\XmlDocumentationProvider.cs" />
   </ItemGroup>
