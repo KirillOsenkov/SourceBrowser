@@ -12,13 +12,25 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private List<HashSet<string>> assemblies = new List<HashSet<string>>();
 
+        public Federation() : this(FederatedIndexUrls)
+        {
+        }
+
         public Federation(IEnumerable<string> servers) : this(servers.ToArray())
         {
         }
 
         public Federation(params string[] servers)
         {
-            WebProxyAuthenticator.Authenticate(this.GetAssemblyUrl(servers[0]));
+            if (servers == null)
+            {
+                return;
+            }
+
+            if (servers.Length > 0)
+            {
+                WebProxyAuthenticator.Authenticate(this.GetAssemblyUrl(servers[0]));
+            }
 
             foreach (var server in servers)
             {
