@@ -11,6 +11,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Utilities
     public class WebProxyAuthenticator
     {
 
+        private static bool hasAuthenticated = false;
+
         /// <summary>
         /// Determine if there is a proxy that requires credentials.
         /// If there is, ask the user for the credentials and apply them to WebRequest.DefaultWebProxy
@@ -26,6 +28,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Utilities
 
         private static bool ProxyAuthSuccess(string url)
         {
+            if (hasAuthenticated)
+            {
+                return true;
+            }
+
             try
             {
                 new WebClient().DownloadString(url);
@@ -38,7 +45,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Utilities
                     return false;
                 }
             }
-            
+
+            hasAuthenticated = true;
             return true;
         }
 

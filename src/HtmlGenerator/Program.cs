@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using Microsoft.SourceBrowser.Common;
-using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -17,8 +16,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 PrintUsage();
                 return;
             }
-
-            WebProxyAuthenticator.Authenticate("http://referencesource.microsoft.com");
 
             var projects = new List<string>();
             foreach (var arg in args)
@@ -106,9 +103,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         Paths.SolutionDestinationFolder,
                         solutionInfo.UrlRoot,
                         solutionInfo.MSBuildProperties != null ? solutionInfo.MSBuildProperties.ToImmutableDictionary() : null,
-                        new Federation(
-                            "http://referencesource.microsoft.com",
-                            "http://source.roslyn.io"));
+                        new Federation(Federation.FederatedIndexUrls));
                     needToCallAgain = solutionGenerator.Generate(assemblyList);
                     solutionGenerator.GenerateResultsHtml(assemblyList);
                 } while (needToCallAgain);
