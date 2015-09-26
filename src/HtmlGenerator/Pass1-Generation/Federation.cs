@@ -22,15 +22,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public Federation(params string[] servers)
         {
-            if (servers == null)
+            if (servers == null || servers.Length > 0)
             {
                 return;
             }
 
-            if (servers.Length > 0)
-            {
-                WebProxyAuthenticator.Authenticate(this.GetAssemblyUrl(servers[0]));
-            }
+            WebProxyAuthenticator.Authenticate(this.GetAssemblyUrl(servers[0]));
 
             foreach (var server in servers)
             {
