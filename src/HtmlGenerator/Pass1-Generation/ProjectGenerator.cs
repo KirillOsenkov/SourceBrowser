@@ -92,11 +92,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     return;
                 }
 
+                Log.Write(ProjectDestinationFolder, ConsoleColor.DarkCyan);
+
                 ProjectSourcePath = Paths.MakeRelativeToFolder(ProjectFilePath, SolutionGenerator.SolutionSourceFolder);
 
                 if (File.Exists(Path.Combine(ProjectDestinationFolder, Constants.DeclaredSymbolsFileName + ".txt")))
                 {
                     // apparently someone already generated a project with this assembly name - their assembly wins
+                    Log.Exception(string.Format(
+                        "A project with assembly name {0} was already generated, skipping current project: {1}",
+                        this.AssemblyName,
+                        this.ProjectFilePath), isSevere: false);
                     return;
                 }
 
@@ -104,8 +110,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     Directory.CreateDirectory(ProjectDestinationFolder);
                 }
-
-                Log.Write(ProjectDestinationFolder, ConsoleColor.DarkCyan);
 
                 var documents = Project.Documents
                     .Where(IncludeDocument)
