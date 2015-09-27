@@ -6,6 +6,7 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
+
     class Program
     {
         static void Main(string[] args)
@@ -102,9 +103,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         Paths.SolutionDestinationFolder,
                         solutionInfo.UrlRoot,
                         solutionInfo.MSBuildProperties != null ? solutionInfo.MSBuildProperties.ToImmutableDictionary() : null,
-                        new Federation(
-                            "http://referencesource.microsoft.com",
-                            "http://source.roslyn.io"));
+                        new Federation(Federation.FederatedIndexUrls));
                     needToCallAgain = solutionGenerator.Generate(assemblyList);
                     solutionGenerator.GenerateResultsHtml(assemblyList);
                 } while (needToCallAgain);
