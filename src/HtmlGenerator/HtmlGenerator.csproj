@@ -1252,7 +1252,7 @@
 
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.0</NuGetVersion>
+    <NuGetVersion>1.0.1</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(NuSpecFile)" />
