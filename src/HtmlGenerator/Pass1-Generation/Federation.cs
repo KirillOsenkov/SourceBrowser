@@ -67,8 +67,5 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             return -1;
         }
-
-        
-
     }
 }

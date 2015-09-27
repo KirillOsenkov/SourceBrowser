@@ -6,8 +6,7 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
-
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
