@@ -11,18 +11,10 @@
   </PropertyGroup>
   <Import Project="..\..\Common.props" />
   <ItemGroup>
-    <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Framework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Utilities.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.Build.Framework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.Build.Utilities.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.CodeAnalysis">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
@@ -1255,5 +1247,23 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
   <Import Project="..\..\Common.targets" />
+
+  <PropertyGroup>
+    <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
+    <NuGetVersion>1.0.0</NuGetVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <NuGetInput Include="$(NuSpecFile)" />
+    <NuGetInput Include="$(MSBuildThisFile)" />
+  </ItemGroup>
+  <Target Name="BuildNuGet"
+          AfterTargets="CoreBuild"
+          Condition="Exists('$(NuSpecFile)')"
+          DependsOnTargets="CopyFilesToOutputDirectory"
+          Inputs="@(NuGetInput)"
+          Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
+    <Exec Command="$(SolutionDir)\.nuget\NuGet.exe Pack Microsoft.SourceBrowser.nuspec -BasePath $(OutDir) -OutputDirectory $(OutDir) -prop currentVersion=$(NuGetVersion)" />
+  </Target>
 </Project>
