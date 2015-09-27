@@ -19,10 +19,10 @@
     <tags>Roslyn Source Browser</tags>
   </metadata>
   <files>
-    <file src="*.exe" target="content" />
-    <file src="*.dll" target="content" />
-    <file src="TypeScriptSupport\*.*" target="content\TypeScriptSupport" />
-    <file src="web\*.*" target="content\web" />
-    <file src="web\content\icons\*.png" target="content\web\content\icons" />
+    <file src="*.exe" target="SourceBrowser" />
+    <file src="*.dll" target="SourceBrowser" />
+    <file src="TypeScriptSupport\*.*" target="SourceBrowser\TypeScriptSupport" />
+    <file src="web\*.*" target="SourceBrowser\web" />
+    <file src="web\content\icons\*.png" target="SourceBrowser\web\content\icons" />
   </files>
 </package>
