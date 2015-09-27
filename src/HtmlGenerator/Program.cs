@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -75,6 +76,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..]");
         }
 
+        private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
+
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
         {
             foreach (var path in solutionFilePaths)
@@ -103,7 +106,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         solutionInfo.UrlRoot,
                         solutionInfo.MSBuildProperties != null ? solutionInfo.MSBuildProperties.ToImmutableDictionary() : null,
                         new Federation(Federation.FederatedIndexUrls));
-                    needToCallAgain = solutionGenerator.Generate(assemblyList);
+                    needToCallAgain = solutionGenerator.Generate(assemblyList, mergedSolutionExplorerRoot);
                     solutionGenerator.GenerateResultsHtml(assemblyList);
                 } while (needToCallAgain);
             }
@@ -118,7 +121,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 try
                 {
                     var solutionFinalizer = new SolutionFinalizer(Paths.SolutionDestinationFolder);
-                    solutionFinalizer.FinalizeProjects();
+                    solutionFinalizer.FinalizeProjects(mergedSolutionExplorerRoot);
                 }
                 catch (Exception ex)
                 {

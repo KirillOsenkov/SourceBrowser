@@ -218,7 +218,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public static string CurrentAssemblyName = null;
 
         /// <returns>true if only part of the solution was processed and the method needs to be called again, false if all done</returns>
-        public bool Generate(HashSet<string> assemblyList = null)
+        public bool Generate(HashSet<string> assemblyList = null, Folder<Project> solutionExplorerRoot = null)
         {
             if (solution == null)
             {
@@ -264,9 +264,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             if (currentBatch.Length > 1)
             {
                 GenerateSolutionExplorer(
-                    currentBatch,
-                    flattenProjectList: false,
-                    customRootSorter: GetCustomRootSorter());
+                    solutionExplorerRoot,
+                    currentBatch);
             }
 
             return currentBatch.Length < projectsToProcess.Length;

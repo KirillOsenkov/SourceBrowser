@@ -61,7 +61,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         Paths.SolutionDestinationFolder,
                         invocation.ServerPath,
                         invocation.NetworkShare);
-                    solutionGenerator.Generate(null);
+                    solutionGenerator.Generate();
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var solutionGenerator = new SolutionGenerator(
                         invocation.OutputAssemblyPath,
                         Paths.SolutionDestinationFolder);
-                    solutionGenerator.Generate(null);
+                    solutionGenerator.Generate();
                 }
             }
             catch (Exception ex)

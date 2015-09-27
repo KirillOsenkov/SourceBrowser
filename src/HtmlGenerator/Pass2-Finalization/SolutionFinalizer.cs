@@ -5,11 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
-    public class SolutionFinalizer
+    public partial class SolutionFinalizer
     {
         public string SolutionDestinationFolder;
         public IEnumerable<ProjectFinalizer> projects;
@@ -86,9 +87,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public void FinalizeProjects()
+        public void FinalizeProjects(Folder<Project> solutionExplorerRoot = null)
         {
             SortProcessedAssemblies();
+            WriteSolutionExplorer(solutionExplorerRoot);
             CreateReferencesFiles();
             CreateMasterDeclarationsIndex();
             CreateProjectMap();
