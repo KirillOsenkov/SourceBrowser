@@ -6,6 +6,9 @@ Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeSc
 Of course Source Browser allows you to browse its own source code:
 [http://sourcebrowser.azurewebsites.net](http://sourcebrowser.azurewebsites.net)
 
+Now also available on NuGet:
+[https://www.nuget.org/packages/Microsoft.SourceBrowser](https://www.nuget.org/packages/Microsoft.SourceBrowser)
+
 ##Instructions:
  1. git clone https://github.com/KirillOsenkov/SourceBrowser.git
  2. cd SourceBrowser
