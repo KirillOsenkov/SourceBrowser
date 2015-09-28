@@ -22,7 +22,7 @@ Now also available on NuGet:
  2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. Pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to. This path will be used in step 5 as your "physicalPath".
- 5. Edit .vs\config\applicationhost.config line 166 so that physicalPath points to \<virtualDirectory path="/" physicalPath="{Path from step 4}" />. Then you can set SourceIndexServer project as startup and run/debug the website.
+ 5. Edit .vs\config\applicationhost.config line 166 so that physicalPath points to \<virtualDirectory path="/" physicalPath="{PathFromStep4}" />. Then you can set SourceIndexServer project as startup and run/debug the website.
 
 ##Conceptual design
 
