@@ -1238,9 +1238,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SourceBrowserReadme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="TypeScriptSupport\analyzer.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1251,7 +1248,7 @@
   <Import Project="..\..\Common.targets" />
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.4</NuGetVersion>
+    <NuGetVersion>1.0.5</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(NuSpecFile)" />
