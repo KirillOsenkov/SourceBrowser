@@ -24,6 +24,6 @@
     <file src="TypeScriptSupport\*.*" target="SourceBrowser\TypeScriptSupport" />
     <file src="web\*.*" target="SourceBrowser\web" />
     <file src="web\content\icons\*.png" target="SourceBrowser\web\content\icons" />
-    <file src="readme.txt" target="content" />
+    <file src="SourceBrowserReadme.txt" target="content" />
   </files>
 </package>
