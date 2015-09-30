@@ -64,7 +64,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             // Warning, this will delete and recreate your destination folder
             Paths.PrepareDestinationFolder();
 
-            using (Disposable.Timing("All"))
+            using (Disposable.Timing("Generating website"))
             {
                 IndexSolutions(projects);
                 FinalizeProjects();
@@ -80,35 +80,31 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
         {
+            var solutionGenerators = new List<SolutionGenerator>();
+            var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var path in solutionFilePaths)
             {
-                IndexSolution(new SolutionInfo
+                using (Disposable.Timing("Loading " + path))
                 {
-                    SlnPath = path,
-                }, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
-            }
-        }
-
-        private static void IndexSolution(SolutionInfo solutionInfo, HashSet<string> assemblyList)
-        {
-            using (Disposable.Timing("Generating projects for " + Path.GetFileName(solutionInfo.SlnPath)))
-            {
-                bool needToCallAgain = false;
-
-                // we need to call several times because it only processes projects one batch at a time
-                // to avoid OutOfMemory on really large solutions
-                do
-                {
-                    GC.Collect();
                     var solutionGenerator = new SolutionGenerator(
-                        solutionInfo.SlnPath,
-                        Paths.SolutionDestinationFolder,
-                        solutionInfo.UrlRoot,
-                        solutionInfo.MSBuildProperties != null ? solutionInfo.MSBuildProperties.ToImmutableDictionary() : null,
-                        new Federation(Federation.FederatedIndexUrls));
-                    needToCallAgain = solutionGenerator.Generate(assemblyList, mergedSolutionExplorerRoot);
-                    solutionGenerator.GenerateResultsHtml(assemblyList);
-                } while (needToCallAgain);
+                        path,
+                        Paths.SolutionDestinationFolder);
+                    solutionGenerators.Add(solutionGenerator);
+                    foreach (var assemblyName in solutionGenerator.GetAssemblyNames())
+                    {
+                        assemblyNames.Add(assemblyName);
+                    }
+                }
+            }
+
+            foreach (var solutionGenerator in solutionGenerators)
+            {
+                using (Disposable.Timing("Generating " + solutionGenerator.ProjectFilePath))
+                {
+                    solutionGenerator.GlobalAssemblyList = assemblyNames;
+                    solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                }
             }
         }
 

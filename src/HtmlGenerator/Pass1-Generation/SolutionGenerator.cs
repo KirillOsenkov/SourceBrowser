@@ -21,6 +21,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private Federation Federation { get; set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// List of all assembly names included in the index, from all solutions
+        /// </summary>
+        public HashSet<string> GlobalAssemblyList { get; set; }
+
         private Solution solution;
 
         public SolutionGenerator(
@@ -35,7 +40,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.ProjectFilePath = solutionFilePath;
             this.ServerPath = serverPath;
             this.solution = CreateSolution(solutionFilePath, properties);
-            this.Federation = federation;
+            this.Federation = federation ?? new Federation();
         }
 
         public SolutionGenerator(
@@ -63,6 +68,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 language,
                 projectSourceFolder,
                 outputAssemblyPath);
+        }
+
+        public IEnumerable<string> GetAssemblyNames()
+        {
+            if (solution != null)
+            {
+                return solution.Projects.Select(p => p.AssemblyName);
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
         }
 
         private static MSBuildWorkspace CreateWorkspace(ImmutableDictionary<string, string> propertiesOpt = null)
@@ -218,7 +235,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public static string CurrentAssemblyName = null;
 
         /// <returns>true if only part of the solution was processed and the method needs to be called again, false if all done</returns>
-        public bool Generate(HashSet<string> assemblyList = null, Folder<Project> solutionExplorerRoot = null)
+        public bool Generate(HashSet<string> processedAssemblyList = null, Folder<Project> solutionExplorerRoot = null)
         {
             if (solution == null)
             {
@@ -234,7 +251,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             var projectsToProcess = allProjects
-                .Where(p => assemblyList == null || !assemblyList.Contains(p.AssemblyName))
+                .Where(p => processedAssemblyList == null || !processedAssemblyList.Contains(p.AssemblyName))
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
@@ -248,9 +265,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     generator.Generate().GetAwaiter().GetResult();
 
                     File.AppendAllText(Paths.ProcessedAssemblies, project.AssemblyName + Environment.NewLine, Encoding.UTF8);
-                    if (assemblyList != null)
+                    if (processedAssemblyList != null)
                     {
-                        assemblyList.Add(project.AssemblyName);
+                        processedAssemblyList.Add(project.AssemblyName);
                     }
                 }
                 finally
@@ -263,7 +280,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             if (currentBatch.Length > 1)
             {
-                GenerateSolutionExplorer(
+                AddProjectsToSolutionExplorer(
                     solutionExplorerRoot,
                     currentBatch);
             }
@@ -360,18 +377,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public bool IsPartOfSolution(string assemblyName)
         {
-            if (solution == null)
+            if (GlobalAssemblyList == null)
             {
-                // if we don't have a solution, it's probably metadata as source or standalone project
-                // In either case we have the source for this assembly, so consider it part of the
-                // "big solution"
+                // if for some reason we don't know a global list, assume everything is in the solution
+                // this is better than the alternative
                 return true;
             }
 
-            return solution.Projects.Any(
-                p => StringComparer.OrdinalIgnoreCase.Equals(
-                    p.AssemblyName,
-                    assemblyName));
+            return GlobalAssemblyList.Contains(assemblyName);
         }
 
         public int GetExternalAssemblyIndex(string assemblyName)

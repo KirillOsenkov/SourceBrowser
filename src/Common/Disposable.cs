@@ -22,7 +22,6 @@ namespace Microsoft.SourceBrowser.Common
         public void Dispose()
         {
             var message = actionName + " complete. Took: " + stopwatch.Elapsed;
-            Debug.WriteLine(message);
             Log.Write(message, ConsoleColor.Green);
         }
     }
