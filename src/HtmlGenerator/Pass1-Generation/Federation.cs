@@ -22,7 +22,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public Federation(params string[] servers)
         {
-            if (servers == null || servers.Length <= 0)
+            if (servers == null || servers.Length == 0)
             {
                 return;
             }
