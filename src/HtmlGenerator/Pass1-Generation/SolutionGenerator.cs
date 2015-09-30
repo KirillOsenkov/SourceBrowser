@@ -368,10 +368,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return true;
             }
 
-            return solution.Projects.Any(
-                p => StringComparer.OrdinalIgnoreCase.Equals(
-                    p.AssemblyName,
-                    assemblyName));
+			bool inSolution = solution.Projects.Any(
+				p => StringComparer.OrdinalIgnoreCase.Equals(
+					p.AssemblyName,
+					assemblyName));
+
+	        return inSolution || Directory.Exists( Path.Combine( this.SolutionDestinationFolder, assemblyName ) );
         }
 
         public int GetExternalAssemblyIndex(string assemblyName)
