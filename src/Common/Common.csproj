@@ -5,6 +5,9 @@
     <AssemblyName>Microsoft.SourceBrowser.Common</AssemblyName>
   </PropertyGroup>
   <Import Project="..\..\Common.props" />
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>

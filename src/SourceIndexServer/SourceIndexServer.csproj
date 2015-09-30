@@ -16,6 +16,9 @@
     <RootNamespace>Microsoft.SourceBrowser.SourceIndexServer</RootNamespace>
   </PropertyGroup>
   <Import Project="..\..\Common.props" />
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
