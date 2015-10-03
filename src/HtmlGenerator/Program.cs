@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -38,20 +35,21 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         {
                             continue;
                         }
-                        using (StreamReader reader = new StreamReader(inputPath))
-                        {
-                            while (!reader.EndOfStream)
-                            {
-                                var project = GetProjectPath(reader.ReadLine());
 
-                                if (project != null)
-                                {
-                                    projects.Add(project);
-                                }
+                        string[] paths = File.ReadAllLines(inputPath);
+                        foreach (string path in paths)
+                        {
+                            var project = GetProjectPath(path);
+
+                            if (project != null)
+                            {
+                                projects.Add(project);
                             }
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
 
                 try
@@ -94,17 +92,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
+        private static bool IsSupportedProject(string filePath)
+        {
+            return filePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static string GetProjectPath(string arg)
         {
             var project = Path.GetFullPath(arg);
-            if (File.Exists(project))
+            if (File.Exists(project) && IsSupportedProject(arg))
             {
-                if (project.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
-                    project.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                    project.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
-                {
-                    return project.StripQuotes();
-                }
+                return project.StripQuotes();
             }
             return null;
         }
@@ -114,7 +114,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] [/in:<filecontaingprojectlist>]");
         }
 
-        private static readonly Folder<Project> s_mergedSolutionExplorerRoot = new Folder<Project>();
+        private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
 
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
         {
@@ -141,7 +141,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 using (Disposable.Timing("Generating " + solutionGenerator.ProjectFilePath))
                 {
                     solutionGenerator.GlobalAssemblyList = assemblyNames;
-                    solutionGenerator.Generate(solutionExplorerRoot: s_mergedSolutionExplorerRoot);
+                    solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
                 }
             }
         }
@@ -155,7 +155,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 try
                 {
                     var solutionFinalizer = new SolutionFinalizer(Paths.SolutionDestinationFolder);
-                    solutionFinalizer.FinalizeProjects(s_mergedSolutionExplorerRoot);
+                    solutionFinalizer.FinalizeProjects(mergedSolutionExplorerRoot);
                 }
                 catch (Exception ex)
                 {
