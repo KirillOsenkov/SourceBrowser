@@ -9,7 +9,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length == 0)
             {
@@ -26,17 +26,37 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
+                if (arg.StartsWith("/in:"))
+                {
+                    string inputPath = arg.Substring("/in:".Length).StripQuotes();
+                    try
+                    {
+                        if (!File.Exists(inputPath))
+                        {
+                            continue;
+                        }
+
+                        string[] paths = File.ReadAllLines(inputPath);
+                        foreach (string path in paths)
+                        {
+                            var project = Path.GetFullPath(path);
+                            if (IsSupportedProject(project))
+                            {
+                                projects.Add(project);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 try
                 {
                     var project = Path.GetFullPath(arg);
-                    if (File.Exists(project))
+                    if (IsSupportedProject(project))
                     {
-                        if (project.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
-                            project.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                            project.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
-                        {
-                            projects.Add(project.StripQuotes());
-                        }
+                        projects.Add(project);
                     }
                 }
                 catch
@@ -71,9 +91,21 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
+        private static bool IsSupportedProject(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                return false;
+            }
+
+            return filePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static void PrintUsage()
         {
-            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..]");
+            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] [/in:<filecontaingprojectlist>]");
         }
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
