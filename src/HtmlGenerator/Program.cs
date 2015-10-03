@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
@@ -39,28 +38,22 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         string[] paths = File.ReadAllLines(inputPath);
                         foreach (string path in paths)
                         {
-                            var project = Path.GetFullPath(path);
-                            if (IsSupportedProject(project))
-                            {
-                                projects.Add(project);
-                            }
+                            AddProject(projects, path);
                         }
                     }
                     catch
                     {
+                        Log.Write("Invalid argument: " + arg, ConsoleColor.Red);
                     }
                 }
 
                 try
                 {
-                    var project = Path.GetFullPath(arg);
-                    if (IsSupportedProject(project))
-                    {
-                        projects.Add(project);
-                    }
+                    AddProject(projects, arg);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Write("Exception: " + ex.ToString(), ConsoleColor.Red);
                 }
             }
 
@@ -88,6 +81,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 IndexSolutions(projects);
                 FinalizeProjects();
+            }
+        }
+
+        private static void AddProject(List<string> projects, string path)
+        {
+            var project = Path.GetFullPath(path);
+            if (IsSupportedProject(project))
+            {
+                projects.Add(project);
             }
         }
 
