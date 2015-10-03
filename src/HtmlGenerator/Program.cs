@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
+using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -114,30 +115,32 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
         {
-            var solutionGenerators = new List<SolutionGenerator>();
             var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Loading " + path))
                 {
-                    var solutionGenerator = new SolutionGenerator(
-                        path,
-                        Paths.SolutionDestinationFolder);
-                    solutionGenerators.Add(solutionGenerator);
-                    foreach (var assemblyName in solutionGenerator.GetAssemblyNames())
+                    foreach (var assemblyName in MSBuildHelper.GetAssemblies(path))
                     {
                         assemblyNames.Add(assemblyName);
                     }
                 }
             }
 
-            foreach (var solutionGenerator in solutionGenerators)
+            Federation federation = new Federation();
+            foreach (var path in solutionFilePaths)
             {
-                using (Disposable.Timing("Generating " + solutionGenerator.ProjectFilePath))
+                using (Disposable.Timing("Generating " + path))
                 {
-                    solutionGenerator.GlobalAssemblyList = assemblyNames;
-                    solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                    using (var solutionGenerator = new SolutionGenerator(
+                        path,
+                        Paths.SolutionDestinationFolder,
+                        federation: federation))
+                    {
+                        solutionGenerator.GlobalAssemblyList = assemblyNames;
+                        solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                    }
                 }
             }
         }

@@ -11,7 +11,7 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
-    public partial class SolutionGenerator
+    public partial class SolutionGenerator : IDisposable
     {
         public string SolutionSourceFolder { get; private set; }
         public string SolutionDestinationFolder { get; private set; }
@@ -27,6 +27,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public HashSet<string> GlobalAssemblyList { get; set; }
 
         private Solution solution;
+
+        private Workspace _workspace;
 
         public SolutionGenerator(
             string solutionFilePath,
@@ -408,6 +410,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     workspace.SkipUnrecognizedProjects = true;
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenSolutionAsync(solutionFilePath).GetAwaiter().GetResult();
+                    _workspace = workspace;
                 }
                 else if (
                     solutionFilePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
@@ -416,6 +419,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var workspace = CreateWorkspace(propertiesOpt);
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenProjectAsync(solutionFilePath).GetAwaiter().GetResult().Solution;
+                    _workspace = workspace;
                 }
                 else if (
                     solutionFilePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
@@ -426,6 +430,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     if (solution != null)
                     {
                         solution.Workspace.WorkspaceFailed += WorkspaceFailed;
+                        _workspace = solution.Workspace;
                     }
                 }
 
@@ -481,5 +486,29 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             filePath = Path.GetFullPath(filePath);
             this.typeScriptFiles.Add(filePath);
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_disposed)
+            {
+                if (disposing)
+                {
+                    if (_workspace != null)
+                    {
+                        _workspace.Dispose();
+                        _workspace = null;
+                    }
+                }
+
+                m_disposed = true;
+            }
+        }
+
+        private bool m_disposed;
     }
 }
