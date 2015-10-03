@@ -39,9 +39,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         string[] paths = File.ReadAllLines(inputPath);
                         foreach (string path in paths)
                         {
-                            var project = GetProjectPath(path);
-
-                            if (project != null)
+                            var project = Path.GetFullPath(path);
+                            if (IsSupportedProject(project))
                             {
                                 projects.Add(project);
                             }
@@ -54,8 +53,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 try
                 {
-                    var project = GetProjectPath(arg);
-                    if (project != null)
+                    var project = Path.GetFullPath(arg);
+                    if (IsSupportedProject(project))
                     {
                         projects.Add(project);
                     }
@@ -94,19 +93,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static bool IsSupportedProject(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                return false;
+            }
+
             return filePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
                    filePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
                    filePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static string GetProjectPath(string arg)
-        {
-            var project = Path.GetFullPath(arg);
-            if (File.Exists(project) && IsSupportedProject(arg))
-            {
-                return project.StripQuotes();
-            }
-            return null;
         }
 
         private static void PrintUsage()
