@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -9,7 +12,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length == 0)
             {
@@ -26,17 +29,37 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
+                if (arg.StartsWith("/in:"))
+                {
+                    string inputPath = arg.Substring("/in:".Length).StripQuotes();
+                    try
+                    {
+                        if (!File.Exists(inputPath))
+                        {
+                            continue;
+                        }
+                        using (StreamReader reader = new StreamReader(inputPath))
+                        {
+                            while (!reader.EndOfStream)
+                            {
+                                var project = GetProjectPath(reader.ReadLine());
+
+                                if (project != null)
+                                {
+                                    projects.Add(project);
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                }
+
                 try
                 {
-                    var project = Path.GetFullPath(arg);
-                    if (File.Exists(project))
+                    var project = GetProjectPath(arg);
+                    if (project != null)
                     {
-                        if (project.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
-                            project.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                            project.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
-                        {
-                            projects.Add(project.StripQuotes());
-                        }
+                        projects.Add(project);
                     }
                 }
                 catch
@@ -71,12 +94,27 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static void PrintUsage()
+        private static string GetProjectPath(string arg)
         {
-            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..]");
+            var project = Path.GetFullPath(arg);
+            if (File.Exists(project))
+            {
+                if (project.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
+                    project.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                    project.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
+                {
+                    return project.StripQuotes();
+                }
+            }
+            return null;
         }
 
-        private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
+        private static void PrintUsage()
+        {
+            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] [/in:<filecontaingprojectlist>]");
+        }
+
+        private static readonly Folder<Project> s_mergedSolutionExplorerRoot = new Folder<Project>();
 
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
         {
@@ -103,7 +141,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 using (Disposable.Timing("Generating " + solutionGenerator.ProjectFilePath))
                 {
                     solutionGenerator.GlobalAssemblyList = assemblyNames;
-                    solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                    solutionGenerator.Generate(solutionExplorerRoot: s_mergedSolutionExplorerRoot);
                 }
             }
         }
@@ -117,7 +155,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 try
                 {
                     var solutionFinalizer = new SolutionFinalizer(Paths.SolutionDestinationFolder);
-                    solutionFinalizer.FinalizeProjects(mergedSolutionExplorerRoot);
+                    solutionFinalizer.FinalizeProjects(s_mergedSolutionExplorerRoot);
                 }
                 catch (Exception ex)
                 {
