@@ -46,6 +46,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     {
                         Log.Write("Invalid argument: " + arg, ConsoleColor.Red);
                     }
+                    continue;
                 }
 
                 try
@@ -142,6 +143,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
                     }
                 }
+                GC.Collect();
             }
         }
 
