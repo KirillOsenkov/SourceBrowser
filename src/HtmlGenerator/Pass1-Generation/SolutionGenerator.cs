@@ -27,8 +27,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public HashSet<string> GlobalAssemblyList { get; set; }
 
         private Solution solution;
-
-        private Workspace _workspace;
+        private Workspace workspace;
 
         public SolutionGenerator(
             string solutionFilePath,
@@ -410,7 +409,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     workspace.SkipUnrecognizedProjects = true;
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenSolutionAsync(solutionFilePath).GetAwaiter().GetResult();
-                    _workspace = workspace;
+                    this.workspace = workspace;
                 }
                 else if (
                     solutionFilePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
@@ -419,7 +418,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var workspace = CreateWorkspace(propertiesOpt);
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenProjectAsync(solutionFilePath).GetAwaiter().GetResult().Solution;
-                    _workspace = workspace;
+                    this.workspace = workspace;
                 }
                 else if (
                     solutionFilePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
@@ -430,7 +429,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     if (solution != null)
                     {
                         solution.Workspace.WorkspaceFailed += WorkspaceFailed;
-                        _workspace = solution.Workspace;
+                        workspace = solution.Workspace;
                     }
                 }
 
@@ -489,26 +488,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!m_disposed)
+            if (workspace != null)
             {
-                if (disposing)
-                {
-                    if (_workspace != null)
-                    {
-                        _workspace.Dispose();
-                        _workspace = null;
-                    }
-                }
-
-                m_disposed = true;
+                workspace.Dispose();
+                workspace = null;
             }
         }
-
-        private bool m_disposed;
     }
 }

@@ -172,7 +172,6 @@
     <Compile Include="Utilities\Markup.cs" />
     <Compile Include="Utilities\MetadataReading.cs" />
     <Compile Include="Utilities\MSBuildExpressionParser.cs" />
-    <Compile Include="Utilities\MSBuildHelper.cs" />
     <Compile Include="Utilities\Paths.cs" />
     <Compile Include="Utilities\Reference.cs" />
     <Compile Include="Utilities\Serialization.cs" />

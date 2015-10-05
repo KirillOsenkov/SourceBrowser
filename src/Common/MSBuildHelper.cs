@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 
-namespace Microsoft.SourceBrowser.HtmlGenerator.Utilities
+namespace Microsoft.SourceBrowser.Common
 {
     public static class MSBuildHelper
     {

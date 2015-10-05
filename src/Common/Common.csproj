@@ -9,7 +9,9 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertTraceListener.cs" />
@@ -19,6 +21,7 @@
     <Compile Include="IsManagedAssembly.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Measure.cs" />
+    <Compile Include="MSBuildHelper.cs" />
     <Compile Include="MultiDictionary.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="PriorityQueue.cs" />

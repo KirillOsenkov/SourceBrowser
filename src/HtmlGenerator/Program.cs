@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
-using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
