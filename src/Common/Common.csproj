@@ -15,6 +15,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyNameExtractor.cs" />
     <Compile Include="AssertTraceListener.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="FileUtilities.cs" />
@@ -22,7 +23,6 @@
     <Compile Include="IsManagedAssembly.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Measure.cs" />
-    <Compile Include="AssemblyNameExtractor.cs" />
     <Compile Include="MultiDictionary.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="PriorityQueue.cs" />

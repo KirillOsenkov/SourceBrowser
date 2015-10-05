@@ -1251,8 +1251,8 @@
     <NuGetVersion>1.0.6</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
-    <NuGetInput Include="$(NuSpecFile)" />
     <NuGetInput Include="$(MSBuildThisFile)" />
+    <NuGetInput Include="$(NuSpecFile)" />
   </ItemGroup>
   <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
     <Exec Command="$(SolutionDir)\.nuget\NuGet.exe Pack Microsoft.SourceBrowser.nuspec -NoPackageAnalysis -BasePath $(OutDir) -OutputDirectory $(OutDir) -prop currentVersion=$(NuGetVersion)" />
