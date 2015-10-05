@@ -1248,7 +1248,7 @@
   <Import Project="..\..\Common.targets" />
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.6</NuGetVersion>
+    <NuGetVersion>1.0.7</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
