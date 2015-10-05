@@ -36,9 +36,6 @@ namespace Microsoft.SourceBrowser.BuildLogParser
         public static MultiDictionary<string, CompilerInvocation> nonExistingReferencesToCompilerInvocationMap =
             new MultiDictionary<string, CompilerInvocation>();
 
-        private static readonly Regex assemblyNameRegex = new Regex(@"<(?:Module)?AssemblyName>((\w|\.|\$|\(|\)|-)+)</(?:Module)?AssemblyName>", RegexOptions.Compiled);
-        private static readonly Regex rootNamespaceRegex = new Regex(@"<RootNamespace>((\w|\.)+)</RootNamespace>", RegexOptions.Compiled);
-
         public LogAnalyzer()
         {
             cacheOfKnownExistingBinaries.Clear();
@@ -405,6 +402,35 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             return false;
         }
 
+        private string GetAssemblyNameFromProject(string projectFilePath)
+        {
+            string assemblyName = null;
+
+            lock (projectFilePathToAssemblyNameCache)
+            {
+                if (projectFilePathToAssemblyNameCache.TryGetValue(projectFilePath, out assemblyName))
+                {
+                    return assemblyName;
+                }
+            }
+
+            assemblyName = AssemblyNameExtractor.GetAssemblyNameFromProject(projectFilePath);
+
+            if (assemblyName == null)
+            {
+                Log.Exception("Couldn't extract AssemblyName from project: " + projectFilePath);
+            }
+            else
+            {
+                lock (projectFilePathToAssemblyNameCache)
+                {
+                    projectFilePathToAssemblyNameCache[projectFilePath] = assemblyName;
+                }
+            }
+
+            return assemblyName;
+        }
+
         private bool ProcessInvocation(string line, Action<CompilerInvocation> collector)
         {
             bool csc = false;
@@ -498,121 +524,6 @@ namespace Microsoft.SourceBrowser.BuildLogParser
         }
 
         private static Dictionary<string, string> projectFilePathToAssemblyNameCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        private static readonly object projectCollectionLock = new object();
-
-        private string GetAssemblyNameFromProject(string projectFilePath)
-        {
-            string assemblyName = null;
-
-            if (!File.Exists(projectFilePath))
-            {
-                return null;
-            }
-
-            lock (projectFilePathToAssemblyNameCache)
-            {
-                if (projectFilePathToAssemblyNameCache.TryGetValue(projectFilePath, out assemblyName))
-                {
-                    return assemblyName;
-                }
-            }
-
-            var projectName = Path.GetFileNameWithoutExtension(projectFilePath);
-            var projectText = File.ReadAllText(projectFilePath);
-            var match = assemblyNameRegex.Match(projectText);
-            if (match.Groups.Count >= 2)
-            {
-                assemblyName = match.Groups[1].Value;
-
-                assemblyName = assemblyName.Replace("$(MyBaseName)", projectName);
-
-                if (assemblyName == "$(RootNamespace)")
-                {
-                    match = rootNamespaceRegex.Match(projectText);
-                    if (match.Groups.Count >= 2)
-                    {
-                        assemblyName = match.Groups[1].Value;
-                    }
-                }
-
-                lock (projectFilePathToAssemblyNameCache)
-                {
-                    projectFilePathToAssemblyNameCache[projectFilePath] = assemblyName;
-                }
-
-                return assemblyName;
-            }
-
-            var doc = XDocument.Load(projectFilePath);
-            var ns = @"http://schemas.microsoft.com/developer/msbuild/2003";
-            var propertyGroups = doc.Descendants(XName.Get("PropertyGroup", ns));
-            var assemblyNameElement = propertyGroups.SelectMany(g => g.Elements(XName.Get("AssemblyName", ns))).LastOrDefault();
-            if (assemblyNameElement != null && !assemblyNameElement.Value.Contains("$"))
-            {
-                assemblyName = assemblyNameElement.Value;
-                lock (projectFilePathToAssemblyNameCache)
-                {
-                    projectFilePathToAssemblyNameCache[projectFilePath] = assemblyName;
-                }
-
-                return assemblyName;
-            }
-
-            var projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
-            var verbatimAssemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "LocalSTS"
-            };
-
-            if (verbatimAssemblyNames.Contains(projectFileName))
-            {
-                lock (projectFilePathToAssemblyNameCache)
-                {
-                    projectFilePathToAssemblyNameCache[projectFilePath] = projectFileName;
-                }
-
-                return projectFileName;
-            }
-
-            lock (projectCollectionLock)
-            {
-                try
-                {
-                    var project = ProjectCollection.GlobalProjectCollection.LoadProject(
-                        projectFilePath,
-                        toolsVersion: "12.0");
-
-                    assemblyName = project.GetPropertyValue("AssemblyName");
-                    if (assemblyName == "")
-                    {
-                        assemblyName = projectFileName;
-                    }
-
-                    if (assemblyName != null)
-                    {
-                        lock (projectFilePathToAssemblyNameCache)
-                        {
-                            projectFilePathToAssemblyNameCache[projectFilePath] = assemblyName;
-                        }
-
-                        return assemblyName;
-                    }
-                }
-                finally
-                {
-                    ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
-                }
-            }
-
-            Log.Exception("Couldn't extract AssemblyName from project: " + projectFilePath);
-            lock (projectFilePathToAssemblyNameCache)
-            {
-                projectFilePathToAssemblyNameCache[projectFilePath] = projectFileName;
-            }
-
-            return projectFileName;
-        }
 
         internal void SelectFinalInvocation(CompilerInvocation invocation)
         {

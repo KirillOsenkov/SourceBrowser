@@ -119,16 +119,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             foreach (var path in solutionFilePaths)
             {
-                using (Disposable.Timing("Loading " + path))
+                using (Disposable.Timing("Reading assembly names from " + path))
                 {
-                    foreach (var assemblyName in MSBuildHelper.GetAssemblies(path))
+                    foreach (var assemblyName in AssemblyNameExtractor.GetAssemblyNames(path))
                     {
                         assemblyNames.Add(assemblyName);
                     }
                 }
             }
 
-            Federation federation = new Federation();
+            var federation = new Federation();
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Generating " + path))
@@ -142,6 +142,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
                     }
                 }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
                 GC.Collect();
             }
         }
