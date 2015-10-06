@@ -50,6 +50,7 @@ The generator is not incremental. You have to generate into an empty folder from
 * Clicking on the partial keyword will display a list of all files where this type is declared
 * MSBuild files (.csproj etc) have hyperlinks
 * TypeScript files (*.ts) are indexed if they're part of a C# project. Work underway to allow an arbitrary array of TypeScript files.
+* Search for GUIDs in C#/VB string literals is supported
 
 ##Project status and contributions
 
