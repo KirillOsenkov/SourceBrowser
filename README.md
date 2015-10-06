@@ -37,6 +37,20 @@ The generator is not incremental. You have to generate into an empty folder from
  1. Indexing more than one project with the same assembly name is currently unsupported. Only the first project wins. This is due to a fundamental design decision to only reference an assembly by short name. Customizers should add a means to filter "victim" projects out in their forks to pick the best single project for inclusion in the index.
  2. The generated website can only be hosted in the root of the domain. Making it run from a subdirectory is non-trivial and unlikely to be supported.
 
+###Features
+* Solution Explorer - contents of projects merged into single tree on the left
+* coloring for C#, VB, MSBuild, XAML and TypeScript
+* Go To Definition (click on a reference)
+* Find All Reference (click on a definition)
+* Project Explorer - in any document click on the Project link at the bottom
+* Namespace explorer - for a project view all types and members nested in namespace hierarchy
+* Document Outline - for a document click on the button in top right to display types and members in the current file
+* http://<URL>/i.txt for the entire solution and /AssemblyName/i.txt (for an assembly) displays source code stats, lines of code, etc
+* http://<URL>/#EmptyArrayAllocation finds all allocations of empty arrays (this feature is one-off and hardcoded and not extensible)
+* Clicking on the partial keyword will display a list of all files where this type is declared
+* MSBuild files (.csproj etc) have hyperlinks
+* TypeScript files (*.ts) are indexed if they're part of a C# project. Work underway to allow an arbitrary array of TypeScript files.
+
 ##Project status and contributions
 
 This is a reference implementation that showcases the concepts and Roslyn usage. It comes with no guarantees, use at your own risk. We will consider accepting high-quality pull requests that add non-trivial value, however we have no plans to do significant work on the application in its current form. Any significant rearchitecture, adding large features, big refactorings won't be accepted because of resource constraints. Feel free to use it to generate websites for your own code, integrate in your CI servers etc. Feel free to do whatever you want in your own forks. Bug reports are gratefully accepted.
