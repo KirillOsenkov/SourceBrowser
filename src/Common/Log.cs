@@ -11,8 +11,8 @@ namespace Microsoft.SourceBrowser.Common
         public const string MessageLogFile = "Messages.txt";
         private const string SeparatorBar = "===============================================";
 
-        public static string ErrorLogFilePath = ErrorLogFile;
-        public static string MessageLogFilePath = MessageLogFile;
+        private static string errorLogFilePath = Path.GetFullPath(ErrorLogFile);
+        private static string messageLogFilePath = Path.GetFullPath(MessageLogFile);
 
         public static void Exception(Exception e, string message, bool isSevere = true)
         {
@@ -52,6 +52,28 @@ namespace Microsoft.SourceBrowser.Common
                 {
                     Console.ForegroundColor = ConsoleColor.Gray;
                 }
+            }
+        }
+
+        public static string ErrorLogFilePath
+        {
+            get { return errorLogFilePath; }
+            set
+            {
+                if (!Path.IsPathRooted(value))
+                    throw new ArgumentException($"Path '{value}' is not rooted.", nameof(value));
+                errorLogFilePath = value;
+            }
+        }
+
+        public static string MessageLogFilePath
+        {
+            get { return messageLogFilePath; }
+            set
+            {
+                if (!Path.IsPathRooted(value))
+                    throw new ArgumentException($"Path '{value}' is not rooted.", nameof(value));
+                messageLogFilePath = value;
             }
         }
     }
