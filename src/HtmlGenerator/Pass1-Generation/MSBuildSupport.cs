@@ -552,7 +552,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             int lengthSoFar = 0;
             foreach (var part in parts)
             {
-                if (part.StartsWith("$(") && part.EndsWith(")"))
+                if (part.StartsWith("$(") && part.EndsWith(")") && part.Length > 3)
                 {
                     var propertyName = part.Substring(2, part.Length - 3);
                     string suffix = "";
@@ -580,7 +580,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 else if (
                     part.StartsWith("@(") &&
                     (part.EndsWith(")") || part.EndsWith("-") || part.EndsWith(",")) &&
-                    !part.Contains("%"))
+                    !part.Contains("%") &&
+                    part.Length > 3)
                 {
                     int suffixLength = 1;
                     var itemName = part.Substring(2, part.Length - 2 - suffixLength);
