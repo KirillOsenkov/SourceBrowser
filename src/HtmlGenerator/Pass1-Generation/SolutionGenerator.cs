@@ -277,7 +277,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
-            new TypeScriptSupport().Generate(typeScriptFiles);
+            new TypeScriptSupport().Generate(typeScriptFiles, SolutionDestinationFolder);
 
             if (currentBatch.Length > 1)
             {

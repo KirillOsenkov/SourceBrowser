@@ -15,14 +15,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private Dictionary<string, List<Reference>> references;
         private List<string> declarations;
         public Dictionary<string, List<Tuple<string, long>>> SymbolIDToListOfLocationsMap { get; private set; }
-        public static readonly string ProjectDestinationFolder = Path.Combine(Paths.SolutionDestinationFolder, Constants.TypeScriptFiles);
 
-        public void Generate(IEnumerable<string> typeScriptFiles)
+        public void Generate(IEnumerable<string> typeScriptFiles, string solutionDestinationFolder)
         {
             if (typeScriptFiles == null || !typeScriptFiles.Any())
             {
                 return;
             }
+
+            var projectDestinationFolder = Path.Combine(solutionDestinationFolder, Constants.TypeScriptFiles).MustBeAbsolute();
 
             declarations = new List<string>();
             references = new Dictionary<string, List<Reference>>(StringComparer.OrdinalIgnoreCase);
@@ -69,11 +70,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             declarations.Sort();
 
             Serialization.WriteDeclaredSymbols(
-                ProjectDestinationFolder,
+                projectDestinationFolder,
                 declarations);
 
             ProjectGenerator.GenerateSymbolIDToListOfDeclarationLocationsMap(
-                ProjectDestinationFolder,
+                projectDestinationFolder,
                 SymbolIDToListOfLocationsMap);
         }
 

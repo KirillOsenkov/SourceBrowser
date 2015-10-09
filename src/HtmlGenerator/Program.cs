@@ -21,7 +21,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 if (arg.StartsWith("/out:"))
                 {
-                    Paths.SolutionDestinationFolder = arg.Substring("/out:".Length).StripQuotes();
+                    Paths.SolutionDestinationFolder = Path.GetFullPath(arg.Substring("/out:".Length).StripQuotes());
                     continue;
                 }
 

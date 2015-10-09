@@ -48,7 +48,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     Log.Write("TypeScript invocation", ConsoleColor.Magenta);
                     var typeScriptGenerator = new TypeScriptSupport();
-                    typeScriptGenerator.Generate(invocation.TypeScriptFiles);
+                    typeScriptGenerator.Generate(invocation.TypeScriptFiles, Paths.SolutionDestinationFolder);
                 }
                 else if (invocation.ProjectFilePath != "-")
                 {
