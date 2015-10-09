@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Microsoft.SourceBrowser.Common
@@ -31,6 +32,15 @@ namespace Microsoft.SourceBrowser.Common
             }
 
             return path.TrimEnd('\\');
+        }
+
+        public static string MustBeAbsolute(this string path)
+        {
+            if (!Path.IsPathRooted(path))
+            {
+                throw new ArgumentException($"Path '{path}' is not absolute.", nameof(path));
+            }
+            return path;
         }
     }
 }

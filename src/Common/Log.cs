@@ -36,7 +36,14 @@ namespace Microsoft.SourceBrowser.Common
         {
             lock (consoleLock)
             {
-                File.AppendAllText(filePath, SeparatorBar + Environment.NewLine + message + Environment.NewLine, Encoding.UTF8);
+                try
+                {
+                    File.AppendAllText(filePath, SeparatorBar + Environment.NewLine + message + Environment.NewLine, Encoding.UTF8);
+                }
+                catch (Exception ex)
+                {
+                    Write($"Failed to write to ${filePath}: ${ex}.", ConsoleColor.Red);
+                }
             }
         }
 
@@ -58,23 +65,13 @@ namespace Microsoft.SourceBrowser.Common
         public static string ErrorLogFilePath
         {
             get { return errorLogFilePath; }
-            set
-            {
-                if (!Path.IsPathRooted(value))
-                    throw new ArgumentException($"Path '{value}' is not rooted.", nameof(value));
-                errorLogFilePath = value;
-            }
+            set { errorLogFilePath = value.MustBeAbsolute(); }
         }
 
         public static string MessageLogFilePath
         {
             get { return messageLogFilePath; }
-            set
-            {
-                if (!Path.IsPathRooted(value))
-                    throw new ArgumentException($"Path '{value}' is not rooted.", nameof(value));
-                messageLogFilePath = value;
-            }
+            set { messageLogFilePath = value.MustBeAbsolute(); }
         }
     }
 }

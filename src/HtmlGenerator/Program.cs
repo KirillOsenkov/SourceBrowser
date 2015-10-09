@@ -21,7 +21,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 if (arg.StartsWith("/out:"))
                 {
-                    Paths.SolutionDestinationFolder = arg.Substring("/out:".Length).StripQuotes();
+                    Paths.SolutionDestinationFolder = Path.GetFullPath(arg.Substring("/out:".Length).StripQuotes());
                     continue;
                 }
 
@@ -72,8 +72,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "Index");
             }
 
-            Log.ErrorLogFilePath = Path.GetFullPath(Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile));
-            Log.MessageLogFilePath = Path.GetFullPath(Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile));
+            Log.ErrorLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile);
+            Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
 
             // Warning, this will delete and recreate your destination folder
             Paths.PrepareDestinationFolder();

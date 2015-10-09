@@ -11,7 +11,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public static class Paths
     {
-        public static string SolutionDestinationFolder = null;
+        private static string solutionDestinationFolder;
+        public static string SolutionDestinationFolder
+        {
+            get { return solutionDestinationFolder; }
+            set { solutionDestinationFolder = value.MustBeAbsolute(); }
+        }
 
         public static string ProcessedAssemblies
         {
