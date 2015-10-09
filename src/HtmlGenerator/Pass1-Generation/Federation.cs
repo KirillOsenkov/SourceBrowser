@@ -27,11 +27,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            WebProxyAuthenticator.Authenticate(this.GetAssemblyUrl(servers[0]));
-
             foreach (var server in servers)
             {
                 var url = this.GetAssemblyUrl(server);
+                WebProxyAuthenticator.Authenticate(url);
 
                 var assemblyList = new WebClient().DownloadString(url);
                 var assemblyNames = new HashSet<string>(assemblyList

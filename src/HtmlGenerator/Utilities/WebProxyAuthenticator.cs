@@ -10,7 +10,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Utilities
     /// </summary>
     public class WebProxyAuthenticator
     {
-
         private static bool hasAuthenticated = false;
 
         /// <summary>
