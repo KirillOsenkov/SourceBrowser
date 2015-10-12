@@ -178,7 +178,6 @@
     <Compile Include="Utilities\SymbolIdService.cs" />
     <Compile Include="Utilities\SymbolKindText.cs" />
     <Compile Include="Utilities\SymbolSorter.cs" />
-    <Compile Include="Utilities\WebProxyAuthenticator.cs" />
     <Compile Include="Utilities\WorkspaceHacks.cs" />
     <Compile Include="Utilities\XmlDocumentationProvider.cs" />
   </ItemGroup>
@@ -1249,7 +1248,7 @@
   <Import Project="..\..\Common.targets" />
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.9</NuGetVersion>
+    <NuGetVersion>1.0.10</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />

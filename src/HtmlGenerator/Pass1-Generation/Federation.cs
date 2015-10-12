@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -30,7 +29,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             foreach (var server in servers)
             {
                 var url = this.GetAssemblyUrl(server);
-                WebProxyAuthenticator.Authenticate(url);
 
                 var assemblyList = new WebClient().DownloadString(url);
                 var assemblyNames = new HashSet<string>(assemblyList
