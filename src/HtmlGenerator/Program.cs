@@ -92,6 +92,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 projects.Add(project);
             }
+            else
+            {
+                Log.Exception("Project not found or not supported: " + path, isSevere: false);
+            }
         }
 
         private static bool IsSupportedProject(string filePath)
