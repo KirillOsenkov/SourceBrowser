@@ -398,14 +398,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return Federation.GetExternalAssemblyIndex(assemblyName);
         }
 
-        private Solution CreateSolution(string solutionFilePath, ImmutableDictionary<string, string> propertiesOpt = null)
+        private Solution CreateSolution(string solutionFilePath, ImmutableDictionary<string, string> properties = null)
         {
             try
             {
                 Solution solution = null;
                 if (solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
                 {
-                    var workspace = CreateWorkspace(propertiesOpt);
+                    properties = AddSolutionProperties(properties, solutionFilePath);
+                    var workspace = CreateWorkspace(properties);
                     workspace.SkipUnrecognizedProjects = true;
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenSolutionAsync(solutionFilePath).GetAwaiter().GetResult();
@@ -415,7 +416,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     solutionFilePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
                     solutionFilePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
                 {
-                    var workspace = CreateWorkspace(propertiesOpt);
+                    var workspace = CreateWorkspace(properties);
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenProjectAsync(solutionFilePath).GetAwaiter().GetResult().Solution;
                     this.workspace = workspace;
@@ -445,6 +446,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Log.Exception(ex, "Failed to open solution: " + solutionFilePath);
                 return null;
             }
+        }
+
+        private ImmutableDictionary<string, string> AddSolutionProperties(ImmutableDictionary<string, string> properties, string solutionFilePath)
+        {
+            // http://referencesource.microsoft.com/#MSBuildFiles/C/ProgramFiles(x86)/MSBuild/14.0/bin_/amd64/Microsoft.Common.CurrentVersion.targets,296
+            properties = properties ?? ImmutableDictionary<string, string>.Empty;
+            properties = properties.Add("SolutionName", Path.GetFileNameWithoutExtension(solutionFilePath));
+            properties = properties.Add("SolutionFileName", Path.GetFileName(solutionFilePath));
+            properties = properties.Add("SolutionPath", solutionFilePath);
+            properties = properties.Add("SolutionDir", Path.GetDirectoryName(solutionFilePath));
+            properties = properties.Add("SolutionExt", Path.GetExtension(solutionFilePath));
+            return properties;
         }
 
         private static void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
