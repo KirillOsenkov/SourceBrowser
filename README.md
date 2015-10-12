@@ -45,8 +45,8 @@ The generator is not incremental. You have to generate into an empty folder from
 * Project Explorer - in any document click on the Project link at the bottom
 * Namespace explorer - for a project view all types and members nested in namespace hierarchy
 * Document Outline - for a document click on the button in top right to display types and members in the current file
-* http://<URL>/i.txt for the entire solution and /AssemblyName/i.txt (for an assembly) displays source code stats, lines of code, etc
-* http://<URL>/#EmptyArrayAllocation finds all allocations of empty arrays (this feature is one-off and hardcoded and not extensible)
+* http://\<URL>/i.txt for the entire solution and /AssemblyName/i.txt (for an assembly) displays source code stats, lines of code, etc
+* http://\<URL>/#EmptyArrayAllocation finds all allocations of empty arrays (this feature is one-off and hardcoded and not extensible)
 * Clicking on the partial keyword will display a list of all files where this type is declared
 * MSBuild files (.csproj etc) have hyperlinks
 * TypeScript files (*.ts) are indexed if they're part of a C# project. Work underway to allow an arbitrary array of TypeScript files.
