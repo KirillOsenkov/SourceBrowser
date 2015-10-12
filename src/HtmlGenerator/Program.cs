@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
@@ -17,6 +19,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             var projects = new List<string>();
+            var properties = new Dictionary<string, string>();
+
             foreach (var arg in args)
             {
                 if (arg.StartsWith("/out:"))
@@ -45,7 +49,20 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     {
                         Log.Write("Invalid argument: " + arg, ConsoleColor.Red);
                     }
+
                     continue;
+                }
+
+                if (arg.StartsWith("/p:"))
+                {
+                    var match = Regex.Match(arg, "/p:(?<name>[^=]+)=(?<value>.+)");
+                    if (match.Success)
+                    {
+                        var propertyName = match.Groups["name"].Value;
+                        var propertyValue = match.Groups["value"].Value;
+                        properties.Add(propertyName, propertyValue);
+                        continue;
+                    }
                 }
 
                 try
@@ -80,7 +97,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             using (Disposable.Timing("Generating website"))
             {
-                IndexSolutions(projects);
+                IndexSolutions(projects, properties);
                 FinalizeProjects();
             }
         }
@@ -117,7 +134,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
 
-        private static void IndexSolutions(IEnumerable<string> solutionFilePaths)
+        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties)
         {
             var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -140,6 +157,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     using (var solutionGenerator = new SolutionGenerator(
                         path,
                         Paths.SolutionDestinationFolder,
+                        properties: properties.ToImmutableDictionary(),
                         federation: federation))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
