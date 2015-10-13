@@ -29,6 +29,12 @@
         public static readonly string ClassificationXmlLiteralCDataSection = "xlcs";
         public static readonly string ClassificationXmlLiteralEmbeddedExpression = "xlee";
         public static readonly string ClassificationXmlLiteralProcessingInstruction = "xlpi";
+        public static readonly string ClassificationNamespace = "n";
+        public static readonly string ClassificationMethod = "method";
+        public static readonly string ClassificationField = "field";
+        public static readonly string ClassificationConstructor = "constructor";
+        public static readonly string ClassificationPreprocessKeyword = "preprocess";
+        public static readonly string ClassificationProperty = "property";
 
         public static readonly string ClassificationExcludedCode = "e";
         public static readonly string RoslynClassificationKeyword = "keyword";
@@ -48,5 +54,6 @@
         public static readonly string MSBuildFiles = "MSBuildFiles";
         public static readonly string TypeScriptFiles = "TypeScriptFiles";
         public static readonly string AssemblyPaths = @"AssemblyPaths.txt";
+
     }
 }

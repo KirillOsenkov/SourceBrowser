@@ -11,21 +11,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public partial class Classification
     {
-        public string GetSpanClass(string text, string classificationType)
-        {
-            if (classificationType == null ||
-                classificationType == Constants.ClassificationIdentifier ||
-                classificationType == Constants.ClassificationPunctuation)
-            {
-                // identifiers are conveniently black by default so let's save some space
-                return null;
-            }
-            else
-            {
-                return classificationType;
-            }
-        }
-
         public async Task<IEnumerable<Range>> Classify(Document document, SourceText text)
         {
             var span = TextSpan.FromBounds(0, text.Length);

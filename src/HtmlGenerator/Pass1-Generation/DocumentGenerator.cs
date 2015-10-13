@@ -266,8 +266,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var html = range.Text;
             html = Markup.HtmlEscape(html);
             bool isLargeFile = IsLargeFile(lineCount);
-
-            string classAttributeValue = classifier.GetSpanClass(html, range.ClassificationType);
+            string classAttributeValue = GetClassAttribute(html, range, isLargeFile);
             HtmlElementInfo hyperlinkInfo = GenerateLinks(range, isLargeFile);
 
             if (hyperlinkInfo == null)
@@ -281,6 +280,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     return "<b>" + html + "</b>";
                 }
+
             }
 
             var sb = new StringBuilder();
