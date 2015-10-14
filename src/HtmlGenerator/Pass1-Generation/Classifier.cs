@@ -160,7 +160,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 { "delegate name", Constants.ClassificationTypeName },
                 { "module name", Constants.ClassificationTypeName },
                 { "type parameter name", Constants.ClassificationTypeName },
-                { "preprocessor keyword", Constants.ClassificationKeyword },
+                { "preprocessor keyword", Constants.ClassificationPreprocessKeyword },
                 { "xml doc comment - delimiter", Constants.ClassificationComment },
                 { "xml doc comment - name", Constants.ClassificationComment },
                 { "xml doc comment - text", Constants.ClassificationComment },

@@ -33,7 +33,7 @@
         public static readonly string ClassificationMethod = "method";
         public static readonly string ClassificationField = "field";
         public static readonly string ClassificationConstructor = "constructor";
-        public static readonly string ClassificationPreprocessKeyword = "preprocess";
+        public static readonly string ClassificationPreprocessKeyword = "k preprocess";
         public static readonly string ClassificationProperty = "property";
 
         public static readonly string ClassificationExcludedCode = "e";

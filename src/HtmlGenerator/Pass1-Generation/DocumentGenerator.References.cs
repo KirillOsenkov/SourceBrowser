@@ -16,29 +16,45 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string ClassFromSymbol(ISymbol symbol, string currentClass = null)
         {
+            string result = null;
             switch (symbol.Kind)
             {
                 case SymbolKind.Namespace:
-                    return Constants.ClassificationNamespace;
+                    result = Constants.ClassificationNamespace;
+                    break;
                 case SymbolKind.Field:
-                    return Constants.ClassificationField;
+                    result = Constants.ClassificationField;
+                    break;
                 case SymbolKind.Property:
-                    return Constants.ClassificationProperty;
+                    result = Constants.ClassificationProperty;
+                    break;
                 case SymbolKind.Method:
                     IMethodSymbol ms = symbol as IMethodSymbol;
                     if (ms?.MethodKind == MethodKind.Constructor)
                     {
-                        return Constants.ClassificationConstructor;
+                        result = Constants.ClassificationConstructor;
                     }
-                    return Constants.ClassificationMethod;
+                    else
+                    {
+                        result = Constants.ClassificationMethod;
+                    }
+                    break;
                 case SymbolKind.Alias:
-                    return Constants.ClassificationTypeName;
+                    result = Constants.ClassificationTypeName;
+                    break;
                 case SymbolKind.NamedType:
-                    return Constants.ClassificationTypeName;
-                case SymbolKind.Preprocessing:
-                    return Constants.ClassificationPreprocessKeyword;
+                    result = Constants.ClassificationTypeName;
+                    break;
+                default:
+                    return currentClass;
             }
-            return currentClass;
+
+            if (String.IsNullOrEmpty(currentClass))
+            {
+                return result;
+            }
+
+            return currentClass + " " + result;
         }
 
         private string GetClassAttribute(string rangeText, Classification.Range range, bool isLargeFile = false)
