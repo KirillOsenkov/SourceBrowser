@@ -49,7 +49,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     return currentClass;
             }
 
-            if (String.IsNullOrEmpty(currentClass))
+            if (string.IsNullOrEmpty(currentClass))
             {
                 return result;
             }
@@ -125,7 +125,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             return ClassFromSymbol(symbol, classificationType);
-
         }
 
         private HtmlElementInfo ProcessReference(Classification.Range range, SyntaxToken token, bool isLargeFile = false)

@@ -54,6 +54,5 @@
         public static readonly string MSBuildFiles = "MSBuildFiles";
         public static readonly string TypeScriptFiles = "TypeScriptFiles";
         public static readonly string AssemblyPaths = @"AssemblyPaths.txt";
-
     }
 }
