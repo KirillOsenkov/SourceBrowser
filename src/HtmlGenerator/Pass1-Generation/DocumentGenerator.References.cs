@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -12,6 +13,120 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         private HashSet<string> reportedSymbolDisplayStrings = new HashSet<string>();
         private bool reportedDiagnostics = false;
+
+        private string ClassFromSymbol(ISymbol symbol, string currentClass = null)
+        {
+            string result = null;
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Namespace:
+                    result = Constants.ClassificationNamespace;
+                    break;
+                case SymbolKind.Field:
+                    result = Constants.ClassificationField;
+                    break;
+                case SymbolKind.Property:
+                    result = Constants.ClassificationProperty;
+                    break;
+                case SymbolKind.Method:
+                    IMethodSymbol ms = symbol as IMethodSymbol;
+                    if (ms?.MethodKind == MethodKind.Constructor)
+                    {
+                        result = Constants.ClassificationConstructor;
+                    }
+                    else
+                    {
+                        result = Constants.ClassificationMethod;
+                    }
+                    break;
+                case SymbolKind.Alias:
+                    result = Constants.ClassificationTypeName;
+                    break;
+                case SymbolKind.NamedType:
+                    result = Constants.ClassificationTypeName;
+                    break;
+                default:
+                    return currentClass;
+            }
+
+            if (String.IsNullOrEmpty(currentClass))
+            {
+                return result;
+            }
+
+            return currentClass + " " + result;
+        }
+
+        private string GetClassAttribute(string rangeText, Classification.Range range, bool isLargeFile = false)
+        {
+            string classificationType = range.ClassificationType;
+
+            if (classificationType == null ||
+                classificationType == Constants.ClassificationPunctuation)
+            {
+                return null;
+            }
+
+            if (range.ClassificationType == Constants.ClassificationLiteral)
+            {
+                return classificationType;
+            }
+
+            if (range.ClassificationType != Constants.ClassificationIdentifier &&
+                range.ClassificationType != Constants.ClassificationTypeName &&
+                rangeText != "this" &&
+                rangeText != "base" &&
+                rangeText != "var" &&
+                rangeText != "New" &&
+                rangeText != "new" &&
+                rangeText != "[" &&
+                rangeText != "partial" &&
+                rangeText != "Partial")
+            {
+                return classificationType;
+            }
+
+            if (range.ClassificationType == Constants.ClassificationKeyword)
+            {
+                return classificationType;
+            }
+
+            var position = range.ClassifiedSpan.TextSpan.Start;
+            var token = Root.FindToken(position, findInsideTrivia: true);
+
+            var declaredSymbol = SemanticModel.GetDeclaredSymbol(token.Parent);
+            if (declaredSymbol is IParameterSymbol && rangeText == "this")
+            {
+                return classificationType;
+            }
+
+            if (declaredSymbol != null)
+            {
+                return ClassFromSymbol(declaredSymbol, classificationType);
+            }
+
+            var node = GetBindableParent(token);
+            if (token.ToString() == "[" &&
+                token.Parent is Microsoft.CodeAnalysis.CSharp.Syntax.BracketedArgumentListSyntax &&
+                token.Parent.Parent is Microsoft.CodeAnalysis.CSharp.Syntax.ElementAccessExpressionSyntax)
+            {
+                node = token.Parent.Parent;
+            }
+
+            if (node == null)
+            {
+                return classificationType;
+            }
+
+            var symbol = GetSymbol(node);
+            if (symbol == null)
+            {
+                return classificationType;
+            }
+
+            return ClassFromSymbol(symbol, classificationType);
+
+        }
 
         private HtmlElementInfo ProcessReference(Classification.Range range, SyntaxToken token, bool isLargeFile = false)
         {
