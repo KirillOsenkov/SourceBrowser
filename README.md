@@ -25,6 +25,8 @@ Now also available on NuGet:
  5. Pass /in:<path> to pass a file with a list of full paths to projects and solutions to include in the index
  6. Set SourceIndexServer project as startup and run/debug the website. It is pre-configured to run from \bin\Debug\HtmlGenerator\Index but you can customize in project properties -> Web -> Custom server.
 
+**Note:** Either Visual Studio 2015 or at least MSBuild Tools 2015 [http://www.microsoft.com/en-us/download/details.aspx?id=48159](http://www.microsoft.com/en-us/download/details.aspx?id=48159) are required for Source Browser to work (Source Browser uses Roslyn and Roslyn uses MSBuild 14.0 to read projects and solutions).
+
 ##Conceptual design
 
 At indexing time, C# and VB source code is analyzed using Roslyn and a lot of static hyperlinked HTML files are generated into the output directory. There is no database. The website is mostly static HTML where all the links, source code coloring etc. are precalculated at indexing time. All the hyperlinks are hardwired to be simple links bypassing the server. 
