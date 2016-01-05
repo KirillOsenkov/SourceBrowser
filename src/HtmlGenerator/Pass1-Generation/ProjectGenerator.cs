@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -111,12 +112,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Directory.CreateDirectory(ProjectDestinationFolder);
                 }
 
-                var documents = Project.Documents
-                    .Where(IncludeDocument)
-                    .OrderByDescending(GetDocumentSortOrder);
+                var documents = Project.Documents.Where(IncludeDocument).ToList();
 
-                var tasks = documents.Select(d => Task.Run(() => GenerateDocument(d))).ToArray();
-                await Task.WhenAll(tasks);
+                var generationTasks = Partitioner.Create(documents)
+                    .GetPartitions(Environment.ProcessorCount)
+                    .Select(partition =>
+                        Task.Run(async () =>
+                        {
+                            using (partition)
+                            {
+                                while (partition.MoveNext())
+                                {
+                                  await GenerateDocument(partition.Current);
+                                }
+                            }
+                        }));
+
+                await Task.WhenAll(generationTasks);
 
                 foreach (var document in documents)
                 {
@@ -164,16 +176,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var symbols = this.DeclaredSymbols.Keys.OfType<INamedTypeSymbol>()
                 .Select(s => new DeclaredSymbolInfo(s, this.AssemblyName));
             NamespaceExplorer.WriteNamespaceExplorer(this.AssemblyName, symbols, ProjectDestinationFolder);
-        }
-
-        private int GetDocumentSortOrder(Document document)
-        {
-            if (File.Exists(document.FilePath))
-            {
-                return (int)new FileInfo(document.FilePath).Length;
-            }
-
-            return 0;
         }
 
         private Task GenerateDocument(Document document)
