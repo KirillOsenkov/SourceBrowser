@@ -300,8 +300,28 @@ Don't use this page directly, pass #symbolId to get redirected.
         public static void GenerateResultsHtml(string solutionDestinationFolder)
         {
             var sb = new StringBuilder();
+
             sb.AppendLine(GetResultsHtmlPrefix());
             sb.AppendLine(GetResultsHtmlSuffix());
+            sb.AppendLine("<script>useSolutionExplorer = false;</script>");
+
+            File.WriteAllText(Path.Combine(solutionDestinationFolder, "results.html"), sb.ToString());
+        }
+
+        public static void GenerateResultsHtml(string solutionDestinationFolder, IEnumerable<string> assemblyList)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(GetResultsHtmlPrefix());
+
+            foreach (var assemblyName in assemblyList)
+            {
+                sb.AppendFormat(
+                  @"<a href=""/#{0},namespaces"" target=""_top""><div class=""resultItem""><div class=""resultLine"">{0}</div></div></a>", assemblyName);
+                sb.AppendLine();
+            }
+
+            sb.AppendLine(GetResultsHtmlSuffix());
+
             File.WriteAllText(Path.Combine(solutionDestinationFolder, "results.html"), sb.ToString());
         }
 

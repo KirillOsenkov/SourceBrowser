@@ -87,7 +87,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public void FinalizeProjects(Folder<Project> solutionExplorerRoot = null)
+        public void FinalizeProjects(bool emitAssemblyList, Folder<Project> solutionExplorerRoot = null)
         {
             SortProcessedAssemblies();
             WriteSolutionExplorer(solutionExplorerRoot);
@@ -97,7 +97,50 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             CreateReferencingProjectLists();
             WriteAggregateStats();
             DeployFilesToRoot(SolutionDestinationFolder);
-            Markup.GenerateResultsHtml(SolutionDestinationFolder);
+
+            if (emitAssemblyList)
+            {
+                var sorter = GetCustomRootSorter();
+                var assemblyNames = assemblyNameToProjectMap.Keys.ToList();
+                assemblyNames.Sort(sorter);
+
+                Markup.GenerateResultsHtml(SolutionDestinationFolder, assemblyNames);
+            }
+            else
+            {
+                Markup.GenerateResultsHtml(SolutionDestinationFolder);
+            }
+        }
+
+        private Comparison<string> GetCustomRootSorter()
+        {
+            var file = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "AssemblySortOrder.txt");
+            if (!File.Exists(file))
+            {
+                return (l, r) => StringComparer.OrdinalIgnoreCase.Compare(l, r);
+            }
+
+            var lines = File
+                .ReadAllLines(file)
+                .Select((assemblyName, index) => new KeyValuePair<string, int>(assemblyName, index + 1))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            return (l, r) =>
+            {
+                int index1, index2;
+                lines.TryGetValue(l, out index1);
+                lines.TryGetValue(r, out index2);
+                if (index1 == 0 || index2 == 0)
+                {
+                    return l.CompareTo(r);
+                }
+                else
+                {
+                    return index1 - index2;
+                }
+            };
         }
 
         public static void SortProcessedAssemblies()
