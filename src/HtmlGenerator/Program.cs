@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
@@ -20,6 +21,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var projects = new List<string>();
             var properties = new Dictionary<string, string>();
+            var emitAssemblyList = false;
 
             foreach (var arg in args)
             {
@@ -65,6 +67,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
                 }
 
+                if (arg == "/assemblylist")
+                {
+                    emitAssemblyList = true;
+                    continue;
+                }
+
                 try
                 {
                     AddProject(projects, arg);
@@ -98,7 +106,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             using (Disposable.Timing("Generating website"))
             {
                 IndexSolutions(projects, properties);
-                FinalizeProjects();
+                FinalizeProjects(emitAssemblyList);
             }
         }
 
@@ -129,7 +137,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void PrintUsage()
         {
-            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] [/in:<filecontaingprojectlist>]");
+            Console.WriteLine(@"Usage: HtmlGenerator "
+                + @"[/out:<outputdirectory>] "
+                + @"<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
+                + @"[/in:<filecontaingprojectlist>] "
+                + @"[/assemblylist]");
         }
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
@@ -171,7 +183,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static void FinalizeProjects()
+        private static void FinalizeProjects(bool emitAssemblyList)
         {
             GenerateLooseFilesProject(Constants.MSBuildFiles, Paths.SolutionDestinationFolder);
             GenerateLooseFilesProject(Constants.TypeScriptFiles, Paths.SolutionDestinationFolder);
@@ -180,7 +192,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 try
                 {
                     var solutionFinalizer = new SolutionFinalizer(Paths.SolutionDestinationFolder);
-                    solutionFinalizer.FinalizeProjects(mergedSolutionExplorerRoot);
+                    solutionFinalizer.FinalizeProjects(emitAssemblyList, mergedSolutionExplorerRoot);
                 }
                 catch (Exception ex)
                 {

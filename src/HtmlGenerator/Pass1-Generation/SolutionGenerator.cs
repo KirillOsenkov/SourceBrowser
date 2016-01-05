@@ -289,57 +289,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return currentBatch.Length < projectsToProcess.Length;
         }
 
-        public void GenerateResultsHtml(IEnumerable<string> assemblyList)
-        {
-            var sb = new StringBuilder();
-            var sorter = GetCustomRootSorter();
-            var assemblyNames = assemblyList.ToList();
-            assemblyNames.Sort(sorter);
-
-            sb.AppendLine(Markup.GetResultsHtmlPrefix());
-
-            //foreach (var assemblyName in assemblyNames)
-            //{
-            //    sb.AppendFormat(@"<a href=""/#{0},namespaces"" target=""_top""><div class=""resultItem""><div class=""resultLine"">{0}</div></div></a>", assemblyName);
-            //    sb.AppendLine();
-            //}
-
-            sb.AppendLine(Markup.GetResultsHtmlSuffix());
-
-            File.WriteAllText(Path.Combine(SolutionDestinationFolder, "results.html"), sb.ToString());
-        }
-
-        public Comparison<string> GetCustomRootSorter()
-        {
-            var file = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "AssemblySortOrder.txt");
-            if (!File.Exists(file))
-            {
-                return (l, r) => StringComparer.OrdinalIgnoreCase.Compare(l, r);
-            }
-
-            var lines = File
-                .ReadAllLines(file)
-                .Select((assemblyName, index) => new KeyValuePair<string, int>(assemblyName, index + 1))
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            return (l, r) =>
-            {
-                int index1, index2;
-                lines.TryGetValue(l, out index1);
-                lines.TryGetValue(r, out index2);
-                if (index1 == 0 || index2 == 0)
-                {
-                    return l.CompareTo(r);
-                }
-                else
-                {
-                    return index1 - index2;
-                }
-            };
-        }
-
         private void SetFieldValue(object instance, string fieldName, object value)
         {
             var type = instance.GetType();
