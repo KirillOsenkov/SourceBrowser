@@ -70,6 +70,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 if (arg == "/assemblylist")
                 {
                     emitAssemblyList = true;
+                    continue;
                 }
 
                 try
