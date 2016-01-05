@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -87,7 +88,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public void FinalizeProjects(Folder<Project> solutionExplorerRoot = null)
+        public void FinalizeProjects(bool emitAssemblyList, Folder<Project> solutionExplorerRoot = null)
         {
             SortProcessedAssemblies();
             WriteSolutionExplorer(solutionExplorerRoot);
@@ -96,8 +97,54 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             CreateProjectMap();
             CreateReferencingProjectLists();
             WriteAggregateStats();
-            DeployFilesToRoot(SolutionDestinationFolder);
-            Markup.GenerateResultsHtml(SolutionDestinationFolder);
+            DeployFilesToRoot(SolutionDestinationFolder, emitAssemblyList);
+
+            if (emitAssemblyList)
+            {
+                var assemblyNames = projects
+                  .Where(projectFinalizer => projectFinalizer.ProjectInfoLine != null)
+                  .Select(projectFinalizer => projectFinalizer.AssemblyId).ToList();
+
+                var sorter = GetCustomRootSorter();
+                assemblyNames.Sort(sorter);
+
+                Markup.GenerateResultsHtmlWithAssemblyList(SolutionDestinationFolder, assemblyNames);
+            }
+            else
+            {
+                Markup.GenerateResultsHtml(SolutionDestinationFolder);
+            }
+        }
+
+        private Comparison<string> GetCustomRootSorter()
+        {
+            var file = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "AssemblySortOrder.txt");
+            if (!File.Exists(file))
+            {
+                return (l, r) => StringComparer.OrdinalIgnoreCase.Compare(l, r);
+            }
+
+            var lines = File
+                .ReadAllLines(file)
+                .Select((assemblyName, index) => new KeyValuePair<string, int>(assemblyName, index + 1))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            return (l, r) =>
+            {
+                int index1, index2;
+                lines.TryGetValue(l, out index1);
+                lines.TryGetValue(r, out index2);
+                if (index1 == 0 || index2 == 0)
+                {
+                    return l.CompareTo(r);
+                }
+                else
+                {
+                    return index1 - index2;
+                }
+            };
         }
 
         public static void SortProcessedAssemblies()
@@ -247,7 +294,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 });
         }
 
-        private void DeployFilesToRoot(string destinationFolder)
+        private void DeployFilesToRoot(string destinationFolder, bool emitAssemblyList)
         {
             Markup.WriteReferencesNotFoundFile(destinationFolder);
 
@@ -264,6 +311,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             FileUtilities.CopyDirectory(sourcePath, destinationFolder);
 
             StampOverviewHtmlWithDate(destinationFolder);
+            if (emitAssemblyList) ToggleSolutionExplorerOff(destinationFolder);
 
             DeployBin(basePath, destinationFolder);
         }
@@ -281,8 +329,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string StampOverviewHtmlText(string text)
         {
-            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d"));
+            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
             return text;
+        }
+
+        private void ToggleSolutionExplorerOff(string destinationFolder)
+        {
+            var scriptsJs = Path.Combine(destinationFolder, "scripts.js");
+            if (File.Exists(scriptsJs))
+            {
+              var text = File.ReadAllText(scriptsJs);
+              text = text.Replace("/*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/", "false");
+              File.WriteAllText(scriptsJs, text);
+            }
         }
 
         private void DeployBin(string sourcePath, string destinationFolder)

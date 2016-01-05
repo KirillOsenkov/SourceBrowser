@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             sb.AppendLine("Declared&nbsp;symbols:&nbsp;" + this.DeclaredSymbols.Count.WithThousandSeparators() + "<br>");
             sb.AppendLine("Declared&nbsp;types:&nbsp;" + namedTypes.Count().WithThousandSeparators() + "<br>");
             sb.AppendLine("Public&nbsp;types:&nbsp;" + namedTypes.Where(t => t.DeclaredAccessibility == Accessibility.Public).Count().WithThousandSeparators() + "<br>");
-            sb.AppendLine("Indexed&nbsp;on:&nbsp;" + DateTime.Now.ToString("MMMM dd"));
+            sb.AppendLine("Indexed&nbsp;on:&nbsp;" + DateTime.Now.ToString("MMMM dd", CultureInfo.InvariantCulture));
 
             sb.AppendLine("</p>");
         }

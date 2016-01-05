@@ -392,7 +392,7 @@
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
           <servers defaultServer="IndexOutput">
-            <server name="IndexOutput" exePath="%ProgramFiles%\IIS Express\IISExpress.exe" cmdArgs="/port:58327 /path:{solutiondir}\bin\Debug\HtmlGenerator\Index /clr:4.0 /systray:true /ntlm" url="http://localhost:58327/" workingDir="{solutiondir}\bin\Debug\HtmlGenerator\Index" />
+            <server name="IndexOutput" exePath="%ProgramFiles%\IIS Express\IISExpress.exe" cmdArgs="/port:58327 /path:{solutiondir}\bin\Debug\HtmlGenerator\Index /clr:4.0 /systray:true /ntlm" url="http://localhost:58327/" workingDir="{solutiondir}\bin\Debug\HtmlGenerator" />
           </servers>
         </WebProjectProperties>
       </FlavorProperties>
