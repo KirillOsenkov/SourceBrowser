@@ -101,8 +101,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             if (emitAssemblyList)
             {
+                var assemblyNames = projects
+                  .Where(projectFinalizer => projectFinalizer.ProjectInfoLine != null)
+                  .Select(projectFinalizer => projectFinalizer.AssemblyId).ToList();
+
                 var sorter = GetCustomRootSorter();
-                var assemblyNames = assemblyNameToProjectMap.Keys.ToList();
                 assemblyNames.Sort(sorter);
 
                 Markup.GenerateResultsHtmlWithAssemblyList(SolutionDestinationFolder, assemblyNames);

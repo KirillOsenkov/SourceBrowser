@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -111,12 +112,44 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Directory.CreateDirectory(ProjectDestinationFolder);
                 }
 
+                var processorCount = Environment.ProcessorCount;
                 var documents = Project.Documents
                     .Where(IncludeDocument)
-                    .OrderByDescending(GetDocumentSortOrder);
+                    //.OrderByDescending(GetDocumentSortOrder)
+                    ;
 
-                var tasks = documents.Select(d => Task.Run(() => GenerateDocument(d))).ToArray();
-                await Task.WhenAll(tasks);
+
+              var tasks = documents
+                .Select((doc, index) => new {Worker = index%processorCount, Document = doc})
+                .GroupBy(x => x.Worker, x => x.Document)
+                .Select(docs => Task.Run<int>(async () =>
+                {
+                  foreach (var doc in docs)
+                  {
+                    await GenerateDocument(doc);
+                  }
+
+                  return 1;
+                }))
+                .ToList();
+
+              await Task.WhenAll(tasks);
+
+
+                //Partitioner.Create<Document>(documents).
+
+        //Task
+
+        //documents.
+
+
+        foreach (var document in documents)
+                {
+                    await GenerateDocument(document);
+                }
+
+                //var tasks = documents.Select(d => Task.Run(() => GenerateDocument(d))).ToArray();
+                //await Task.WhenAll(tasks);
 
                 foreach (var document in documents)
                 {
