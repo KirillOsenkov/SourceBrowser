@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -96,7 +97,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             CreateProjectMap();
             CreateReferencingProjectLists();
             WriteAggregateStats();
-            DeployFilesToRoot(SolutionDestinationFolder);
+            DeployFilesToRoot(SolutionDestinationFolder, emitAssemblyList);
 
             if (emitAssemblyList)
             {
@@ -104,7 +105,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var assemblyNames = assemblyNameToProjectMap.Keys.ToList();
                 assemblyNames.Sort(sorter);
 
-                Markup.GenerateResultsHtml(SolutionDestinationFolder, assemblyNames);
+                Markup.GenerateResultsHtmlWithAssemblyList(SolutionDestinationFolder, assemblyNames);
             }
             else
             {
@@ -290,7 +291,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 });
         }
 
-        private void DeployFilesToRoot(string destinationFolder)
+        private void DeployFilesToRoot(string destinationFolder, bool emitAssemblyList)
         {
             Markup.WriteReferencesNotFoundFile(destinationFolder);
 
@@ -307,6 +308,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             FileUtilities.CopyDirectory(sourcePath, destinationFolder);
 
             StampOverviewHtmlWithDate(destinationFolder);
+            if (emitAssemblyList) ToggleSolutionExplorerOff(destinationFolder);
 
             DeployBin(basePath, destinationFolder);
         }
@@ -324,8 +326,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string StampOverviewHtmlText(string text)
         {
-            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d"));
+            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
             return text;
+        }
+
+        private void ToggleSolutionExplorerOff(string destinationFolder)
+        {
+            var scriptsJs = Path.Combine(destinationFolder, "scripts.js");
+            if (File.Exists(scriptsJs))
+            {
+              var text = File.ReadAllText(scriptsJs);
+              text = text.Replace("/*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/", "false");
+              File.WriteAllText(scriptsJs, text);
+            }
         }
 
         private void DeployBin(string sourcePath, string destinationFolder)

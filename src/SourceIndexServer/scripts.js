@@ -1,6 +1,6 @@
 ﻿var currentSelection = null;
 var currentResult = null;
-var useSolutionExplorer = true;
+var useSolutionExplorer = /*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/;
 var anchorSplitChar = ",";
 
 var externalUrlMap = [

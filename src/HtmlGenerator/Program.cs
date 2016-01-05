@@ -136,7 +136,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void PrintUsage()
         {
-            Console.WriteLine(@"Usage: HtmlGenerator [/out:<outputdirectory>] <pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] [/in:<filecontaingprojectlist>]");
+            Console.WriteLine(@"Usage: HtmlGenerator "
+                + @"[/out:<outputdirectory>] "
+                + @"<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
+                + @"[/in:<filecontaingprojectlist>] "
+                + @"[/assemblylist]");
         }
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();

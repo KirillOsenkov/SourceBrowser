@@ -302,15 +302,15 @@ Don't use this page directly, pass #symbolId to get redirected.
             var sb = new StringBuilder();
 
             sb.AppendLine(GetResultsHtmlPrefix());
-            sb.AppendLine(GetResultsHtmlSuffix());
-            sb.AppendLine("<script>useSolutionExplorer = false;</script>");
+            sb.AppendLine(GetResultsHtmlSuffix(emitSolutionBrowserLink: false));
 
             File.WriteAllText(Path.Combine(solutionDestinationFolder, "results.html"), sb.ToString());
         }
 
-        public static void GenerateResultsHtml(string solutionDestinationFolder, IEnumerable<string> assemblyList)
+        public static void GenerateResultsHtmlWithAssemblyList(string solutionDestinationFolder, IEnumerable<string> assemblyList)
         {
             var sb = new StringBuilder();
+
             sb.AppendLine(GetResultsHtmlPrefix());
 
             foreach (var assemblyName in assemblyList)
@@ -320,7 +320,7 @@ Don't use this page directly, pass #symbolId to get redirected.
                 sb.AppendLine();
             }
 
-            sb.AppendLine(GetResultsHtmlSuffix());
+            sb.AppendLine(GetResultsHtmlSuffix(emitSolutionBrowserLink: true));
 
             File.WriteAllText(Path.Combine(solutionDestinationFolder, "results.html"), sb.ToString());
         }
@@ -340,9 +340,13 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
 ";
         }
 
-        public static string GetResultsHtmlSuffix()
+        public static string GetResultsHtmlSuffix(bool emitSolutionBrowserLink)
         {
-            return @"</div></div></body></html>";
+            var solutionExplorerLink = emitSolutionBrowserLink
+                ? @"<div class=""note"">Try also browsing the <a href=""solutionexplorer.html"" class=""blueLink"">solution explorer</a>.</div>"
+                : null;
+
+            return @"</div></div>" + solutionExplorerLink + @"</body></html>";
         }
 
         private static string partialTypeDisambiguationFileTemplate = @"<!DOCTYPE html>
