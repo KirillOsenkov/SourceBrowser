@@ -261,7 +261,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             foreach (var path in this.Paths)
             {
-                if (symbol.ProjectFilePath.IndexOf(path, StringComparison.OrdinalIgnoreCase) == -1)
+                if (symbol.ProjectFilePath == null || symbol.ProjectFilePath.IndexOf(path, StringComparison.OrdinalIgnoreCase) == -1)
                 {
                     return false;
                 }
