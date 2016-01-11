@@ -19,7 +19,7 @@ Now also available on NuGet:
 
 ##In Visual Studio 2015:
  1. Open SourceBrowser.sln.
- 2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln
+ 2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln (you may need to unload the SourceIndexServer project if you see an error message that IIS can't serve from bin\Debug\HtmlGenerator\Index). 
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. Pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to. This path will be used in step 6 as your "physicalPath".
  5. Pass /in:<path> to pass a file with a list of full paths to projects and solutions to include in the index
