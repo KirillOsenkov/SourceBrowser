@@ -118,6 +118,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         /// <returns>..\..\A\B\1.txt</returns>
         public static string MakeRelativeToFolder(string filePath, string relativeToPath)
         {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+
+            if (string.IsNullOrEmpty(relativeToPath))
+            {
+                throw new ArgumentNullException(nameof(relativeToPath));
+            }
+
+            // the file is on a different drive
+            if (filePath[0] != relativeToPath[0])
+            {
+                // better than crashing
+                return Path.GetFileName(filePath);
+            }
+
             if (relativeToPath.EndsWith("\\"))
             {
                 relativeToPath = relativeToPath.TrimEnd('\\');
