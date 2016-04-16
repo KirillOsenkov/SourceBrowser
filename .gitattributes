@@ -2,3 +2,4 @@
 # Don't mess with my line endings.
 ###############################################################################
 * -text
+src/HtmlGenerator/TypeScriptSupport/lib.d.ts linguist-vendored
