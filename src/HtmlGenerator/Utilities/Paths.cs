@@ -167,7 +167,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 .Select(SanitizeFolder)
                 .ToArray());
 
-            result = Path.Combine(result, Path.GetFileName(document.FilePath));
+            string fileName;
+            if (document.FilePath != null)
+            {
+                fileName = Path.GetFileName(document.FilePath);
+            }
+            else
+            {
+                fileName = document.Name;
+            }
+
+            result = Path.Combine(result, fileName);
 
             return result;
         }

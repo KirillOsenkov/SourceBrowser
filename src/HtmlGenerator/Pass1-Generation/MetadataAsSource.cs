@@ -137,9 +137,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         }
                     }
 
+                    const string assemblyAttributesFileName = "AssemblyAttributes.cs";
                     project = project.AddDocument(
-                        "AssemblyAttributes.cs",
-                        assemblyAttributesFileText).Project;
+                        assemblyAttributesFileName,
+                        assemblyAttributesFileText,
+                        filePath: assemblyAttributesFileName).Project;
 
                     solution = project.Solution;
                     return solution;
@@ -215,7 +217,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 index++;
             }
 
-            project = project.AddDocument(fileName, text, folders).Project;
+            project = project.AddDocument(fileName, text, folders, fileName).Project;
             return project;
         }
 
