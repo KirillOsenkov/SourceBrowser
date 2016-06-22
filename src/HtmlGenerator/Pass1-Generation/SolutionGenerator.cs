@@ -225,7 +225,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     var document = project.AddDocument(
                         newAssemblyAttributesDocumentName,
-                        assemblyAttributesFileText);
+                        assemblyAttributesFileText,
+                        filePath: newAssemblyAttributesDocumentName);
                     solution = document.Project.Solution;
                 }
             }
