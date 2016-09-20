@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
@@ -88,7 +89,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public void FinalizeProjects(bool emitAssemblyList, Folder<Project> solutionExplorerRoot = null)
+        public void FinalizeProjects(bool emitAssemblyList, Federation federfation, Folder<Project> solutionExplorerRoot = null)
         {
             SortProcessedAssemblies();
             WriteSolutionExplorer(solutionExplorerRoot);
@@ -97,7 +98,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             CreateProjectMap();
             CreateReferencingProjectLists();
             WriteAggregateStats();
-            DeployFilesToRoot(SolutionDestinationFolder, emitAssemblyList);
+            DeployFilesToRoot(SolutionDestinationFolder, emitAssemblyList, federfation);
 
             if (emitAssemblyList)
             {
@@ -294,7 +295,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 });
         }
 
-        private void DeployFilesToRoot(string destinationFolder, bool emitAssemblyList)
+        private void DeployFilesToRoot(string destinationFolder, bool emitAssemblyList, Federation federation)
         {
             Markup.WriteReferencesNotFoundFile(destinationFolder);
 
@@ -312,6 +313,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             StampOverviewHtmlWithDate(destinationFolder);
             if (emitAssemblyList) ToggleSolutionExplorerOff(destinationFolder);
+            SetExternalUrlMap(destinationFolder, federation);
 
             DeployBin(basePath, destinationFolder);
         }
@@ -341,6 +343,30 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
               var text = File.ReadAllText(scriptsJs);
               text = text.Replace("/*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/", "false");
               File.WriteAllText(scriptsJs, text);
+            }
+        }
+
+        private void SetExternalUrlMap(string destinationFolder, Federation federation)
+        {
+            var scriptsJs = Path.Combine(destinationFolder, "scripts.js");
+            if (File.Exists(scriptsJs))
+            {
+                var sb = new StringBuilder();
+                foreach (var server in federation.GetServers())
+                {
+                    if (sb.Length > 0)
+                        sb.Append(",");
+                    sb.Append("\"");
+                    sb.Append(server);
+                    sb.Append("\"");
+                }
+
+                if (sb.Length > 0)
+                {
+                    var text = File.ReadAllText(scriptsJs);
+                    text = Regex.Replace(text, @"/\*EXTERNAL_URL_MAP\*/.*/\*EXTERNAL_URL_MAP\*/", sb.ToString());
+                    File.WriteAllText(scriptsJs, text);
+                }
             }
         }
 
