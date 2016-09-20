@@ -4,8 +4,7 @@ var useSolutionExplorer = /*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/
 var anchorSplitChar = ",";
 
 var externalUrlMap = [
-    "http://referencesource.microsoft.com/",
-    "http://source.roslyn.io/"
+    /*EXTERNAL_URL_MAP*/"http://referencesource.microsoft.com/","http://source.roslyn.io/"/*EXTERNAL_URL_MAP*/
 ];
 
 var supportedFileExtensions = [

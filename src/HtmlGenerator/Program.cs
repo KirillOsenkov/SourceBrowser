@@ -22,12 +22,22 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var projects = new List<string>();
             var properties = new Dictionary<string, string>();
             var emitAssemblyList = false;
+            var force = false;
+            var noBuiltInFederations = false;
+            var offlineFederations = new Dictionary<string, string>();
+            var federations = new HashSet<string>();
 
             foreach (var arg in args)
             {
                 if (arg.StartsWith("/out:"))
                 {
                     Paths.SolutionDestinationFolder = Path.GetFullPath(arg.Substring("/out:".Length).StripQuotes());
+                    continue;
+                }
+
+                if (arg == "/force")
+                {
+                    force = true;
                     continue;
                 }
 
@@ -73,6 +83,33 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
+                if (arg == "/nobuiltinfederations")
+                {
+                    noBuiltInFederations = true;
+                    Log.Message("Disabling built-in federations.");
+                    continue;
+                }
+
+                if (arg.StartsWith("/federation:"))
+                {
+                    string server = arg.Substring("/federation:".Length);
+                    Log.Message($"Adding federation '{server}'.");
+                    federations.Add(server);
+                }
+
+                if (arg.StartsWith("/offlinefederation:"))
+                {
+                    var match = Regex.Match(arg, "/offlinefederation:(?<server>[^=]+)=(?<file>.+)");
+                    if (match.Success)
+                    {
+                        var server = match.Groups["server"].Value;
+                        var assemblyListFileName = match.Groups["file"].Value;
+                        offlineFederations[server] = assemblyListFileName;
+                        Log.Message($"Adding federation '{server}' (offline from '{assemblyListFileName}').");
+                        continue;
+                    }
+                }
+
                 try
                 {
                     AddProject(projects, arg);
@@ -101,12 +138,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
 
             // Warning, this will delete and recreate your destination folder
-            Paths.PrepareDestinationFolder();
+            Paths.PrepareDestinationFolder(force);
 
             using (Disposable.Timing("Generating website"))
             {
-                IndexSolutions(projects, properties);
-                FinalizeProjects(emitAssemblyList);
+                var federation = noBuiltInFederations ? new Federation(null) : new Federation();
+                foreach (var entry in offlineFederations)
+                {
+                    federation.AddFederation(entry.Key, entry.Value);
+                }
+
+                IndexSolutions(projects, properties, federation);
+                FinalizeProjects(emitAssemblyList, federation);
             }
         }
 
@@ -139,14 +182,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             Console.WriteLine(@"Usage: HtmlGenerator "
                 + @"[/out:<outputdirectory>] "
+                + @"[/force] "
                 + @"<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
                 + @"[/in:<filecontaingprojectlist>] "
+                + @"[/nobuiltinfederations] "
+                + @"[/offlinefederation:server=assemblyListFile] "
                 + @"[/assemblylist]");
         }
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
 
-        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties)
+        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties, Federation federation)
         {
             var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -161,7 +207,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
-            var federation = new Federation();
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Generating " + path))
@@ -183,7 +228,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static void FinalizeProjects(bool emitAssemblyList)
+        private static void FinalizeProjects(bool emitAssemblyList, Federation federation)
         {
             GenerateLooseFilesProject(Constants.MSBuildFiles, Paths.SolutionDestinationFolder);
             GenerateLooseFilesProject(Constants.TypeScriptFiles, Paths.SolutionDestinationFolder);
@@ -192,7 +237,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 try
                 {
                     var solutionFinalizer = new SolutionFinalizer(Paths.SolutionDestinationFolder);
-                    solutionFinalizer.FinalizeProjects(emitAssemblyList, mergedSolutionExplorerRoot);
+                    solutionFinalizer.FinalizeProjects(emitAssemblyList, federation, mergedSolutionExplorerRoot);
                 }
                 catch (Exception ex)
                 {
