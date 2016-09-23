@@ -8,20 +8,35 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class Federation
     {
-        public static IEnumerable<string> FederatedIndexUrls = new[] { @"http://referencesource.microsoft.com", @"http://source.roslyn.io" };
+        public static IEnumerable<string> FederatedIndexUrls = new[]
+        {
+            @"http://referencesource.microsoft.com",
+            @"http://source.roslyn.io"
+        };
 
         private class Info
         {
             public Info(string server, HashSet<string> assemblies)
             {
-                if (server == null) throw new ArgumentNullException(nameof(server));
-                if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+                if (server == null)
+                {
+                    throw new ArgumentNullException(nameof(server));
+                }
+
+                if (assemblies == null)
+                {
+                    throw new ArgumentNullException(nameof(assemblies));
+                }
 
                 if (!server.StartsWith("http://"))
+                {
                     server = "http://" + server;
+                }
 
                 if (!server.EndsWith("/"))
+                {
                     server += "/";
+                }
 
                 Server = server;
                 Assemblies = assemblies;
@@ -66,7 +81,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public void AddFederation(string server, string assemblyListFile)
         {
-            federations.Add(new Info(server, GetAssemblyNames(File.ReadAllText(assemblyListFile))));
+            var fileText = File.ReadAllText(assemblyListFile);
+            var assemblyNames = GetAssemblyNames(fileText);
+            var info = new Info(server, assemblyNames);
+            federations.Add(info);
         }
 
         private HashSet<string> GetAssemblyNames(string assemblyList)
