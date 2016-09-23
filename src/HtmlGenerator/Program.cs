@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
@@ -142,7 +141,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             using (Disposable.Timing("Generating website"))
             {
-                var federation = noBuiltInFederations ? new Federation(null) : new Federation();
+                var federation = noBuiltInFederations ? new Federation(null) : new Federation(federations);
                 foreach (var entry in offlineFederations)
                 {
                     federation.AddFederation(entry.Key, entry.Value);
