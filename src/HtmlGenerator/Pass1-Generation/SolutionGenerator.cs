@@ -92,7 +92,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             propertiesOpt = propertiesOpt.Add("CheckForSystemRuntimeDependency", "true");
             propertiesOpt = propertiesOpt.Add("VisualStudioVersion", "14.0");
 
-            return MSBuildWorkspace.Create(properties: propertiesOpt, hostServices: WorkspaceHacks.Pack);
+            var w = MSBuildWorkspace.Create(properties: propertiesOpt, hostServices: WorkspaceHacks.Pack);
+            w.LoadMetadataForReferencedProjects = true;
+            return w;
         }
 
         private static Solution CreateSolution(
