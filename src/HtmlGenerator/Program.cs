@@ -94,6 +94,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     string server = arg.Substring("/federation:".Length);
                     Log.Message($"Adding federation '{server}'.");
                     federations.Add(server);
+                    continue;
                 }
 
                 if (arg.StartsWith("/offlinefederation:"))
@@ -107,6 +108,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         Log.Message($"Adding federation '{server}' (offline from '{assemblyListFileName}').");
                         continue;
                     }
+                    
+                    continue;
                 }
 
                 try
