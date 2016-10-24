@@ -91,6 +91,7 @@
     <Compile Include="ITextVisitor.cs" />
     <Compile Include="PluginAggregator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SymbolVisitorWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -213,7 +213,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var s = SemanticModel.GetDeclaredSymbol(token.Parent);
                 if (s != null)
                 {
-                    maybeLog(string.Join(string.Empty, projectGenerator.PluginSymbolVisitors.Select(sv => sv.Visit(s, context))));
+                    maybeLog(string.Join(string.Empty, projectGenerator.PluginSymbolVisitors.Select(sv => new MEF.SymbolVisitorWrapper(sv, context)).Select(s.Accept)));
                 }
             }
             if (lines.Any())
