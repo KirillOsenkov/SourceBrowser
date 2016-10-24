@@ -20,6 +20,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public string NetworkShare { get; private set; }
         private Federation Federation { get; set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        public MEF.PluginAggregator PluginAggregator;
 
         /// <summary>
         /// List of all assembly names included in the index, from all solutions
@@ -42,6 +43,25 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.ServerPath = serverPath;
             this.solution = CreateSolution(solutionFilePath, properties);
             this.Federation = federation ?? new Federation();
+            SetupPluginAggregator();
+        }
+
+        private void SetupPluginAggregator()
+        {
+            var settings = System.Configuration.ConfigurationManager.AppSettings;
+            var configs = settings
+                .AllKeys
+                .Where(k => k.Contains(':'))                            //Ignore keys that don't have a colon to indicate which plugin they go to
+                .Select(k => Tuple.Create(k.Split(':'), settings[k]))   //Get the data -- split the key to get the plugin name and setting name, look up the key to get the value
+                .GroupBy(t => t.Item1[0])                               //Group the settings based on which plugin they're for
+                .ToDictionary(
+                    group => group.Key,                                 //Index the outer dictionary based on plugin
+                    group => group.ToDictionary(
+                        t => t.Item1[1],                                //Index the inner dictionary based on setting name
+                        t => t.Item2                                    //The actual value of the setting
+                    )
+                );
+            PluginAggregator = new MEF.PluginAggregator(configs, new Utilities.PluginLogger());
         }
 
         public SolutionGenerator(
@@ -62,6 +82,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.ServerPath = serverPath;
             this.NetworkShare = networkShare;
             string projectSourceFolder = Path.GetDirectoryName(projectFilePath);
+            SetupPluginAggregator();
 
             this.solution = CreateSolution(
                 commandLineArguments,

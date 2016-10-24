@@ -314,7 +314,8 @@ function rewriteExternalLinks() {
     var length = links.length;
     for (var i = 0; i < length; i++) {
         var link = links[i];
-        rewriteExternalLink(link);
+        if( link.getAttribute("href").startsWith("http") )
+            rewriteExternalLink(link);
     }
 }
 
