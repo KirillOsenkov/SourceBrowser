@@ -9,6 +9,9 @@
   <PropertyGroup>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>..\..\bin\Debug\HtmlGenerator\</OutputPath>
+  </PropertyGroup>
   <Import Project="..\..\Common.props" />
   <ItemGroup>
     <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -97,6 +100,7 @@
       <HintPath>..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting">
@@ -191,6 +195,7 @@
     <Compile Include="Utilities\MetadataReading.cs" />
     <Compile Include="Utilities\MSBuildExpressionParser.cs" />
     <Compile Include="Utilities\Paths.cs" />
+    <Compile Include="Utilities\PluginLogger.cs" />
     <Compile Include="Utilities\Reference.cs" />
     <Compile Include="Utilities\Serialization.cs" />
     <Compile Include="Utilities\SymbolIdService.cs" />
@@ -200,6 +205,10 @@
     <Compile Include="Utilities\XmlDocumentationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MEF\MEF.csproj">
+      <Project>{1acb1d72-d9fe-45db-8d47-fa2840724fe3}</Project>
+      <Name>MEF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BuildLogParser\BuildLogParser.csproj">
       <Project>{57002f26-8d15-4cf7-a53d-61ae8cc5e836}</Project>
       <Name>BuildLogAnalyzer</Name>

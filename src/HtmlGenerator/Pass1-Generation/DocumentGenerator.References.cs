@@ -57,7 +57,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return currentClass + " " + result;
         }
 
-        private string GetClassAttribute(string rangeText, Classification.Range range, bool isLargeFile = false)
+        private string GetClassAttribute(string rangeText, Classification.Range range)
         {
             string classificationType = range.ClassificationType;
 

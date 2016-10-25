@@ -506,7 +506,7 @@ a i {
     border: 0;
 }
 
-#ln {
+#ln, #glyph {
     margin-left: 16px;
     margin-right: 24px;
     margin-top: 0;

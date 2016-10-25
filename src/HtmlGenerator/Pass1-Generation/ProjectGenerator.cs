@@ -26,6 +26,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public string ProjectSourcePath { get; set; }
         public string ProjectFilePath { get; private set; }
         public List<string> OtherFiles { get; set; }
+        public IEnumerable<MEF.ISymbolVisitor> PluginSymbolVisitors { get; private set; }
+        public IEnumerable<MEF.ITextVisitor> PluginTextVisitors { get; private set; }
 
         public ProjectGenerator(SolutionGenerator solutionGenerator, Project project) : this()
         {
@@ -36,6 +38,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.BaseMembers = new Dictionary<ISymbol, ISymbol>();
             this.ImplementedInterfaceMembers = new MultiDictionary<ISymbol, ISymbol>();
             this.assemblyAttributesFileName = MetadataAsSource.GeneratedAssemblyAttributesFileName + (project.Language == LanguageNames.CSharp ? ".cs" : ".vb");
+            PluginSymbolVisitors = SolutionGenerator.PluginAggregator.ManufactureSymbolVisitors(project).ToArray();
+            PluginTextVisitors = SolutionGenerator.PluginAggregator.ManufactureTextVisitors(project).ToArray();
         }
 
         /// <summary>
