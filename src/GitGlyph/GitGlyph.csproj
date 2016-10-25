@@ -101,7 +101,7 @@
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MEF\MEF.csproj">
+    <ProjectReference Include="..\MEF\MEF.csproj">
       <Project>{1acb1d72-d9fe-45db-8d47-fa2840724fe3}</Project>
       <Name>MEF</Name>
     </ProjectReference>

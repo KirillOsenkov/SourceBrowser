@@ -10,32 +10,34 @@ namespace MEF
 {
     public class PluginAggregator : IReadOnlyDictionary<string, ISourceBrowserPlugin>, IDisposable
     {
-        private CompositionContainer _container;
+        private CompositionContainer container;
 
         //private static Lazy<PluginAggregator> _instance = new Lazy<PluginAggregator>(() => new PluginAggregator());
         //public static PluginAggregator Instance { get { return _instance.Value; } }
 
         [ImportMany]
 #pragma warning disable CS0649
-        IEnumerable<Lazy<ISourceBrowserPlugin, ISourceBrowserPluginMetadata>> _plugins;
+        IEnumerable<Lazy<ISourceBrowserPlugin, ISourceBrowserPluginMetadata>> plugins;
 #pragma warning restore CS0649
         private Dictionary<string, ISourceBrowserPlugin> Plugins;
 
         public PluginAggregator(Dictionary<string, Dictionary<string, string>> pluginConfigurations, ILog logger)
         {
             //Create the CompositionContainer with the parts in the catalog
-            _container = new CompositionContainer(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
+            container = new CompositionContainer(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
 
             //Fill the imports of this object
-            _container.ComposeParts(this);
+            container.ComposeParts(this);
 
-            Plugins = _plugins.ToDictionary(l => l.Metadata.Name, l => l.Value);
+            Plugins = plugins.ToDictionary(l => l.Metadata.Name, l => l.Value);
 
             foreach (var pair in Plugins)
             {
                 Dictionary<string, string> config;
                 if (!pluginConfigurations.TryGetValue(pair.Key, out config))
+                {
                     config = new Dictionary<string, string>();
+                }
                 pair.Value.Init(config, logger);
             }
         }
@@ -104,8 +106,8 @@ namespace MEF
 
         public void Dispose()
         {
-            if (_container != null)
-                _container.Dispose();
+            if (container != null)
+                container.Dispose();
         }
     }
 }

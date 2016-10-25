@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
 namespace MEF
 {
     public class SymbolVisitorWrapper : SymbolVisitor<string>
     {
-        private ISymbolVisitor Wrapped;
-        private IReadOnlyDictionary<string, string> Context;
+        private ISymbolVisitor Wrapped { get; set; }
+        private IReadOnlyDictionary<string, string> Context { get; set; }
 
         public SymbolVisitorWrapper(ISymbolVisitor v, IReadOnlyDictionary<string, string> context)
         {

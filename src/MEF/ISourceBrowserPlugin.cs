@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
 
 namespace MEF
 {
     public interface ISourceBrowserPlugin
     {
-        void Init(Dictionary<string, string> Configuration, ILog logger);
+        void Init(Dictionary<string, string> configuration, ILog logger);
         IEnumerable<ISymbolVisitor> ManufactureSymbolVisitors(string projectPath);
         IEnumerable<ITextVisitor> ManufactureTextVisitors(string projectPath);
     }

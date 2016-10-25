@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using LibGit2Sharp;
 
 namespace GitGlyph
 {
     public class GitBlameVisitor : MEF.ITextVisitor
     {
-        private Repository Repository;
-        private string Root;
-        private MEF.ILog Logger;
+        private Repository Repository { get; set; }
+        private string Root { get; set; }
+        private MEF.ILog Logger { get; set; }
 
         public GitBlameVisitor(Repository r, MEF.ILog logger)
         {
@@ -71,11 +70,15 @@ namespace GitGlyph
 
             return result.ToString();
         }
-        private Dictionary<string, IEnumerable<BlameHunk>> Cache = new Dictionary<string, IEnumerable<BlameHunk>>();
+
+        /// <summary>
+        /// Cache used to memoize the GetBlame method.
+        /// </summary>
+        private Dictionary<string, IEnumerable<BlameHunk>> getBlameResultCache = new Dictionary<string, IEnumerable<BlameHunk>>();
         private IEnumerable<BlameHunk> GetBlame(string path)
         {
             IEnumerable<BlameHunk> result;
-            if (!Cache.TryGetValue(path, out result))
+            if (!getBlameResultCache.TryGetValue(path, out result))
             {
                 try
                 {
@@ -93,7 +96,7 @@ namespace GitGlyph
                     Logger.Error("Couldn't blame " + path, ex);
                     result = new BlameHunk[0];
                 }
-                Cache.Add(path, result);
+                getBlameResultCache.Add(path, result);
             }
             return result;
         }

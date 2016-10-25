@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MEF;
-using Microsoft.CodeAnalysis;
 using System.ComponentModel.Composition;
-using System.Linq;
 using LibGit2Sharp;
+using MEF;
 
 namespace GitGlyph
 {
@@ -12,17 +10,17 @@ namespace GitGlyph
     [ExportMetadata("Name", "Git")]
     public class GitSourceBrowserPlugin : ISourceBrowserPlugin, IDisposable
     {
-        private ILog Logger;
-        private List<Repository> RepositoriesToDispose;
+        private ILog Logger { get; set; }
+        private List<Repository> repositoriesToDispose;
 
         public GitSourceBrowserPlugin()
         {
-            RepositoriesToDispose = new List<Repository>();
+            repositoriesToDispose = new List<Repository>();
         }
 
         public void Dispose()
         {
-            foreach ( var r in RepositoriesToDispose )
+            foreach ( var r in repositoriesToDispose )
             {
                 r.Dispose();
             }
@@ -46,7 +44,7 @@ namespace GitGlyph
                 Logger.Warning("Cannot find git repo");
             } else {
                 Repository r = new Repository(path);
-                RepositoriesToDispose.Add(r);
+                repositoriesToDispose.Add(r);
                 yield return new GitBlameVisitor(r, Logger);
             }
         }
