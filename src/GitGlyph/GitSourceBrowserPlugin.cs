@@ -20,7 +20,7 @@ namespace GitGlyph
 
         public void Dispose()
         {
-            foreach ( var r in repositoriesToDispose )
+            foreach (var r in repositoriesToDispose)
             {
                 r.Dispose();
             }
@@ -39,10 +39,12 @@ namespace GitGlyph
         public IEnumerable<ITextVisitor> ManufactureTextVisitors(string projectPath)
         {
             var path = Repository.Discover(projectPath);
-            if ( path == null )
+            if (path == null)
             {
                 Logger.Warning("Cannot find git repo");
-            } else {
+            }
+            else
+            {
                 Repository r = new Repository(path);
                 repositoriesToDispose.Add(r);
                 yield return new GitBlameVisitor(r, Logger);

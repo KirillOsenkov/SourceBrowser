@@ -4,6 +4,6 @@ namespace MEF
 {
     public interface ITextVisitor
     {
-        string Visit(string text, IReadOnlyDictionary<string,string> context);
+        string Visit(string text, IReadOnlyDictionary<string, string> context);
     }
 }
