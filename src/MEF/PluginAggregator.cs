@@ -6,7 +6,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace MEF
+namespace Microsoft.SourceBrowser.MEF
 {
     public class PluginAggregator : IReadOnlyDictionary<string, ISourceBrowserPlugin>, IDisposable
     {

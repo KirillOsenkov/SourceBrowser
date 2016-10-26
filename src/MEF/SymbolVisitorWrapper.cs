@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace MEF
+namespace Microsoft.SourceBrowser.MEF
 {
     public class SymbolVisitorWrapper : SymbolVisitor<string>
     {

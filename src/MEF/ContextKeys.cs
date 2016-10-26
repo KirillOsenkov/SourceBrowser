@@ -1,4 +1,4 @@
-﻿namespace MEF
+﻿namespace Microsoft.SourceBrowser.MEF
 {
     public static class ContextKeys
     {
