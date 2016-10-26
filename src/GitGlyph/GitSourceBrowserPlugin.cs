@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using LibGit2Sharp;
-using MEF;
+using Microsoft.SourceBrowser.MEF;
 
 namespace GitGlyph
 {

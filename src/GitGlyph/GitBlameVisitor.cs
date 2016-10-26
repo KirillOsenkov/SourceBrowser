@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LibGit2Sharp;
+using Microsoft.SourceBrowser.MEF;
 
 namespace GitGlyph
 {
-    public class GitBlameVisitor : MEF.ITextVisitor
+    public class GitBlameVisitor : ITextVisitor
     {
         private Repository Repository { get; set; }
         private string Root { get; set; }
-        private MEF.ILog Logger { get; set; }
+        private ILog Logger { get; set; }
 
-        public GitBlameVisitor(Repository r, MEF.ILog logger)
+        public GitBlameVisitor(Repository r, ILog logger)
         {
             Repository = r;
             Logger = logger;
@@ -21,8 +22,8 @@ namespace GitGlyph
 
         public string Visit(string text, IReadOnlyDictionary<string, string> context)
         {
-            var path = System.IO.Path.GetFullPath(context[MEF.ContextKeys.FilePath]);
-            var blame = GetBlame(path).FirstOrDefault(bh => bh.FinalStartLineNumber.ToString() == context[MEF.ContextKeys.LineNumber]);
+            var path = System.IO.Path.GetFullPath(context[ContextKeys.FilePath]);
+            var blame = GetBlame(path).FirstOrDefault(bh => bh.FinalStartLineNumber.ToString() == context[ContextKeys.LineNumber]);
 
             if (blame != null)
             {
@@ -39,7 +40,7 @@ namespace GitGlyph
 
         private string FormatContext(IReadOnlyDictionary<string, string> context)
         {
-            return string.Format("File: {0}\nLine: {1}", MakeRelativeToRepository(context[MEF.ContextKeys.FilePath]), context[MEF.ContextKeys.LineNumber]);
+            return string.Format("File: {0}\nLine: {1}", MakeRelativeToRepository(context[ContextKeys.FilePath]), context[ContextKeys.LineNumber]);
         }
 
         private string ShortenObjectId(GitObject o)

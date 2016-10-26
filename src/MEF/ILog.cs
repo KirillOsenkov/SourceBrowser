@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MEF
+namespace Microsoft.SourceBrowser.MEF
 {
     public interface ILog
     {
