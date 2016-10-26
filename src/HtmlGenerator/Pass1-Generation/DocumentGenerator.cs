@@ -196,24 +196,48 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var pos = r.ClassifiedSpan.TextSpan.Start;
                 var token = Root.FindToken(pos, true);
                 var nextLineNumber = token.SyntaxTree.GetLineSpan(token.Span).StartLinePosition.Line + 1;
+                ISymbol symbol = null;
 
                 Dictionary<string, string> context = new Dictionary<string, string> {
                     { MEF.ContextKeys.FilePath, Document.FilePath },
                     { MEF.ContextKeys.LineNumber, lineNumber.ToString() }
                 };
 
+                Func<MEF.ITextVisitor, string> VisitText = v =>
+                {
+                    try
+                    {
+                        return v.Visit(Text.Lines[lineNumber - 1].ToString(), context);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write("Exception in text visitor: " + ex.Message);
+                        return null;
+                    }
+                };
+
+                Func<MEF.ISymbolVisitor, string> VisitSymbol = v =>
+                {
+                    try
+                    {
+                        return symbol.Accept(new MEF.SymbolVisitorWrapper(v, context));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write("Exception in symbol visitor: " + ex.Message);
+                        return null;
+                    }
+                };
+
                 if (nextLineNumber != lineNumber)
                 {
                     lineNumber = nextLineNumber;
-                    maybeLog(string.Join(string.Empty, projectGenerator.PluginTextVisitors.Select(tv => tv.Visit(
-                        Text.Lines[lineNumber].ToString(),
-                        context
-                    ))));
+                    maybeLog(string.Join(string.Empty, projectGenerator.PluginTextVisitors.Select(VisitText)));
                 }
-                var s = SemanticModel.GetDeclaredSymbol(token.Parent);
-                if (s != null)
+                symbol = SemanticModel.GetDeclaredSymbol(token.Parent);
+                if (symbol != null)
                 {
-                    maybeLog(string.Join(string.Empty, projectGenerator.PluginSymbolVisitors.Select(sv => new MEF.SymbolVisitorWrapper(sv, context)).Select(s.Accept)));
+                    maybeLog(string.Join(string.Empty, projectGenerator.PluginSymbolVisitors.Select(VisitSymbol)));
                 }
             }
             if (lines.Any())
