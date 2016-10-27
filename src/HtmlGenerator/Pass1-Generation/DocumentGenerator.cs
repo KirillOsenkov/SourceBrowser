@@ -178,6 +178,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var lines = new Dictionary<int, HashSet<string>>();
             int lineNumber = -1;
+            ISymbol symbol = null;
+            Dictionary<string, string> context = new Dictionary<string, string>
+            {
+                    { MEF.ContextKeys.FilePath, Document.FilePath },
+                    { MEF.ContextKeys.LineNumber, "-1" }
+            };
+
             Action<string> maybeLog = g =>
             {
                 if (!string.IsNullOrWhiteSpace(g))
@@ -191,53 +198,50 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     lineGlyphs.Add(g);
                 }
             };
+
+            Func<MEF.ITextVisitor, string> VisitText = v =>
+            {
+                try
+                {
+                    return v.Visit(Text.Lines[lineNumber - 1].ToString(), context);
+                }
+                catch (Exception ex)
+                {
+                    Log.Write("Exception in text visitor: " + ex.Message);
+                    return null;
+                }
+            };
+
+            Func<MEF.ISymbolVisitor, string> VisitSymbol = v =>
+            {
+                try
+                {
+                    return symbol.Accept(new MEF.SymbolVisitorWrapper(v, context));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write("Exception in symbol visitor: " + ex.Message);
+                    return null;
+                }
+            };
+
+
             foreach (var r in ranges)
             {
                 var pos = r.ClassifiedSpan.TextSpan.Start;
                 var token = Root.FindToken(pos, true);
                 var nextLineNumber = token.SyntaxTree.GetLineSpan(token.Span).StartLinePosition.Line + 1;
-                ISymbol symbol = null;
-
-                Dictionary<string, string> context = new Dictionary<string, string> {
-                    { MEF.ContextKeys.FilePath, Document.FilePath },
-                    { MEF.ContextKeys.LineNumber, lineNumber.ToString() }
-                };
-
-                Func<MEF.ITextVisitor, string> VisitText = v =>
-                {
-                    try
-                    {
-                        return v.Visit(Text.Lines[lineNumber - 1].ToString(), context);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write("Exception in text visitor: " + ex.Message);
-                        return null;
-                    }
-                };
-
-                Func<MEF.ISymbolVisitor, string> VisitSymbol = v =>
-                {
-                    try
-                    {
-                        return symbol.Accept(new MEF.SymbolVisitorWrapper(v, context));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write("Exception in symbol visitor: " + ex.Message);
-                        return null;
-                    }
-                };
 
                 if (nextLineNumber != lineNumber)
                 {
                     lineNumber = nextLineNumber;
-                    maybeLog(string.Join(string.Empty, projectGenerator.PluginTextVisitors.Select(VisitText)));
+                    context[MEF.ContextKeys.LineNumber] = lineNumber.ToString();
+                    maybeLog(string.Concat(projectGenerator.PluginTextVisitors.Select(VisitText)));
                 }
                 symbol = SemanticModel.GetDeclaredSymbol(token.Parent);
                 if (symbol != null)
                 {
-                    maybeLog(string.Join(string.Empty, projectGenerator.PluginSymbolVisitors.Select(VisitSymbol)));
+                    maybeLog(string.Concat(projectGenerator.PluginSymbolVisitors.Select(VisitSymbol)));
                 }
             }
             if (lines.Any())
