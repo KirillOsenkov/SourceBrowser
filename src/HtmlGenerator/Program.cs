@@ -25,12 +25,26 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var noBuiltInFederations = false;
             var offlineFederations = new Dictionary<string, string>();
             var federations = new HashSet<string>();
+            var serverPathMappings = new Dictionary<string, string>();
 
             foreach (var arg in args)
             {
                 if (arg.StartsWith("/out:"))
                 {
                     Paths.SolutionDestinationFolder = Path.GetFullPath(arg.Substring("/out:".Length).StripQuotes());
+                    continue;
+                }
+
+                if (arg.StartsWith("/serverPath:"))
+                {
+                    var mapping = arg.Substring("/serverPath:".Length).StripQuotes();
+                    var parts = mapping.Split('=');
+                    if (parts.Length != 2)
+                    {
+                        Log.Write($"Invalid Server Path: '{mapping}'", ConsoleColor.Red);
+                        continue;
+                    }
+                    serverPathMappings.Add(Path.GetFullPath(parts[0]), parts[1]);
                     continue;
                 }
 
@@ -150,7 +164,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     federation.AddFederation(entry.Key, entry.Value);
                 }
 
-                IndexSolutions(projects, properties, federation);
+                IndexSolutions(projects, properties, federation, serverPathMappings);
                 FinalizeProjects(emitAssemblyList, federation);
             }
         }
@@ -194,7 +208,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
 
-        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties, Federation federation)
+        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties, Federation federation, Dictionary<string, string> serverPathMappings)
         {
             var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -217,7 +231,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         path,
                         Paths.SolutionDestinationFolder,
                         properties: properties.ToImmutableDictionary(),
-                        federation: federation))
+                        federation: federation,
+                        serverPathMappings: serverPathMappings))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
                         solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
