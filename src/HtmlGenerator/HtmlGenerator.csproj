@@ -1288,4 +1288,7 @@
   <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
     <Exec Command="&quot;$(SolutionDir)\.nuget\NuGet.exe&quot; Pack Microsoft.SourceBrowser.nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
   </Target>
+  <Target Name="CreateIndexOutputDirectory" AfterTargets="CoreBuild" DependsOnTargets="CopyFilesToOutputDirectory">
+    <MakeDir Directories="$(OutDir)\Index" Condition="!Exists('$(OutDir)\Index')" />
+  </Target>
 </Project>
