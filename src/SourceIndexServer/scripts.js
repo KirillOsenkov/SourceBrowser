@@ -4,7 +4,7 @@ var useSolutionExplorer = /*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/
 var anchorSplitChar = ",";
 
 var externalUrlMap = [
-    /*EXTERNAL_URL_MAP*/"http://referencesource.microsoft.com/","http://source.roslyn.io/"/*EXTERNAL_URL_MAP*/
+    /*EXTERNAL_URL_MAP*/"http://referencesource.microsoft.com/", "http://source.roslyn.io/"/*EXTERNAL_URL_MAP*/
 ];
 
 var supportedFileExtensions = [
@@ -314,8 +314,9 @@ function rewriteExternalLinks() {
     var length = links.length;
     for (var i = 0; i < length; i++) {
         var link = links[i];
-        if( link.getAttribute("href").startsWith("http") )
+        if (startsWithIgnoreCase(link.getAttribute("href"), "http")) {
             rewriteExternalLink(link);
+        }
     }
 }
 
