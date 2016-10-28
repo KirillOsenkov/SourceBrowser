@@ -7,6 +7,10 @@ public static class Extensions
     public static void ExtensionMethod(this string s) { }
 }
 
+#if TESTDEFINE
+public class ThisShouldBeEnabled { }
+#endif
+
 class ArrayOfZeroLengthAllocationDetection
 {
     private const int SIZE = 0;
