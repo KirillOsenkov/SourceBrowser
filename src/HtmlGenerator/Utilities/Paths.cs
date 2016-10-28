@@ -93,7 +93,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
 
                 Log.Write("Deleting " + SolutionDestinationFolder);
-                Directory.Delete(SolutionDestinationFolder, recursive: true);
+                try
+                {
+                    Directory.Delete(SolutionDestinationFolder, recursive: true);
+                }
+                catch (Exception)
+                {
+                }
             }
 
             Directory.CreateDirectory(SolutionDestinationFolder);
