@@ -17,6 +17,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public string SolutionDestinationFolder { get; private set; }
         public string ProjectFilePath { get; private set; }
         public string ServerPath { get; set; }
+        public IReadOnlyDictionary<string, string> ServerPathMappings { get; }
         public string NetworkShare { get; private set; }
         private Federation Federation { get; set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -35,12 +36,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string solutionDestinationFolder,
             string serverPath = null,
             ImmutableDictionary<string, string> properties = null,
-            Federation federation = null)
+            Federation federation = null,
+            IReadOnlyDictionary<string, string> serverPathMappings = null)
         {
             this.SolutionSourceFolder = Path.GetDirectoryName(solutionFilePath);
             this.SolutionDestinationFolder = solutionDestinationFolder;
             this.ProjectFilePath = solutionFilePath;
             this.ServerPath = serverPath;
+            ServerPathMappings = serverPathMappings;
             this.solution = CreateSolution(solutionFilePath, properties);
             this.Federation = federation ?? new Federation();
             SetupPluginAggregator();

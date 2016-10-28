@@ -312,6 +312,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string GetWebLink()
         {
+            var fullPath = Path.GetFullPath(Document.FilePath);
+            var serverPathMapping =
+                projectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key));
+            if (serverPathMapping.Key != null)
+            {
+                return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
+            }
+
             var serverPath = this.projectGenerator.SolutionGenerator.ServerPath;
             if (string.IsNullOrEmpty(serverPath))
             {
