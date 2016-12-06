@@ -26,7 +26,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             };
             var assemblies = assemblyNames
                 .Select(n => Assembly.Load(n));
-            Pack = MefHostServices.Create(assemblies);
+            try
+            {
+                Pack = MefHostServices.Create(assemblies);
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                foreach (var e in ex.LoaderExceptions)
+                {
+                    Console.Error.WriteLine(e.ToString());
+                }
+                throw;
+            }
         }
 
         public static dynamic GetSemanticFactsService(Document document)

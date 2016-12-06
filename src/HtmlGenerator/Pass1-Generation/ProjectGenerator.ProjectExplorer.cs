@@ -101,6 +101,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 assemblyNames.Add(metadataReference);
             }
 
+            foreach (var reference in ForwardedReferenceAssemblies)
+            {
+                assemblyNames.Add(reference);
+            }
+
             var usedReferences = new HashSet<string>(this.UsedReferences, StringComparer.OrdinalIgnoreCase);
             foreach (var reference in assemblyNames)
             {
@@ -111,7 +116,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     url = "@" + externalIndex.ToString() + "@#" + reference;
                     sb.AppendLine(Markup.GetProjectExplorerReference(url, reference));
                 }
-                else if (SolutionGenerator.IsPartOfSolution(reference) && usedReferences.Contains(reference))
+                else if ((SolutionGenerator.IsPartOfSolution(reference) || (reference?.Contains("->") ?? false)) && usedReferences.Contains(reference))
                 {
                     sb.AppendLine(Markup.GetProjectExplorerReference(url, reference));
                 }

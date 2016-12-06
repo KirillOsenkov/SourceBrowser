@@ -187,9 +187,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     a != Constants.MSBuildItemsAssembly &&
                     a != Constants.MSBuildTargetsAssembly &&
                     a != Constants.MSBuildTasksAssembly &&
-                    a != Constants.GuidAssembly);
+                    a != Constants.GuidAssembly)
+                .Concat(ForwardedReferenceAssemblies);
             File.WriteAllLines(Path.Combine(ProjectDestinationFolder, Constants.UsedReferencedAssemblyList + ".txt"), this.UsedReferences);
         }
+
+        internal HashSet<string> ForwardedReferenceAssemblies = new HashSet<string>();
 
         private void GenerateReferencedAssemblyList()
         {
@@ -205,6 +208,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             foreach (var metadataReference in Project.MetadataReferences.OrderBy(m => Path.GetFileNameWithoutExtension(m.Display)))
             {
                 list.Add(Path.GetFileNameWithoutExtension(metadataReference.Display));
+            }
+
+            foreach (var assembly in ForwardedReferenceAssemblies)
+            {
+                list.Add(assembly);
             }
 
             File.WriteAllText(index, string.Join(Environment.NewLine, list));

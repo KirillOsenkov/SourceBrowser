@@ -1,0 +1,19 @@
+﻿<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ProjectGuid>{C34D3731-2CE5-41C2-AFCC-A8A0545D2849}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Type.Forwarder">
+      <HintPath>..\Type.Forwarder.Reference\bin\Debug\Type.Forwarder.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -266,7 +265,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 + @"[/assemblylist]");
         }
 
-        private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
+        private static readonly Folder<CodeAnalysis.Project> mergedSolutionExplorerRoot = new Folder<CodeAnalysis.Project>();
 
         private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties, Federation federation, Dictionary<string, string> serverPathMappings, IEnumerable<string> pluginBlacklist)
         {
@@ -283,6 +282,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
+            var typeForwards = new Dictionary<ValueTuple<string, string>, string>();
+
+            var domain = AppDomain.CreateDomain("TypeForwards");
+            foreach (var path in solutionFilePaths)
+            {
+                using (Disposable.Timing($"Reading type forwards from {path}"))
+                {
+                    GetTypeForwards(path, typeForwards, domain);
+                }
+            }
+            AppDomain.Unload(domain);
+            domain = null;
+
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Generating " + path))
@@ -293,7 +305,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         properties: properties.ToImmutableDictionary(),
                         federation: federation,
                         serverPathMappings: serverPathMappings,
-                        pluginBlacklist: pluginBlacklist))
+                        pluginBlacklist: pluginBlacklist,
+                        typeForwards: typeForwards))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
                         solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
@@ -303,6 +316,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
+            }
+        }
+
+        private static void GetTypeForwards(string path, Dictionary<ValueTuple<string, string>, string> typeForwards, AppDomain domain)
+        {
+            var obj = (TypeForwardReader)domain.CreateInstanceFromAndUnwrap(Assembly.GetEntryAssembly().CodeBase, "Microsoft.SourceBrowser.HtmlGenerator.TypeForwardReader");
+            var forwards = obj.GetTypeForwards(path);
+            foreach (var forward in forwards)
+            {
+                typeForwards[ValueTuple.Create(forward.Item1, forward.Item2)] = forward.Item3;
             }
         }
 

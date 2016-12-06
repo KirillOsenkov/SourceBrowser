@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.SourceBrowser.Common;
+using System.Diagnostics;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -483,7 +484,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             out string assemblyName)
         {
             string href = null;
-            assemblyName = SymbolIdService.GetAssemblyId(symbol.ContainingAssembly);
+            assemblyName = SymbolIdService.GetAssemblyId(GetAssemblyFromSymbol(symbol));
 
             // if it's in a different assembly, use the URL to a redirecting file for that assembly
             if (assemblyName != Document.Project.AssemblyName)
@@ -497,7 +498,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     referencedSymbolDestinationFilePath = Path.Combine(
                         SolutionDestinationFolder,
-                        SymbolIdService.GetAssemblyId(symbol.ContainingAssembly),
+                        assemblyName,
                         Constants.PartialResolvingFileName,
                         symbolId);
                 }
@@ -546,7 +547,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
-        private static string GetAssemblyFromSymbol(ISymbol symbol)
+        private string GetAssemblyFromSymbol(ISymbol symbol)
         {
             ITypeSymbol type = (ITypeSymbol)GetTypeFromSymbol(symbol);
             string metadataName = type.MetadataName;
@@ -563,6 +564,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             if (forwardedTo != null)
             {
                 symbol = forwardedTo;
+            }
+
+            type = (ITypeSymbol)GetTypeFromSymbol(symbol);
+            var forwardKey = ValueTuple.Create(type.ContainingAssembly.Name, (type?.OriginalDefinition ?? type).GetDocumentationCommentId());
+            string forwardedToAssembly;
+            if (projectGenerator.SolutionGenerator.TypeForwards.TryGetValue(forwardKey, out forwardedToAssembly))
+            {
+                lock (projectGenerator.ForwardedReferenceAssemblies)
+                {
+                    projectGenerator.ForwardedReferenceAssemblies.Add(
+                        type.ContainingAssembly.Name + "->" + forwardedToAssembly);
+                }
+                return forwardedToAssembly;
             }
 
             var assembly = SymbolIdService.GetAssemblyId(symbol.ContainingAssembly);
