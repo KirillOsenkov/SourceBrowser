@@ -208,9 +208,18 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             var term = query.OriginalString;
             term = Markup.UrlEncodeAndHtmlEscape(term);
             WriteLine("<ul>");
-            AppendAffiliateLink("http://www.bing.com/search?q=" + term);
-            AppendAffiliateLink("http://social.msdn.microsoft.com/Search/en-US?query=" + term);
-            AppendAffiliateLink("http://stackoverflow.com/search?q=" + term);
+            // Read the AffiliateLinks file and display links one by one.
+            int counter = 0;
+            string line;
+            System.IO.StreamReader file = new System.IO.StreamReader("..\\AffiliateLinks.txt");
+            while ((line = file.ReadLine()) != null)
+            {
+                AppendAffiliateLink(line + term);
+                counter++;
+            }
+
+            file.Close();
+
             WriteLine("</ul>");
         }
 
