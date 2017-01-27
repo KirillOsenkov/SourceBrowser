@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -209,16 +210,11 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             term = Markup.UrlEncodeAndHtmlEscape(term);
             WriteLine("<ul>");
             // Read the AffiliateLinks file and display links one by one.
-            int counter = 0;
-            string line;
-            System.IO.StreamReader file = new System.IO.StreamReader("..\\AffiliateLinks.txt");
-            while ((line = file.ReadLine()) != null)
+            
+            foreach (string line in File.ReadLines("..\\AffiliateLinks.txt"))
             {
                 AppendAffiliateLink(line + term);
-                counter++;
             }
-
-            file.Close();
 
             WriteLine("</ul>");
         }
