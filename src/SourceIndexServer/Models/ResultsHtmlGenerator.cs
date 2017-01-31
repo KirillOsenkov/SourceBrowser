@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -208,9 +209,13 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             var term = query.OriginalString;
             term = Markup.UrlEncodeAndHtmlEscape(term);
             WriteLine("<ul>");
-            AppendAffiliateLink("http://www.bing.com/search?q=" + term);
-            AppendAffiliateLink("http://social.msdn.microsoft.com/Search/en-US?query=" + term);
-            AppendAffiliateLink("http://stackoverflow.com/search?q=" + term);
+            // Read the AffiliateLinks file and display links one by one.
+            
+            foreach (string line in File.ReadLines("..\\AffiliateLinks.txt"))
+            {
+                AppendAffiliateLink(line + term);
+            }
+
             WriteLine("</ul>");
         }
 

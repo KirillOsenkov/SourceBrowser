@@ -1265,6 +1265,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AffiliateLinks.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TypeScriptSupport\analyzer.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

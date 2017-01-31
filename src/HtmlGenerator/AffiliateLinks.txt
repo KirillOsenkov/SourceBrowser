@@ -1,0 +1,4 @@
+﻿http://stackoverflow.com/search?q=
+http://social.msdn.microsoft.com/Search/en-US?query=
+https://www.google.com/search?q=
+http://www.bing.com/search?q=
