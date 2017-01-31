@@ -40,7 +40,8 @@ public class ExtensionUsage
 public interface I1 { void Foo(); }
 public interface I2 : I1 { }
 
-interface I3 : IEnumerable<C> { }
+interface I3 : IEnumerable<I2>, I2, I1 { }
+interface I4 : IEnumerable<I2> { }
 
 public partial class Partial
 {
