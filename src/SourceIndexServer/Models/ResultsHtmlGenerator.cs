@@ -209,9 +209,9 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             var term = query.OriginalString;
             term = Markup.UrlEncodeAndHtmlEscape(term);
             WriteLine("<ul>");
+
             // Read the AffiliateLinks file and display links one by one.
-            
-            foreach (string line in File.ReadLines("..\\AffiliateLinks.txt"))
+            foreach (string line in AffiliateUrls)
             {
                 AppendAffiliateLink(line + term);
             }
@@ -222,6 +222,35 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         private void AppendAffiliateLink(string url)
         {
             WriteLine(Markup.Li(Markup.A(url)));
+        }
+
+        private const string affiliateLinksFilePath = "..\\AffiliateLinks.txt";
+        private static string[] affiliateUrls;
+        private static string[] AffiliateUrls
+        {
+            get
+            {
+                if (affiliateUrls == null)
+                {
+                    try
+                    {
+                        if (File.Exists(affiliateLinksFilePath))
+                        {
+                            affiliateUrls = File.ReadAllLines(affiliateLinksFilePath);
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+
+                    if (affiliateUrls == null)
+                    {
+                        affiliateUrls = new string[0];
+                    }
+                }
+
+                return affiliateUrls;
+            }
         }
 
         private void WriteSymbolResults(Index index)
