@@ -5,11 +5,21 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Xml;
 using Microsoft.SourceBrowser.Common;
+using ExceptionAnalysis.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class FirstChanceExceptionHandler
     {
+        private static HashSet<Module> IgnoredModules = new HashSet<Module>();
+
+        public static void IgnoreModules(IEnumerable<Module> t)
+        {
+            IgnoredModules.UnionWith(t);
+        }
+
         private static HashSet<string> knownMessages = new HashSet<string>()
         {
             "Unable to load DLL 'api-ms-win-core-file-l1-2-0.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)",
@@ -31,6 +41,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             try
             {
                 var ex = e.Exception;
+
+                if ( ex is EntryPointNotFoundException )
+                {
+                    if ( ex.Message.Contains("Unable to find an entry point named 'ReadFile'"))
+                    {
+                        return;
+                    }
+                }
 
                 if (ex is InvalidCastException)
                 {
@@ -108,6 +126,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
 
                 if (stackTrace.Contains("at System.Guid.StringToInt"))
+                {
+                    return;
+                }
+
+                var trace = new TraceFactory().Manufacture(ex);
+
+                if ( trace.Select(f => f.Method.Module).Any(IgnoredModules.Contains) )
                 {
                     return;
                 }

@@ -85,7 +85,9 @@ namespace GitGlyph
                 {
                     if (path.StartsWith(Root))
                     {
-                        result = Repository.Blame(MakeRelativeToRepository(path));
+                        var relativePath = MakeRelativeToRepository(path);
+                        if (!Repository.Ignore.IsPathIgnored(relativePath))
+                            result = Repository.Blame(relativePath);
                     }
                     else
                     {
@@ -94,7 +96,7 @@ namespace GitGlyph
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Couldn't blame " + path, ex);
+                    Logger.Info("Couldn't blame " + path, ex);
                     result = new BlameHunk[0];
                 }
                 getBlameResultCache.Add(path, result);
