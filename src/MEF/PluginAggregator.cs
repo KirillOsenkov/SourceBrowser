@@ -8,57 +8,18 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.SourceBrowser.MEF
 {
-    public class PluginAggregator : IReadOnlyDictionary<string, ISourceBrowserPlugin>, IDisposable
+    public class PluginAggregator : IReadOnlyCollection<SourceBrowserPluginWrapper>, IDisposable
     {
         private CompositionContainer container;
-
-        //private static Lazy<PluginAggregator> _instance = new Lazy<PluginAggregator>(() => new PluginAggregator());
-        //public static PluginAggregator Instance { get { return _instance.Value; } }
 
         [ImportMany]
 #pragma warning disable CS0649
         IEnumerable<Lazy<ISourceBrowserPlugin, ISourceBrowserPluginMetadata>> plugins;
 #pragma warning restore CS0649
-        private Dictionary<string, ISourceBrowserPlugin> Plugins;
+        private List<SourceBrowserPluginWrapper> Plugins;
+        private ILog Logger;
 
-        public PluginAggregator(Dictionary<string, Dictionary<string, string>> pluginConfigurations, ILog logger)
-        {
-            //Create the CompositionContainer with the parts in the catalog
-            container = new CompositionContainer(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
-
-            //Fill the imports of this object
-            container.ComposeParts(this);
-
-            Plugins = plugins.ToDictionary(l => l.Metadata.Name, l => l.Value);
-
-            foreach (var pair in Plugins)
-            {
-                Dictionary<string, string> config;
-                if (!pluginConfigurations.TryGetValue(pair.Key, out config))
-                {
-                    config = new Dictionary<string, string>();
-                }
-                pair.Value.Init(config, logger);
-            }
-        }
-
-        public IEnumerable<ISymbolVisitor> ManufactureSymbolVisitors(Project project)
-        {
-            return Values.SelectMany(p => p.ManufactureSymbolVisitors(project.FilePath));
-        }
-
-        public IEnumerable<ITextVisitor> ManufactureTextVisitors(Project project)
-        {
-            return Values.SelectMany(p => p.ManufactureTextVisitors(project.FilePath));
-        }
-
-        public ISourceBrowserPlugin this[string key]
-        {
-            get
-            {
-                return Plugins[key];
-            }
-        }
+        private Dictionary<string, Dictionary<string, string>> PluginConfigurations;
 
         public int Count
         {
@@ -68,46 +29,75 @@ namespace Microsoft.SourceBrowser.MEF
             }
         }
 
-        public IEnumerable<string> Keys
+        public PluginAggregator(Dictionary<string, Dictionary<string, string>> pluginConfigurations, ILog logger, IEnumerable<string> blackList)
         {
-            get
+            PluginConfigurations = pluginConfigurations;
+            Logger = logger;
+
+            //Create the CompositionContainer with the parts in the catalog
+            container = new CompositionContainer(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
+
+            //Fill the imports of this object
+            container.ComposeParts(this);
+
+            var blackListSet = new HashSet<string>(blackList);
+
+            Plugins = plugins
+            .Select(pair => new SourceBrowserPluginWrapper(pair.Value, pair.Metadata, Logger))
+            .Where(w => !blackListSet.Contains(w.Name))
+            .ToList();
+        }
+
+        public void Init()
+        {
+            foreach (var plugin in Plugins)
             {
-                return Plugins.Keys;
+                Dictionary<string, string> config;
+                if (!PluginConfigurations.TryGetValue(plugin.Name, out config))
+                {
+                    config = new Dictionary<string, string>();
+                }
+                plugin.Init(config, Logger);
             }
         }
 
-        public IEnumerable<ISourceBrowserPlugin> Values
+        public IEnumerable<ISymbolVisitor> ManufactureSymbolVisitors(Project project)
         {
-            get
+            return Plugins.SelectMany(p => p.ManufactureSymbolVisitors(project.FilePath));
+        }
+
+        private IEnumerable<ISymbolVisitor> ManufactureSymbolVisitors(string name, ISourceBrowserPlugin plugin, Project project)
+        {
+            try
             {
-                return Plugins.Values;
+                return plugin.ManufactureSymbolVisitors(project.FilePath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Info(name + " Plugin failed to manufacture symbol visitors", ex);
+                return Enumerable.Empty<ISymbolVisitor>();
             }
         }
 
-        public bool ContainsKey(string key)
+        public IEnumerable<ITextVisitor> ManufactureTextVisitors(Project project)
         {
-            return Plugins.ContainsKey(key);
-        }
-
-        public IEnumerator<KeyValuePair<string, ISourceBrowserPlugin>> GetEnumerator()
-        {
-            return Plugins.GetEnumerator();
-        }
-
-        public bool TryGetValue(string key, out ISourceBrowserPlugin value)
-        {
-            return Plugins.TryGetValue(key, out value);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Plugins.GetEnumerator();
+            return Plugins.SelectMany(p => p.ManufactureTextVisitors(project.FilePath));
         }
 
         public void Dispose()
         {
             if (container != null)
                 container.Dispose();
+        }
+
+        public IEnumerator<SourceBrowserPluginWrapper> GetEnumerator()
+        {
+            return Plugins.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Plugins.GetEnumerator();
         }
     }
 }

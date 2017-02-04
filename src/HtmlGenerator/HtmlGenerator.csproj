@@ -14,6 +14,14 @@
   </PropertyGroup>
   <Import Project="..\..\Common.props" />
   <ItemGroup>
+    <Reference Include="ExceptionAnalysis, Version=1.0.0.39796, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExceptionAnalysis.Diagnostics.1.0.0.39796\lib\net46\ExceptionAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExceptionAnalysis.Diagnostics, Version=1.0.0.39796, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExceptionAnalysis.Diagnostics.1.0.0.39796\lib\net46\ExceptionAnalysis.Diagnostics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Build, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.Build.Framework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -1259,7 +1267,9 @@
       <Link>Web\Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

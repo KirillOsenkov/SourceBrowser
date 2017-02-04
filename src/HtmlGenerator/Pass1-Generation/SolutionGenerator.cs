@@ -20,6 +20,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public IReadOnlyDictionary<string, string> ServerPathMappings { get; }
         public string NetworkShare { get; private set; }
         private Federation Federation { get; set; }
+        public IEnumerable<string> PluginBlacklist { get; private set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public MEF.PluginAggregator PluginAggregator;
 
@@ -37,7 +38,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string serverPath = null,
             ImmutableDictionary<string, string> properties = null,
             Federation federation = null,
-            IReadOnlyDictionary<string, string> serverPathMappings = null)
+            IReadOnlyDictionary<string, string> serverPathMappings = null,
+            IEnumerable<string> pluginBlacklist = null)
         {
             this.SolutionSourceFolder = Path.GetDirectoryName(solutionFilePath);
             this.SolutionDestinationFolder = solutionDestinationFolder;
@@ -46,6 +48,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             ServerPathMappings = serverPathMappings;
             this.solution = CreateSolution(solutionFilePath, properties);
             this.Federation = federation ?? new Federation();
+            this.PluginBlacklist = pluginBlacklist ?? Enumerable.Empty<string>();
             SetupPluginAggregator();
         }
 
@@ -64,7 +67,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         t => t.Item2                                    //The actual value of the setting
                     )
                 );
-            PluginAggregator = new MEF.PluginAggregator(configs, new Utilities.PluginLogger());
+            PluginAggregator = new MEF.PluginAggregator(configs, new Utilities.PluginLogger(), PluginBlacklist);
+            FirstChanceExceptionHandler.IgnoreModules(PluginAggregator.Select(p => p.PluginModule));
+            PluginAggregator.Init();
         }
 
         public SolutionGenerator(
@@ -347,7 +352,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Log.Write(externalReference.Key, ConsoleColor.Magenta);
                 var solutionGenerator = new SolutionGenerator(
                     externalReference.Value,
-                    Paths.SolutionDestinationFolder);
+                    Paths.SolutionDestinationFolder,
+                    pluginBlacklist: PluginBlacklist);
                 solutionGenerator.Generate(assemblyList);
             }
         }
