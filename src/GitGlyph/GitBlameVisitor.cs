@@ -23,8 +23,7 @@ namespace GitGlyph
         public string Visit(string text, IReadOnlyDictionary<string, string> context)
         {
             var path = System.IO.Path.GetFullPath(context[ContextKeys.FilePath]);
-            var blame = GetBlame(path).FirstOrDefault(bh => bh.FinalStartLineNumber.ToString() == context[ContextKeys.LineNumber]);
-
+            var blame = GetBlame(path)?.FirstOrDefault(bh => bh.FinalStartLineNumber.ToString() == context[ContextKeys.LineNumber]);
             if (blame != null)
             {
                 var author = blame.FinalCommit.Author;
@@ -35,6 +34,7 @@ namespace GitGlyph
                     FormatCommit(blame.FinalCommit)
                 })), "Email from SourceBrowser");
             }
+
             return null;
         }
 
