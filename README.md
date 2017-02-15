@@ -1,4 +1,9 @@
 # SourceBrowser
+
+---
+Converted the solution to Visual Studio 2017 with Nuget 4.0 and fixed all compilation errors and dependencies errors and upgraded the dependencies to work with new solutions.
+---
+
 Source browser website generator that powers http://referencesource.microsoft.com and http://source.roslyn.io.
 
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code. **Note** that it still does require IIS and ASP.NET for hosting (symbol index is kept server-side), so [without IIS and ASP.NET the search function doesn't work](https://github.com/KirillOsenkov/SourceBrowser/wiki/Why-does-generated-Html-still-require-a-server-side-ASP.NET-Web-API%3F).
