@@ -1,0 +1,44 @@
+﻿===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: C:\Users\Guy\Desktop\ExOption
+===============================================
+Project not found or not supported: Code\ExOption\ExOption.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found or not supported: C:\Users\Guy\Desktop\ExOption
+===============================================
+Project not found or not supported: Code\ExOption\ExOption.sln
+===============================================
+Project not found or not supported: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Project not found: ..\..\..\TestCode\TestSolution.sln
+===============================================
+Input file is locked or no permissions to access it: C:\Users\Guy\Desktop\ExOption
+===============================================
+Project not found: Code\ExOption\ExOption.sln
+===============================================
+Project not found: ..\..\..\TestCode\TestSolution.sln

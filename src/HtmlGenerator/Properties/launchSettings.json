@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HtmlGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\Guy\\Desktop\\SourceBrowser\\SourceBrowser.sln\""
+    }
+  }
+}

@@ -1,0 +1,1048 @@
+﻿body {
+    font-family: Segoe UI, Tahoma, Helvetica, sans-serif;
+    cursor: text;
+    margin: 0px;
+    padding: 0px;
+}
+
+.body, p, ul, ol, h1, h2, h3 {
+    margin: 20px;
+}
+
+h1 {
+    font-family: 'Segoe UI Light', 'Segoe UI', Tahoma, Helvetica, sans-serif;
+    font-weight: 100;
+    background-color: deepskyblue;
+    color: white;
+    padding: 16px;
+}
+
+pre {
+    font-family: Consolas, 'Courier New', 'Andale Mono', 'Lucida Console', monospace;
+    font-size: 12pt;
+    line-height: 125%;
+    tab-size: 4;
+}
+
+    pre a:focus {
+        color: inherit;
+        background-color: lime;
+    }
+
+    pre b {
+        font-weight: normal;
+        color: blue;
+    }
+
+a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:visited {
+    color: inherit;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: underline;
+}
+
+a:active {
+    color: inherit;
+}
+
+a img {
+    border: none;
+}
+
+div div a:hover, body a:hover {
+    text-decoration: none;
+}
+
+table.ex {
+    margin: 32px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: lightgray;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 0px;
+    border-right-width: 0px;
+}
+
+thead td.ex {
+    background-color: deepskyblue;
+    color: white;
+    border-style: solid;
+    border-color: deepskyblue;
+}
+
+tr td.ex {
+    vertical-align: top;
+    border-style: solid;
+    border-color: lightgray;
+    padding: 8px;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+}
+
+.note {
+    margin: 8px;
+    padding: 8px;
+    background-color: lightyellow;
+    border-color: khaki;
+}
+
+.rG, .resultGroup {
+    margin-right: 0px;
+    margin-left: 8px;
+    margin-bottom: 16px;
+}
+
+.partialTypeHeader {
+    font-size: larger;
+    font-weight: bold;
+    margin-left: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.linkIcon {
+    vertical-align: middle;
+    margin-right: 12px;
+    list-style-type: disc;
+    list-style-position: outside;
+}
+
+.resultGroupHeader {
+    cursor: pointer;
+    padding: 6px 6px 6px 28px;
+    margin-top: 16px;
+    background-color: #e7f5ff;
+    background-image: url('content/icons/minus.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 13px;
+    background-origin: border-box;
+}
+
+    .resultGroupHeader:hover {
+        background-color: #d4edff;
+    }
+
+.resultGroupAssemblyName {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.rA {
+    font-size: larger;
+    font-weight: bold;
+    background-color: #e7f5ff;
+    background-image: url('content/icons/minus.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 14px;
+    background-origin: border-box;
+    padding: 6px 6px 6px 28px;
+    cursor: pointer;
+}
+
+    .rA:hover {
+        background-color: #d4edff;
+    }
+
+.resultGroupProjectPath {
+    font-size: smaller;
+    color: silver;
+}
+
+.rF, .resultGroupFileGroup {
+    margin-top: 8px;
+}
+
+.rL, a.rL, .referenceLine {
+    font-family: Consolas, 'Courier New', 'Andale Mono', 'Lucida Console', monospace;
+    font-size: small;
+    white-space: nowrap;
+    display: block;
+}
+
+    .rL:hover, .referenceLine:hover {
+        background-color: #eeeeee;
+    }
+
+.rx, .referenceLineText {
+    margin-left: 12px;
+}
+
+a b {
+    font-weight: normal;
+    margin-right: 12px;
+    color: #2b91af;
+}
+
+a i {
+    background-color: yellow;
+    font-style: normal;
+}
+
+.l {
+    margin-right: 12px;
+}
+
+.rO, .referenceOccurrence {
+    background-color: yellow;
+}
+
+.rN, .resultGroupFileName {
+    background-color: #f6f6f6;
+    color: gray;
+    padding: 4px 4px 4px 30px;
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    background-origin: border-box;
+}
+
+.resultItem {
+    padding: 8px 0px 8px 24px;
+    text-decoration: none;
+    white-space: nowrap;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-style: solid;
+    border-top-style: solid;
+    border-bottom-style: solid;
+}
+
+    .resultItem:hover {
+        background-color: #f6f6f6;
+    }
+
+.projectExplorerBody, .namespaceExplorerBody, .solutionExplorerBody {
+    cursor: default;
+    /*font-size: 12px;*/
+}
+
+.reference {
+    cursor: pointer;
+    display: block;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 31px;
+    white-space: nowrap;
+    background-image: url('content/icons/192.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+.referenceDisabled {
+    display: block;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 31px;
+    white-space: nowrap;
+    background-image: url('content/icons/192.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+    color: lightgray;
+}
+
+.folder {
+    margin-left: 21px;
+}
+
+.folderTitle {
+    white-space: nowrap;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.typeTitle {
+    white-space: nowrap;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-left: 30px;
+}
+
+.typeDeclarationNodeImage, .tDNI {
+    margin-top: 3px;
+    padding-right: 8px;
+    vertical-align: top;
+}
+
+.typeDeclarationNode, .tDN {
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline;
+    padding-left: 0px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+    .typeDeclarationNode:focus, .tDN:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.projectCS {
+    white-space: nowrap;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 32px;
+    background-image: url('content/icons/196.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 6px 6px;
+}
+
+.projectVB {
+    white-space: nowrap;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 32px;
+    background-image: url('content/icons/195.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 6px 6px;
+}
+
+.cs {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/csharp.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .cs:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.vb {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/vb.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .vb:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.csproj {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/196.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .csproj:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.vbproj {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/195.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .vbproj:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.xaml {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/xaml.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .xaml:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.ts {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/typescript.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .ts:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.selectedFilename {
+    background-color: #3399ff;
+    color: white;
+}
+
+    .selectedFilename:link, .selectedFilename:visited, .selectedFilename:hover, .selectedFilename:active {
+        color: white;
+    }
+
+.currentResult {
+    border-left-color: lightgray;
+    border-top-color: lightgray;
+    border-bottom-color: lightgray;
+    border-left-style: solid;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    background-color: #eeeeee;
+}
+
+    .currentResult:hover {
+        background-color: #eeeeee;
+    }
+
+.resultLine {
+}
+
+.resultKind {
+    display: inline;
+    color: blue;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.resultName {
+    display: inline;
+    margin-left: 0px;
+}
+
+.resultDescription {
+    font-size: smaller;
+    color: silver;
+    text-decoration: none;
+}
+
+.rH {
+    margin-right: 0px;
+    padding: 8px;
+    background-color: #68217A;
+    color: white;
+}
+
+.cB {
+}
+
+.cz {
+    margin-bottom: 66px;
+}
+
+.tb {
+    border: 0;
+}
+
+#ln, #glyph {
+    margin-left: 16px;
+    margin-right: 24px;
+    margin-top: 0;
+    color: #2b91af;
+    text-align: right;
+    vertical-align: top;
+}
+
+#code {
+    margin: 0;
+    vertical-align: top;
+    text-align: left;
+}
+
+.dH {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    background-color: aliceblue;
+    padding: 8px;
+    color: gray;
+    height: 50px;
+    opacity: 0.85;
+}
+
+.headerBody {
+    background-color: #68217A;
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+}
+
+#dotnetLogo {
+    margin-top: 10px;
+    margin-bottom: 6px;
+    margin-left: 10px;
+    margin-right: 0px;
+    padding: 0px;
+    border-width: 0px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+#search-box {
+    font-size: 16pt;
+    width: 405px;
+    border-color: lightgray;
+    border-width: 1px;
+    border-style: solid;
+    background-image: url('content/icons/searchmagnifyingglass.png');
+    background-repeat: no-repeat;
+    background-position: 8px 10px;
+    padding-left: 32px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    margin-left: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+    vertical-align: top;
+    /*border-style: none;
+    background-color: transparent;
+    width: 100%;*/
+}
+
+#logoText {
+    background-image: url(content/icons/microsoftlogo.png);
+    background-repeat: no-repeat;
+    background-position: 0px 22px;
+    background-clip: border-box;
+    color: white;
+    font-size: 20px;
+    margin-left: 16px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    padding-top: 14px;
+    padding-bottom: 2px;
+    padding-left: 95px;
+    padding-right: 0px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+#currentVersion {
+    color: #e0e0e0;
+    margin-top: 19px;
+    margin-left: 15px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    padding: 0px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+#headerMenu {
+    float: right;
+    top: 0px;
+    right: 10px;
+    padding: 18px;
+}
+
+#downloadButton {
+    text-align: center;
+    background-color: #68217A;
+    color: white;
+    font-size: 16pt;
+    padding: 40px;
+    margin: 60px;
+}
+
+#feedbackButtonLink {
+    color: white;
+    margin: 8px;
+}
+
+    #feedbackButtonLink:hover {
+        text-decoration: underline;
+    }
+
+#downloadButtonLink {
+    color: white;
+    margin: 8px;
+}
+
+    #downloadButtonLink:hover {
+        text-decoration: underline;
+    }
+
+#licenseButtonLink {
+    color: white;
+    margin: 8px;
+}
+
+    #licenseButtonLink:hover {
+        text-decoration: underline;
+    }
+
+#helpButtonLink {
+    color: white;
+    margin: 8px;
+}
+
+    #helpButtonLink:hover {
+        text-decoration: underline;
+    }
+
+.result {
+    margin: 16px;
+    padding: 4px;
+    background-color: lightgoldenrodyellow;
+}
+
+.r, .rd {
+    cursor: pointer;
+}
+
+.r {
+    border-width: 1px;
+    border-color: ivory;
+    border-style: solid;
+}
+
+.k, a.k {
+    color: blue;
+}
+
+    a.k, a.k:hover {
+        text-decoration: underline;
+    }
+
+.t, a.t,
+.l, .lineNumber {
+    color: #2b91af;
+}
+
+.c {
+    color: #008000;
+}
+
+.x, .e {
+    color: #808080;
+}
+
+.s {
+    color: #a31515;
+}
+
+.xd {
+    color: blue;
+}
+
+.xn {
+    color: #A31515;
+}
+
+.xan {
+    color: red;
+}
+
+.xav {
+    color: blue;
+}
+
+.xer {
+    color: red;
+}
+
+.xcs {
+    color: #808080;
+}
+
+.xpi {
+    color: #808080;
+}
+
+.xld {
+    color: #6464B9;
+}
+
+.xln {
+    color: #844646;
+}
+
+.xlan {
+    color: #B96464;
+}
+
+.xlav {
+    color: #6464B9;
+}
+
+.xlaq {
+    color: #555555;
+}
+
+.xler {
+    color: #B96464;
+}
+
+.xlcs {
+    color: #C0C0C0;
+}
+
+.xlpi {
+    color: #C0C0C0;
+}
+
+.xlee {
+    color: #B96464;
+    background-color: #FFFEBF;
+}
+
+a.s, a.s:hover {
+    color: #a31515;
+    text-decoration: underline;
+}
+
+p a, p a:link, p a:hover, p a:focus, p a:active,
+ul a, ul a:link, ul a:hover, ul a:focus, ul a:active,
+ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
+.blueLink, .blueLink:link, .blueLink:hover, .blueLink:focus, .blueLink:active {
+    text-decoration: underline;
+    color: blue;
+}
+
+    p a:visited,
+    ul a:visited,
+    .blueLink:visited {
+        color: blue;
+    }
+
+.partialTypeLink {
+    color: blue;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 32px;
+    text-decoration: none;
+}
+
+    .partialTypeLink:hover {
+        background-color: #eeeeee;
+        text-decoration: none;
+    }
+
+.documentOutlineButton {
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 0px;
+    padding: 8px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    background-color: #ffffff;
+    opacity: 0.9;
+}
+
+    .documentOutlineButton:hover {
+        border-color: #eeccc0;
+        background-color: #fff5ec;
+    }
+
+.projectExplorerButton {
+    position: fixed;
+    right: 0;
+    top: 50px;
+    margin: 0px;
+    padding: 8px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    background-color: #ffffff;
+    opacity: 0.9;
+}
+
+    .projectExplorerButton:hover {
+        border-color: #90e6d4;
+        background-color: #dcfff8;
+    }
+
+.namespaceExplorerButton {
+    position: fixed;
+    right: 0;
+    top: 100px;
+    margin: 0px;
+    padding: 8px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    background-color: #ffffff;
+    opacity: 0.9;
+}
+
+    .namespaceExplorerButton:hover {
+        border-color: #e0e0e0;
+        background-color: #f0f0f0;
+    }
+
+.documentOutlineDiv:hover {
+    background-color: #f6f6f6;
+}
+
+#root {
+    padding: 16px;
+}
+
+.tabChannel {
+    margin: 0px;
+    padding: 0px;
+    background-color: #68217A;
+}
+
+.activeTab {
+    background-color: white;
+    padding-left: 16px;
+    padding-top: 6px;
+    padding-right: 16px;
+    padding-bottom: 6px;
+    display: inline-block;
+}
+
+.inactiveTab {
+    background-color: #68217A;
+    color: white;
+    padding-left: 16px;
+    padding-top: 6px;
+    padding-right: 16px;
+    padding-bottom: 6px;
+    display: inline-block;
+}
+
+    .inactiveTab:link, .inactiveTab:visited, .inactiveTab:hover, .inactiveTab:active {
+        color: white;
+    }
+
+.imagePlusMinus {
+    vertical-align: top;
+    margin-left: 8px;
+    margin-top: 6px;
+    margin-right: 14px;
+    margin-bottom: -1px;
+}
+
+.imageFolder {
+    margin-left: 0px;
+    margin-top: 5px;
+    margin-right: 6px;
+    margin-bottom: -2px;
+}
+
+#sourcesList {
+    margin: 32px;
+}
+
+    #sourcesList li {
+        background-color: steelblue;
+        color: white;
+        padding: 5px 10px 5px 10px;
+        margin: 4px;
+        display: inline-block;
+        list-style-type: none;
+        font-weight: 100;
+    }
+
+.externalIndexLinks {
+    margin: 32px;
+}
+
+    .externalIndexLinks li {
+        background-color: purple;
+        color: white;
+        padding: 10px 20px;
+        margin: 4px;
+        display: inline-block;
+        list-style-type: none;
+    }
+
+        .externalIndexLinks li a {
+            color: white;
+        }
+
+.msbuildlink {
+}
+
+    .msbuildlink:hover {
+        background-color: whitesmoke;
+    }
+
+.projectInfo {
+    color: lightgray;
+}
+
+@media only screen and (max-width: 462px) {
+    #dotnetLogo {
+        display: none;
+    }
+
+    #searchBoxAndImages {
+        padding-right: 58px;
+        box-sizing: border-box;
+        display: block;
+    }
+
+    #search-box {
+        width: 100%;
+    }
+
+    #logoText {
+        display: none;
+    }
+
+    #currentVersion {
+        display: none;
+    }
+
+    #headerMenu {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 463px) and (max-width: 869px) {
+    #dotnetLogo {
+        display: none;
+    }
+
+    #searchBoxAndImages {
+    }
+
+    #search-box {
+        width: 405px;
+    }
+
+    #logoText {
+        display: none;
+    }
+
+    #currentVersion {
+        display: none;
+    }
+
+    #headerMenu {
+        display: inline-block;
+    }
+}
+
+@media only screen and (min-width: 870px) and (max-width: 1280px) {
+    #dotnetLogo {
+        display: none;
+    }
+
+    #searchBoxAndImages {
+    }
+
+    #search-box {
+        width: 405px;
+    }
+
+    #logoText {
+        display: inline-block;
+    }
+
+    #currentVersion {
+        display: none;
+    }
+
+    #headerMenu {
+        display: inline-block;
+    }
+}
+
+@media only screen and (min-width: 1281px) {
+    #dotnetLogo {
+        display: inline-block;
+    }
+
+    #searchBoxAndImages {
+    }
+
+    #search-box {
+        width: 405px;
+    }
+
+    #logoText {
+        display: inline-block;
+    }
+
+    #currentVersion {
+        display: inline-block;
+    }
+
+    #headerMenu {
+        display: inline-block;
+    }
+}
