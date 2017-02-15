@@ -1,0 +1,18 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildcardIncludes", "WildcardIncludes.csproj", "{DAFAB23C-9B6A-405C-90F9-2E23F29C3DE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAFAB23C-9B6A-405C-90F9-2E23F29C3DE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DAFAB23C-9B6A-405C-90F9-2E23F29C3DE0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DAFAB23C-9B6A-405C-90F9-2E23F29C3DE0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DAFAB23C-9B6A-405C-90F9-2E23F29C3DE0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

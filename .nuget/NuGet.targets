@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
+        
+        <!-- Enable the restore command to run before builds -->
+        <RestorePackages Condition="  '$(RestorePackages)' == '' ">true</RestorePackages>
+
+        <!-- Download NuGet.exe if it does not already exist -->
+        <DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">true</DownloadNuGetExe>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(PackageSources)' == '' ">
+      <PackageSource Include="https://nuget.org/api/v2/" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <NuGetToolsPath>$([System.IO.Path]::Combine($(SolutionDir), ".nuget"))</NuGetToolsPath>
+        <PackagesConfig>$([System.IO.Path]::Combine($(ProjectDir), "packages.config"))</PackagesConfig>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)\nuget.exe</NuGetExePath>
+        <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
+
+        <NuGetCommand>"$(NuGetExePath)"</NuGetCommand>
+
+        <PackageOutputDir Condition="$(PackageOutputDir) == ''">$(TargetDir.Trim('\\'))</PackageOutputDir>
+
+        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  -RequireConsent -solutionDir "$(SolutionDir) "</RestoreCommand>
+
+        <!-- We need to ensure packages are restored prior to assembly resolve -->
+        <ResolveReferencesDependsOn Condition="$(RestorePackages) == 'true'">
+            RestorePackages;
+            $(ResolveReferencesDependsOn);
+        </ResolveReferencesDependsOn>
+    </PropertyGroup>
+
+    <Target Name="CheckPrerequisites">
+        <!-- Raise an error if we're unable to locate nuget.exe  -->
+        <Error Condition="'$(DownloadNuGetExe)' != 'true' AND !Exists('$(NuGetExePath)')" Text="Unable to locate '$(NuGetExePath)'" />
+        <SetEnvironmentVariable EnvKey="VisualStudioVersion" EnvValue="$(VisualStudioVersion)" Condition=" '$(VisualStudioVersion)' != '' AND '$(OS)' == 'Windows_NT' " />
+        <!--
+        Take advantage of MsBuild's build dependency tracking to make sure that we only ever download nuget.exe once.
+        This effectively acts as a lock that makes sure that the download operation will only happen once and all
+        parallel builds will have to wait for it to complete.
+        -->
+        <MsBuild Targets="_DownloadNuGet" Projects="$(MSBuildThisFileFullPath)" Properties="Configuration=NOT_IMPORTANT" />
+    </Target>
+
+    <Target Name="_DownloadNuGet">
+        <DownloadNuGet OutputFilename="$(NuGetExePath)" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')" />
+    </Target>
+
+    <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+        <Exec Command="$(RestoreCommand)"
+              Condition="Exists('$(PackagesConfig)')"
+              LogStandardErrorAsError="true" />
+    </Target>
+
+    <UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <OutputFilename ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Reference Include="System.Core" />
+            <Using Namespace="System" />
+            <Using Namespace="System.IO" />
+            <Using Namespace="System.Net" />
+            <Using Namespace="Microsoft.Build.Framework" />
+            <Using Namespace="Microsoft.Build.Utilities" />
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+                try {
+                    OutputFilename = Path.GetFullPath(OutputFilename);
+
+                    Log.LogMessage("Downloading latest version of NuGet.exe...");
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFile("https://nuget.org/nuget.exe", OutputFilename);
+
+                    return true;
+                }
+                catch (Exception ex) {
+                    Log.LogErrorFromException(ex);
+                    return false;
+                }
+            ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+    
+     <UsingTask TaskName="SetEnvironmentVariable" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <EnvKey ParameterType="System.String" Required="true" />
+            <EnvValue ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System" />
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+                try {
+                    Environment.SetEnvironmentVariable(EnvKey, EnvValue, System.EnvironmentVariableTarget.Process);
+                }
+                catch  {
+                }
+            ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+</Project>
