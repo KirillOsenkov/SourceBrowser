@@ -236,6 +236,7 @@ Don't use this page directly, pass #symbolId to get redirected.
                 writeLine(row);
             }
 
+            writeLine(string.Format("<tr><td>File indexed on: {0}</td></tr>", DateTime.Now.ToString()));
             writeLine("</table>");
             writeLine("</div>");
         }
