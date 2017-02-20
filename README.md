@@ -1,5 +1,5 @@
 # SourceBrowser
-Source browser website generator that powers http://referencesource.microsoft.com and http://source.roslyn.io.
+Source browser website generator that powers http://referencesource.microsoft.com, http://source.roslyn.io and http://source.dot.net.
 
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code. **Note** that it still does require IIS and ASP.NET for hosting (symbol index is kept server-side), so [without IIS and ASP.NET the search function doesn't work](https://github.com/KirillOsenkov/SourceBrowser/wiki/Why-does-generated-Html-still-require-a-server-side-ASP.NET-Web-API%3F).
 
