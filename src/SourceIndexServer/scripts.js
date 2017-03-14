@@ -314,9 +314,7 @@ function rewriteExternalLinks() {
     var length = links.length;
     for (var i = 0; i < length; i++) {
         var link = links[i];
-        if (startsWithIgnoreCase(link.getAttribute("href"), "http")) {
-            rewriteExternalLink(link);
-        }
+        rewriteExternalLink(link);
     }
 }
 
@@ -333,7 +331,7 @@ function rewriteExternalLink(link) {
         link.target = "_top";
     }
 
-    if (link.hash.length == 17) {
+    if (link.hash && link.hash.length == 17) {
         link.onclick = function () {
             var filePath = top.s.location.pathname.slice(1);
             filePath = getDisplayableFileName(filePath);
