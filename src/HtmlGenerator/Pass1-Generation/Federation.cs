@@ -8,7 +8,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class Federation
     {
-        public static IEnumerable<string> FederatedIndexUrls = new[]
+        public static IEnumerable<string> DefaultFederatedIndexUrls = new[]
         {
             @"http://referencesource.microsoft.com",
             @"http://source.roslyn.io"
@@ -48,7 +48,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private readonly List<Info> federations = new List<Info>();
 
-        public Federation() : this(FederatedIndexUrls)
+        public Federation()
         {
         }
 
@@ -58,7 +58,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public Federation(params string[] servers)
         {
-            if (servers == null || servers.Length == 0)
+            AddFederations(servers);
+        }
+
+        public void AddFederations(IEnumerable<string> servers)
+        {
+            if (servers == null)
             {
                 return;
             }
@@ -67,6 +72,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 AddFederation(server);
             }
+        }
+
+        public void AddFederations(params string[] servers)
+        {
+            AddFederations((IEnumerable<string>)servers);
         }
 
         public void AddFederation(string server)
