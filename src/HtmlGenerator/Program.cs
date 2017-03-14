@@ -170,7 +170,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             using (Disposable.Timing("Generating website"))
             {
-                var federation = noBuiltInFederations ? new Federation(null) : new Federation(federations);
+                var federation = new Federation();
+
+                if (!noBuiltInFederations)
+                {
+                    federation.AddFederations(Federation.DefaultFederatedIndexUrls);
+                }
+
+                federation.AddFederations(federations);
+
                 foreach (var entry in offlineFederations)
                 {
                     federation.AddFederation(entry.Key, entry.Value);
