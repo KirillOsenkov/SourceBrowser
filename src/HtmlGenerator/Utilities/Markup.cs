@@ -163,7 +163,7 @@ redirectToReferences();
         private static string documentHtmlPrefixTemplate = @"<!DOCTYPE html>
 <html><head><title>{0}</title><link rel=""stylesheet"" href=""{1}styles.css""><script src=""{1}scripts.js""></script></head>
 <body class=""cB"" onload=""{3}({2});"">";
-        private static string documentTablePrefix = @"<div class=""cz""><table class=""tb"" cellpadding=""0"" cellspacing=""0""><tr><td valign=""top"" align=""right""><pre id=""glyph"">{1}</pre></td><td valign=""top"" align=""right""><pre id=""ln"">{0}</pre></td><td valign=""top"" align=""left""><pre id=""code"">";
+        private static string documentTablePrefix = @"<div class=""cz""><table class=""tb"" cellpadding=""0"" cellspacing=""0""><tr>{1}<td valign=""top"" align=""right""><pre id=""ln"">{0}</pre></td><td valign=""top"" align=""left""><pre id=""code"">";
 
         public static string GetDocumentPrefix(string title, string relativePathToRoot, int lineCount, string customJSOnloadFunction = "i")
         {
@@ -179,6 +179,11 @@ redirectToReferences();
         public static string GetTablePrefix(string documentUrl, int pregenerateLineNumbers, string glyphHtml)
         {
             var lineNumberText = GenerateLineNumberText(pregenerateLineNumbers, documentUrl);
+            if (!string.IsNullOrWhiteSpace(glyphHtml))
+            {
+                glyphHtml = $@"<td valign=""top"" align=""right""><pre id=""glyph"">{glyphHtml}</pre></td>";
+            }
+
             return string.Format(documentTablePrefix, lineNumberText, glyphHtml);
         }
 
