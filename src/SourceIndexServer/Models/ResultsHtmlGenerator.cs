@@ -224,7 +224,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             WriteLine(Markup.Li(Markup.A(url)));
         }
 
-        private const string affiliateLinksFilePath = "..\\AffiliateLinks.txt";
+        private const string affiliateLinksFilePath = "AffiliateLinks.txt";
         private static string[] affiliateUrls;
         private static string[] AffiliateUrls
         {
