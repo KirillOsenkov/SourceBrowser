@@ -154,7 +154,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var ranges = (await classifier.Classify(Document, Text)).ToArray();
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
-            var table = Markup.GetTablePrefix(DocumentUrl, pregenerateLineNumbers ? lineCount : 0, GenerateGlyphs(ranges));
+            var table = Markup.GetTablePrefix(
+                DocumentUrl,
+                pregenerateLineNumbers ? lineCount : 0,
+                GenerateGlyphs(ranges));
             writer.WriteLine(table);
 
             GeneratePre(ranges, writer, lineCount);
@@ -176,6 +179,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string GenerateGlyphs(IEnumerable<Classification.Range> ranges)
         {
+            if (!SolutionGenerator.LoadPlugins)
+            {
+                return "";
+            }
+
             var lines = new Dictionary<int, HashSet<string>>();
             int lineNumber = -1;
             ISymbol symbol = null;
@@ -195,6 +203,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         lineGlyphs = new HashSet<string>();
                         lines.Add(lineNumber, lineGlyphs);
                     }
+
                     lineGlyphs.Add(g);
                 }
             };
@@ -225,7 +234,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             };
 
-
             foreach (var r in ranges)
             {
                 var pos = r.ClassifiedSpan.TextSpan.Start;
@@ -238,12 +246,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     context[MEF.ContextKeys.LineNumber] = lineNumber.ToString();
                     maybeLog(string.Concat(projectGenerator.PluginTextVisitors.Select(VisitText)));
                 }
+
                 symbol = SemanticModel.GetDeclaredSymbol(token.Parent);
                 if (symbol != null)
                 {
                     maybeLog(string.Concat(projectGenerator.PluginSymbolVisitors.Select(VisitSymbol)));
                 }
             }
+
             if (lines.Any())
             {
                 var sb = new StringBuilder();
@@ -257,20 +267,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                             sb.Append(g);
                         }
                     }
+
                     sb.Append("<br/>");
                 }
+
                 return sb.ToString();
             }
             else
             {
                 return string.Empty;
             }
-        }
-
-
-
-        private class ET4MethodVisitor : SymbolVisitor<string>
-        {
         }
 
         private string DocumentUrl { get { return Document.Project.AssemblyName + "/" + documentRelativeFilePathWithoutHtmlExtension.Replace('\\', '/'); } }

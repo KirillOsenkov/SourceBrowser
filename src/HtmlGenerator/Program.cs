@@ -126,6 +126,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
+                if (string.Equals(arg, "/noplugins", StringComparison.OrdinalIgnoreCase))
+                {
+                    SolutionGenerator.LoadPlugins = false;
+                    continue;
+                }
+
                 if (arg.StartsWith("/noplugin:"))
                 {
                     pluginBlacklist.Add(arg.Substring("/noplugin:".Length));
@@ -205,6 +211,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Console.WriteLine(@"Usage: HtmlGenerator "
                 + @"[/out:<outputdirectory>] "
                 + @"[/force] "
+                + @"[/noplugins] "
+                + @"[/noplugin:Git] "
                 + @"<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
                 + @"[/in:<filecontaingprojectlist>] "
                 + @"[/nobuiltinfederations] "

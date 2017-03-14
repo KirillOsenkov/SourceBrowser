@@ -49,8 +49,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.solution = CreateSolution(solutionFilePath, properties);
             this.Federation = federation ?? new Federation();
             this.PluginBlacklist = pluginBlacklist ?? Enumerable.Empty<string>();
-            SetupPluginAggregator();
+
+            if (LoadPlugins)
+            {
+                SetupPluginAggregator();
+            }
         }
+
+        public static bool LoadPlugins { get; set; } = true;
 
         private void SetupPluginAggregator()
         {
