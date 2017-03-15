@@ -45,6 +45,8 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         public double progress = 0.0;
         public string loadErrorMessage = null;
 
+        public static readonly string RootPath = HostingEnvironment.ApplicationPhysicalPath;
+
         public static Index Instance
         {
             get
@@ -56,8 +58,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
                         if (instance == null)
                         {
                             instance = new Index();
-                            var rootPath = HostingEnvironment.ApplicationPhysicalPath;
-                            Task.Run(() => IndexLoader.ReadIndex(instance, rootPath));
+                            Task.Run(() => IndexLoader.ReadIndex(instance, RootPath));
                             AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
                         }
                     }
