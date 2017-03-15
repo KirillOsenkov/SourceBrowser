@@ -22,16 +22,15 @@
                 <div>Use quotes to find exact string (turns off prefix search).</div>
             </td>
             <td class="ex">
-                <div><a class="blueLink" href="/#q=BitConverter" target="_top">BitConverter</a></div>
-                <div><a class="blueLink" href="/#q=System.Console" target="_top">System.Console</a></div>
-                <div><a class="blueLink" href="/#q=Debug.Asse" target="_top">Debug.Asse</a></div>
-                <div><a class="blueLink" href="/#q=%22StringBuilder%22" target="_top">"StringBuilder"</a></div>
+                <div><a class="blueLink" href="/#q=TextSnapshot" target="_top">TextSnapshot</a></div>
+                <div><a class="blueLink" href="/#q=MonoDevelop.Core.ProgressMonitor" target="_top">MonoDevelop.Core.ProgressMonitor</a></div>
+                <div><a class="blueLink" href="/#q=%22FilePath%22" target="_top">"FilePath"</a></div>
             </td>
         </tr>
         <tr>
             <td class="ex">Use "assembly" prefix to search for assembly names.</td>
             <td class="ex">
-                <div><a class="blueLink" href="/#q=assembly%20System." target="_top">assembly System.</a></div>
+                <div><a class="blueLink" href="/#q=assembly%20MonoDevelop.Debugger." target="_top">assembly MonoDevelop.Debugger.</a></div>
             </td>
         </tr>
         <tr>
@@ -40,34 +39,28 @@
                 <div><span class="k">assembly</span>, <span class="k">type</span>, <span class="k">class</span>, <span class="k">struct</span>, <span class="k">interface</span>, <span class="k">enum</span>, <span class="k">delegate</span>, <span class="k">method</span>, <span class="k">property</span>, <span class="k">event</span>, <span class="k">field</span>, <span class="k">file</span></div>
             </td>
             <td class="ex">
-                <div><a class="blueLink" href="/#q=class%20Assembly" target="_top">class Assembly</a></div>
-                <div><a class="blueLink" href="/#q=struct%20DateTime" target="_top">struct DateTime</a></div>
-                <div><a class="blueLink" href="/#q=interface%20IQueryable" target="_top">interface IQueryable</a></div>
+                <div><a class="blueLink" href="/#q=class%20Platform" target="_top">class Platform</a></div>
+                <div><a class="blueLink" href="/#q=struct%20PropInfo" target="_top">struct PropInfo</a></div>
+                <div><a class="blueLink" href="/#q=interface%20IPro" target="_top">interface IPro</a></div>
             </td>
         </tr>
         <tr>
             <td class="ex">Add words separated by space to filter results to only those that contain all of the words. Can also filter by assembly name.</td>
             <td class="ex">
                 <div><a class="blueLink" href="/#q=task%20factory" target="_top">task factory</a></div>
-                <div><a class="blueLink" href="/#q=StringBuilder%20mscorlib" target="_top">StringBuilder mscorlib</a></div>
+                <div><a class="blueLink" href="/#q=FilePath%20MonoDevelop.Core" target="_top">FilePath MonoDevelop.Core</a></div>
             </td>
         </tr>
         <tr>
             <td class="ex">Find .cs or .vb files.</td>
             <td class="ex">
-                <div><a class="blueLink" href="/#q=Enumerable.cs" target="_top">Enumerable.cs</a></div>
-            </td>
-        </tr>
-        <tr>
-            <td class="ex">Find projects by path.</td>
-            <td class="ex">
-                <div><a class="blueLink" href="/#q=ndp\fx\src\data" target="_top">ndp\fx\src\data</a></div>
+                <div><a class="blueLink" href="/#q=IApplication.cs" target="_top">IApplication.cs</a></div>
             </td>
         </tr>
         <tr>
             <td class="ex">Find GUIDs mentioned in string literals.</td>
             <td class="ex">
-                <div><a class="blueLink" href="/#q=03973551-57A1-3900-A2B5-9083E3FF2943" target="_top">03973551-57A1-3900-A2B5-9083E3FF2943</a></div>
+                <div><a class="blueLink" href="/#q=0b12" target="_top">0b12</a></div>
             </td>
         </tr>
     </table>
@@ -83,23 +76,23 @@
         </thead>
         <tr>
             <td class="ex">Link to assembly</td>
-            <td class="ex"><a class="blueLink" href="/#System.Core" target="_top">/#System.Core</a></td>
+            <td class="ex"><a class="blueLink" href="/#MonoDevelop.Core" target="_top">/#MonoDevelop.Core</a></td>
         </tr>
         <tr>
             <td class="ex">Link to file</td>
-            <td class="ex"><a class="blueLink" href="/#mscorlib/system/environment.cs" target="_top">/#mscorlib/system/environment.cs</a></td>
+            <td class="ex"><a class="blueLink" href="/#MonoDevelop.Core/MonoDevelop.Core/IApplication.cs" target="_top">/#MonoDevelop.Core/MonoDevelop.Core/IApplication.cs</a></td>
         </tr>
         <tr>
             <td class="ex">Link to line number</td>
-            <td class="ex"><a class="blueLink" href="/#mscorlib/system/environment.cs#56" target="_top">/#mscorlib/system/environment.cs#56</a></td>
+            <td class="ex"><a class="blueLink" href="/#MonoDevelop.Core/MonoDevelop.Core/IApplication.cs#36" target="_top">/#MonoDevelop.Core/MonoDevelop.Core/IApplication.cs#36</a></td>
         </tr>
         <tr>
             <td class="ex">Link to a type/member</td>
-            <td class="ex"><a class="blueLink" href="/mscorlib/a.html#1f55292c3174123d" target="_top">/mscorlib/a.html#1f55292c3174123d</a> (right-click the definition and choose Copy Shortcut)</td>
+            <td class="ex"><a class="blueLink" href="/MonoDevelop.Core/a.html#dc467901c77fd388" target="_top">/MonoDevelop.Core/a.html#dc467901c77fd388</a> (right-click the definition and choose Copy Shortcut)</td>
         </tr>
         <tr>
             <td class="ex">Link to search results</td>
-            <td class="ex"><a class="blueLink" href="/#q=Button%20PresentationFramework" target="_top">/#q=Button%20PresentationFramework</a></td>
+            <td class="ex"><a class="blueLink" href="/#q=IApp" target="_top">/#q=IApp</a></td>
         </tr>
     </table>
     <h3>Features</h3>
