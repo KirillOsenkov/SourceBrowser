@@ -17,7 +17,7 @@ Now also available on NuGet:
  5. HtmlGenerator.exe ..\\..\\..\TestCode\TestSolution.sln
  6. the website in bin\Debug\HtmlGenerator\Index is ready to be served
 
-##In Visual Studio 2015:
+##In Visual Studio 2017:
  1. Open SourceBrowser.sln.
  2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln (you may need to unload the SourceIndexServer project if you see an error message that IIS can't serve from bin\Debug\HtmlGenerator\Index). 
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
@@ -25,7 +25,7 @@ Now also available on NuGet:
  5. Pass /in:<path> to pass a file with a list of full paths to projects and solutions to include in the index
  6. Set SourceIndexServer project as startup and run/debug the website. It is pre-configured to run from \bin\Debug\HtmlGenerator\Index but you can customize in project properties -> Web -> Custom server.
 
-**Note:** Either Visual Studio 2015 or at least MSBuild Tools 2015 [http://www.microsoft.com/en-us/download/details.aspx?id=48159](http://www.microsoft.com/en-us/download/details.aspx?id=48159) are required for Source Browser to work (Source Browser uses Roslyn and Roslyn uses MSBuild 14.0 to read projects and solutions).
+**Note:** Either Visual Studio 2017 or at least MSBuild Tools 2017 are required to build Source Browser (Source Browser uses Roslyn 2.0.0 and Roslyn uses MSBuild 15.0 to read projects and solutions).
 
 ##Conceptual design
 
