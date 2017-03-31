@@ -275,7 +275,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MEF\MEF.csproj">
-      <Project>{1acb1d72-d9fe-45db-8d47-fa2840724fe3}</Project>
+      <Project>{e3411353-9f6b-4fb2-874e-106bf4896462}</Project>
       <Name>MEF</Name>
     </ProjectReference>
     <ProjectReference Include="..\BuildLogParser\BuildLogParser.csproj">
