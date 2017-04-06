@@ -86,7 +86,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Directory.Delete(output, recursive: true);
             }
 
-            var json = JsonConvert.SerializeObject(new { fileNames, libFile });
+            var json = JsonConvert.SerializeObject(new { fileNames, libFile, outputFolder = output });
             var argumentsJson = Path.Combine(Common.Paths.BaseAppFolder, "TypeScriptAnalyzerArguments.json");
             File.WriteAllText(argumentsJson, json);
 

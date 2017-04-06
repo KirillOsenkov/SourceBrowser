@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer
@@ -92,7 +93,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
                 return text;
             }
 
-            text = System.Security.SecurityElement.Escape(text);
+            text = WebUtility.HtmlEncode(text);
 
             // HTML doesn't support XML's &apos;
             // need to use &#39; instead

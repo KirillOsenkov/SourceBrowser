@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Microsoft.SourceBrowser.Common
 {
+#if NET46
     public class AssertTraceListener : TraceListener
     {
         public static void Register()
@@ -58,4 +59,5 @@ namespace Microsoft.SourceBrowser.Common
             Log.Write(message);
         }
     }
+#endif
 }

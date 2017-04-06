@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
@@ -162,11 +165,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "Index");
             }
 
-            Log.ErrorLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile);
-            Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
+            var websiteDestination = Paths.SolutionDestinationFolder;
 
             // Warning, this will delete and recreate your destination folder
             Paths.PrepareDestinationFolder(force);
+
+            Paths.SolutionDestinationFolder = Path.Combine(Paths.SolutionDestinationFolder, "index"); //The actual index files need to be written to the "index" subdirectory
+
+            Directory.CreateDirectory(Paths.SolutionDestinationFolder);
+
+            Log.ErrorLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile);
+            Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
 
             using (Disposable.Timing("Generating website"))
             {
@@ -186,6 +195,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist);
                 FinalizeProjects(emitAssemblyList, federation);
+                WebsiteFinalizer.Finalize(websiteDestination, emitAssemblyList, federation);
             }
         }
 
@@ -290,6 +300,91 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var projectGenerator = new ProjectGenerator(projectName, solutionDestinationPath);
             projectGenerator.GenerateNonProjectFolder();
+        }
+    }
+
+    internal static class WebsiteFinalizer
+    {
+        public static void Finalize(string destinationFolder, bool emitAssemblyList, Federation federation)
+        {
+            string sourcePath = Assembly.GetEntryAssembly().Location;
+            sourcePath = Path.GetDirectoryName(sourcePath);
+            string basePath = sourcePath;
+            sourcePath = Path.Combine(sourcePath, @"Web");
+            if (!Directory.Exists(sourcePath))
+            {
+                return;
+            }
+
+            sourcePath = Path.GetFullPath(sourcePath);
+            FileUtilities.CopyDirectory(sourcePath, destinationFolder);
+
+            StampOverviewHtmlWithDate(destinationFolder);
+
+            if (emitAssemblyList)
+            {
+                ToggleSolutionExplorerOff(destinationFolder);
+            }
+
+            SetExternalUrlMap(destinationFolder, federation);
+        }
+
+        private static void StampOverviewHtmlWithDate(string destinationFolder)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot/overview.html");
+            var dst = Path.Combine(destinationFolder, "index/overview.html");
+            if (File.Exists(source))
+            {
+                var text = File.ReadAllText(source);
+                text = StampOverviewHtmlText(text);
+                File.WriteAllText(dst, text);
+            }
+        }
+
+        private static string StampOverviewHtmlText(string text)
+        {
+            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
+            return text;
+        }
+
+        private static void ToggleSolutionExplorerOff(string destinationFolder)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot/scripts.js");
+            var dst = Path.Combine(destinationFolder, "index/scripts.js");
+            if (File.Exists(source))
+            {
+                var text = File.ReadAllText(source);
+                text = text.Replace("/*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/", "false");
+                File.WriteAllText(dst, text);
+            }
+        }
+
+        private static void SetExternalUrlMap(string destinationFolder, Federation federation)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot/scripts.js");
+            var dst = Path.Combine(destinationFolder, "index/scripts.js");
+            if (File.Exists(source))
+            {
+                var sb = new StringBuilder();
+                foreach (var server in federation.GetServers())
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(",");
+                    }
+
+                    sb.Append("\"");
+                    sb.Append(server);
+                    sb.Append("\"");
+                }
+
+                if (sb.Length > 0)
+                {
+                    var text = File.ReadAllText(source);
+                    text = Regex.Replace(text, @"/\*EXTERNAL_URL_MAP\*/.*/\*EXTERNAL_URL_MAP\*/", sb.ToString());
+                    File.WriteAllText(dst, text);
+                }
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.SourceBrowser.Common;
 using Microsoft.SourceBrowser.SourceIndexServer;
 using Microsoft.SourceBrowser.SourceIndexServer.Models;
@@ -191,6 +193,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
                 var actualResults = resultSymbols.Select(i => i.Description);
                 Assert.IsTrue(actualResults.SequenceEqual(expectedResults));
             }
+        }
+
+        static IndexUnitTests()
+        {
+            Index.SetRootPath(Path.GetDirectoryName(typeof(IndexUnitTests).GetTypeInfo().Assembly.Location)); 
         }
 
         public void EndToEnd(string queryString, string expectedHtml)
