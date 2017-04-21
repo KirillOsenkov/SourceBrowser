@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer.Models
@@ -12,8 +11,23 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
     {
         public const int MaxRawResults = 100;
 
-        private static Index instance;
-        private static readonly object gate = new object();
+        public static string RootPath { get; private set; }
+
+        // For testing
+        public static void SetRootPath(string rootPath)
+        {
+            RootPath = rootPath;
+        }
+
+        public Index()
+        {
+        }
+
+        public Index(string rootPath)
+        {
+            RootPath = rootPath;
+            Task.Run(() => IndexLoader.ReadIndex(this, rootPath));
+        }
 
         internal void ClearAll()
         {
@@ -44,38 +58,6 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         public bool indexFinishedPopulating = false;
         public double progress = 0.0;
         public string loadErrorMessage = null;
-
-        public static readonly string RootPath = HostingEnvironment.ApplicationPhysicalPath;
-
-        public static Index Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (gate)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new Index();
-                            Task.Run(() => IndexLoader.ReadIndex(instance, RootPath));
-                            AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
-                        }
-                    }
-                }
-
-                return instance;
-            }
-        }
-
-        private static void CurrentDomain_DomainUnload(object sender, EventArgs e)
-        {
-            if (instance != null)
-            {
-                instance.Dispose();
-                instance = null;
-            }
-        }
 
         public Query Get(string queryString)
         {
