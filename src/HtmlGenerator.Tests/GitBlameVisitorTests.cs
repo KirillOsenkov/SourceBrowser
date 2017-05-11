@@ -1,49 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GitGlyph;
 using LibGit2Sharp;
+using Microsoft.SourceBrowser.Common;
 using Microsoft.SourceBrowser.HtmlGenerator.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HtmlGenerator.Tests
 {
     [TestClass]
-    public class GitBlameVistorTests
+    public class GitBlameVisitorTests
     {
         [TestMethod]
         public void TestVisit()
         {
-            string pathToClonedRepo = Path.Combine(Path.GetTempPath(), "GitBlameVisitorRepo");
-            string pathToTestFile = Path.Combine(pathToClonedRepo, "Test.cs");
-            string pathToBareRepo = Path.Combine("Repositories", "GitBlameVisitorRepo.git");
+            string pathToRepo = Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
+            
+            // Create the Git Repository for test
+            Repository.Init(pathToRepo);
+            var repo = new Repository(pathToRepo);
+            
+            // Create the committer's signature and commit
+            Signature author = new Signature("User", "user@example.com", DateTime.Now);
+            Signature committer = author;
+            writeAndCommit("FirstLine", author, committer, repo, "First Commit");
+            Commit commit2 = writeAndCommit("SecondLine", author, committer, repo, "Second Commit");
+
             try
             {
-                Repository.Clone(pathToBareRepo, pathToClonedRepo);
-                Repository repo = new Repository(pathToClonedRepo);
-                //Test.cs contains:
-                //bd46cc8 public class Test
-                //bd46cc8 {
-                //909a6197  private int test;
-                //11933d2a  private int myInt;
-                //bd46cc8 }
                 Dictionary<string, string> context = new Dictionary<string, string>
                 {
-                    {Microsoft.SourceBrowser.MEF.ContextKeys.FilePath, pathToTestFile},
-                    {Microsoft.SourceBrowser.MEF.ContextKeys.LineNumber, "3"}
+                    {Microsoft.SourceBrowser.MEF.ContextKeys.FilePath, Path.Combine(pathToRepo,"Test.txt")},
+                    {Microsoft.SourceBrowser.MEF.ContextKeys.LineNumber, "2"}
                 };
-                string expectedThirdLineSha1 = "909a6197";
+                string expectedSecondLineSha1 = commit2.Id.Sha;
                 GitBlameVisitor visitor = new GitBlameVisitor(repo, new PluginLogger());
 
                 string htmlResult = visitor.Visit(null, context);
 
-                Assert.IsTrue(htmlResult.Contains(expectedThirdLineSha1));
+                Assert.IsTrue(htmlResult.Contains(expectedSecondLineSha1));
             }
             finally
             {
-                DeleteDirectory(pathToClonedRepo);
+                DeleteDirectory(pathToRepo);
             }
         }
 
+        /// <summary>
+        /// Write content in the file Test.txt, stage this file and finally commit this change to the repository.
+        /// </summary>
+        /// <param name="content">Line written in the the file</param>
+        /// <param name="author">Signature of the author</param>
+        /// <param name="committer">Signature of the committer</param>
+        /// <param name="repo">Repository to commit to</param>
+        /// <param name="commitMessage">Message of the commit</param>
+        /// <returns>Commit of the change</returns>
+        private Commit writeAndCommit(String content, Signature author, Signature committer, Repository repo, String commitMessage)
+        {
+            File.AppendAllLines(Path.Combine(repo.Info.WorkingDirectory, "Test.txt"), content.SplitBySpacesConsideringQuotes());
+            Commands.Stage(repo, "Test.txt");
+            return repo.Commit(commitMessage, author, committer);
+        }
+        
         /// <summary>
         /// Recursively unsets the readonly bit for all files and repositories in a directory and delete this directory
         /// Necessary to remove Git Repositories
