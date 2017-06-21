@@ -89,6 +89,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         var propertyName = match.Groups["name"].Value;
                         var propertyValue = match.Groups["value"].Value;
                         properties.Add(propertyName, propertyValue);
+                        Log.Message($"Adding property {propertyName}={propertyValue}");
                         continue;
                     }
                 }
