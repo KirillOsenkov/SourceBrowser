@@ -21,9 +21,19 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new Index(Path.Combine(Environment.ContentRootPath, "index")));
+            RootPath = Path.Combine(Environment.ContentRootPath, "Index");
+
+            var subfolder = Path.Combine(RootPath, "Index");
+            if (File.Exists(Path.Combine(subfolder, "Projects.txt")))
+            {
+                RootPath = subfolder;
+            }
+
+            services.AddSingleton(new Index(RootPath));
             services.AddMvc();
         }
+
+        public string RootPath { get; set; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -44,12 +54,10 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "index")),
+                FileProvider = new PhysicalFileProvider(RootPath),
             });
             app.UseStaticFiles();
-
             app.UseMvc();
-
         }
     }
 }
