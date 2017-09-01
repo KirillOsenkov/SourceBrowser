@@ -157,6 +157,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             AssertTraceListener.Register();
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler.HandleFirstChanceException;
 
+            HelpMSBuildFindToolset();
+
             if (Paths.SolutionDestinationFolder == null)
             {
                 Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "Index");
@@ -186,6 +188,32 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist);
                 FinalizeProjects(emitAssemblyList, federation);
+            }
+        }
+
+        /// <summary>
+        /// Workaround for a bug in MSBuild where it couldn't find the SdkResolver if run not in VS command prompt:
+        /// https://github.com/Microsoft/msbuild/issues/2369
+        /// Pretend we're in the VS Command Prompt to fix this.
+        /// </summary>
+        private static void HelpMSBuildFindToolset()
+        {
+            if (Environment.GetEnvironmentVariable("VSINSTALLDIR") == null)
+            {
+                var root = @"C:\Program Files (x86)\Microsoft Visual Studio\2017";
+                if (Directory.Exists(root))
+                {
+                    foreach (var sku in Directory.GetDirectories(root))
+                    {
+                        var msbuildExe = Path.Combine(sku, "MSBuild", "15.0", "Bin", "MSBuild.exe");
+                        if (File.Exists(msbuildExe))
+                        {
+                            Environment.SetEnvironmentVariable("VSINSTALLDIR", sku);
+                            Environment.SetEnvironmentVariable("VisualStudioVersion", @"15.0");
+                            break;
+                        }
+                    }
+                }
             }
         }
 
