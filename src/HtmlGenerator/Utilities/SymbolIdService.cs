@@ -200,10 +200,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 case Glyph.EnumInternal:
                     return StandardGlyphGroup.GlyphGroupEnum;
 
-                case Glyph.EnumMemberPublic:
-                case Glyph.EnumMemberProtected:
-                case Glyph.EnumMemberPrivate:
-                case Glyph.EnumMemberInternal:
+                case Glyph.EnumMember:
                     return StandardGlyphGroup.GlyphGroupEnumMember;
 
                 case Glyph.Error:

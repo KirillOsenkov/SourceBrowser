@@ -32,10 +32,7 @@
         EnumPrivate,
         EnumInternal,
 
-        EnumMemberPublic,
-        EnumMemberProtected,
-        EnumMemberPrivate,
-        EnumMemberInternal,
+        EnumMember,
 
         Error,
         StatusInformation,
