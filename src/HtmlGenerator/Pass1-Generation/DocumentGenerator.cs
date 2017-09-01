@@ -320,7 +320,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var fullPath = Path.GetFullPath(Document.FilePath);
             var serverPathMapping =
-                projectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key));
+                projectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
             if (serverPathMapping.Key != null)
             {
                 return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
