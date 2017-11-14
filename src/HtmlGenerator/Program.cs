@@ -359,8 +359,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void StampOverviewHtmlWithDate(string destinationFolder)
         {
-            var source = Path.Combine(destinationFolder, "wwwroot/overview.html");
-            var dst = Path.Combine(destinationFolder, "index/overview.html");
+            var source = Path.Combine(destinationFolder, "wwwroot", "overview.html");
+            var dst = Path.Combine(destinationFolder, "index", "overview.html");
             if (File.Exists(source))
             {
                 var text = File.ReadAllText(source);
