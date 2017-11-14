@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.15</NuGetVersion>
+    <NuGetVersion>1.0.16</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
