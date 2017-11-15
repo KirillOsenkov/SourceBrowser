@@ -54,7 +54,10 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <Target Name="PublishWebsite" AfterTargets="CoreBuild" BeforeTargets="BuildNuGet">
-    <Exec Command="dotnet publish &quot;$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj'))&quot; -f netcoreapp1.1 -c Release -o &quot;$([System.IO.Path]::GetFullPath('$(OutDir)\Web'))&quot;" />
+    <MSBuild Targets="Publish"
+      Projects="$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj"
+      Properties="PublishDir=$(TargetDir)\Web;Configuration=Release"
+      RemoveProperties="TargetFramework" />
   </Target>
   <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
     <Exec Command="&quot;$(SolutionDir)\.nuget\NuGet.exe&quot; Pack Microsoft.SourceBrowser.nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
