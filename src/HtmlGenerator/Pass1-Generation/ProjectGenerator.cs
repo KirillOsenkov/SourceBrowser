@@ -158,6 +158,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     GenerateNamespaceExplorer();
                     GenerateIndex();
                 }
+
+                var compilation = Project.GetCompilationAsync().Result;
+                var diagnostics = compilation.GetDiagnostics().Select(d => d.ToString()).ToArray();
+                if (diagnostics.Length > 0)
+                {
+                    var diagnosticsTxt = Path.Combine(this.ProjectDestinationFolder, "diagnostics.txt");
+                    File.WriteAllLines(diagnosticsTxt, diagnostics);
+                }
             }
             catch (Exception ex)
             {
