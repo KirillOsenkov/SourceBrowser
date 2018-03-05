@@ -28,10 +28,10 @@
   <ItemGroup>
     <PackageReference Include="ExceptionAnalysis.Diagnostics" Version="1.0.0.39796" />
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
-    <PackageReference Include="Microsoft.Build" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.3.409" />
+    <PackageReference Include="Microsoft.Build" Version="15.5.180" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.5.180" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.5.180" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.5.180" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.3.0-beta1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.3.1" />

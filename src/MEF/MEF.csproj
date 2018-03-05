@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
-    <PackageReference Include="Microsoft.Build" Version="15.3.409" />
+    <PackageReference Include="Microsoft.Build" Version="15.5.180" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.3.0-beta1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.3.1" />
