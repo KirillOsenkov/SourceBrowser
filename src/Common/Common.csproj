@@ -7,6 +7,6 @@
     <DefineConstants>$(DefineConstants);NET46</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="15.3.409" />
+    <PackageReference Include="Microsoft.Build" Version="15.5.180" />
   </ItemGroup>
 </Project>
