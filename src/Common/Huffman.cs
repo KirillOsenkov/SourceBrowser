@@ -289,7 +289,7 @@ namespace Microsoft.SourceBrowser.Common
 
         private byte[] ToByteArray(bool[] bits)
         {
-            BitArray array = new BitArray(bits);
+            ICollection array = new BitArray(bits);
             byte[] result = new byte[(int)Math.Ceiling(array.Count / 8.0)];
             array.CopyTo(result, 0);
             return result;

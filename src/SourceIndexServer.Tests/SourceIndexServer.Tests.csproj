@@ -1,44 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectGuid>{B9F60322-17E2-46BF-A98A-467F1D6A8469}</ProjectGuid>
-    <AssemblyName>Microsoft.SourceBrowser.SourceIndexServer.Tests</AssemblyName>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace>Microsoft.SourceBrowser.SourceIndexServer.Tests</RootNamespace>
-  </PropertyGroup>
-  <Import Project="..\..\Common.props" />
+
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-    <Reference Include="System" />
+    <Content Include="..\HtmlGenerator\Web\index\AffiliateLinks.txt" Link="AffiliateLinks.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="IndexLoaderUnitTests.cs" />
-    <Compile Include="IndexUnitTests.cs" />
-    <Compile Include="QueryUnitTests.cs" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.0-beta2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.0-beta2" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{f13cd277-e86b-4bc6-9e93-39ed055a46db}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceIndexServer\SourceIndexServer.csproj">
-      <Project>{1ae38cc6-18c6-4ab7-8fe3-feeb33329952}</Project>
-      <Name>SourceIndexServer</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\SourceIndexServer\SourceIndexServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="..\..\Common.targets" />
+
 </Project>

@@ -125,7 +125,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             // Explicitly add "CheckForSystemRuntimeDependency = true" property to correctly resolve facade references.
             // See https://github.com/dotnet/roslyn/issues/560
             propertiesOpt = propertiesOpt.Add("CheckForSystemRuntimeDependency", "true");
-            propertiesOpt = propertiesOpt.Add("VisualStudioVersion", "14.0");
+            propertiesOpt = propertiesOpt.Add("VisualStudioVersion", "15.0");
 
             var w = MSBuildWorkspace.Create(properties: propertiesOpt, hostServices: WorkspaceHacks.Pack);
             w.LoadMetadataForReferencedProjects = true;
@@ -317,12 +317,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             new TypeScriptSupport().Generate(typeScriptFiles, SolutionDestinationFolder);
 
-            if (currentBatch.Length > 1)
-            {
-                AddProjectsToSolutionExplorer(
-                    solutionExplorerRoot,
-                    currentBatch);
-            }
+            AddProjectsToSolutionExplorer(
+                solutionExplorerRoot,
+                currentBatch);
 
             return currentBatch.Length < projectsToProcess.Length;
         }

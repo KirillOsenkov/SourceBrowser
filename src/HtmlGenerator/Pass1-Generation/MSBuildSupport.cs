@@ -26,7 +26,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var url = localFileSystemPath + ".html";
             url = url.Replace(":", "");
             url = url.Replace(" ", "");
+
+            // need these because IIS refuses to render static files that have \bin\ in the path
             url = url.Replace(@"\bin\", @"\bin_\");
+            url = url.Replace(@"\Bin\", @"\Bin_\");
             if (url.StartsWith(@"\\"))
             {
                 url = url.Substring(2);

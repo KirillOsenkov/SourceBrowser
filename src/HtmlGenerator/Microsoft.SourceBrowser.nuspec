@@ -24,6 +24,6 @@
     <file src="*.dll" target="tools" />
     <file src="TypeScriptSupport\*.*" target="tools\TypeScriptSupport" />
     <file src="web\*.*" target="tools\web" />
-    <file src="web\content\icons\*.png" target="tools\web\content\icons" />
+    <file src="web\**\*.*" target="tools\web" />
   </files>
 </package>

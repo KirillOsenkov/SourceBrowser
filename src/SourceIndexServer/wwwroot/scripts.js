@@ -680,7 +680,7 @@ function redirectToNextLevelRedirectFile() {
         var hashParts = anchor.split(anchorSplitChar);
         var id = hashParts[0];
 
-        var destination = "a" + id.slice(0, 1) + ".html" + "#" + createSafeLineNumber(id);
+        var destination = "A" + id.slice(0, 1) + ".html" + "#" + createSafeLineNumber(id);
         if (hashParts.length == 2) {
             destination = destination + anchorSplitChar + "references";
         }

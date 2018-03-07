@@ -16,7 +16,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
         {
             AssemblyNumber = symbolInfo.AssemblyNumber;
             Glyph = symbolInfo.Glyph;
-            Name = string.Intern(symbolInfo.Name);
+            Name = symbolInfo.Name;
             ID = symbolInfo.ID;
             Description = IntPtr.Zero;
         }

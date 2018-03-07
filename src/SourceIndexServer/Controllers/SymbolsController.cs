@@ -1,24 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SourceBrowser.Common;
 using Microsoft.SourceBrowser.SourceIndexServer.Models;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
 {
-    public class SymbolsController : ApiController
+    public class SymbolsController : Controller
     {
+        private readonly IServiceProvider _provider;
         private const int MaxInputLength = 260;
         private static readonly Dictionary<string, int> usages = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private static readonly DateTime serviceStarted = DateTime.UtcNow;
         private static int requestsServed = 0;
 
-        [HttpGet]
-        public HttpResponseMessage GetHtml(string symbol)
+        public SymbolsController(IServiceProvider provider)
+        {
+            _provider = provider;
+        }
+
+        [HttpGet("/api/symbols")]
+        public IActionResult GetHtml(string symbol)
         {
             string result = null;
             try
@@ -30,9 +35,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
                 result = Markup.Note(ex.ToString());
             }
 
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StringContent(result, Encoding.UTF8, "text/html");
-            return response;
+            return Content(result, "text/html", Encoding.UTF8);
         }
 
         private string UpdateUsages()
@@ -53,7 +56,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
             }
         }
 
-        private static string GetHtmlCore(string symbol, string usageStats = null)
+        private string GetHtmlCore(string symbol, string usageStats = null)
         {
             if (symbol == null || symbol.Length < 3)
             {
@@ -72,7 +75,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
             {
                 Stopwatch sw = Stopwatch.StartNew();
 
-                var index = Index.Instance;
+                var index = _provider.GetRequiredService<Index>();
                 var query = index.Get(symbol);
 
                 var result = new ResultsHtmlGenerator(query).Generate(sw, index, usageStats);

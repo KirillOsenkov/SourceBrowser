@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
@@ -157,18 +161,26 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             AssertTraceListener.Register();
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler.HandleFirstChanceException;
 
-            HelpMSBuildFindToolset();
+            // This loads the real MSBuild from the toolset so that all targets and SDKs can be found
+            // as if a real build is happening
+            MSBuildLocator.RegisterDefaults();
 
             if (Paths.SolutionDestinationFolder == null)
             {
                 Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "Index");
             }
 
-            Log.ErrorLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile);
-            Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
+            var websiteDestination = Paths.SolutionDestinationFolder;
 
             // Warning, this will delete and recreate your destination folder
             Paths.PrepareDestinationFolder(force);
+
+            Paths.SolutionDestinationFolder = Path.Combine(Paths.SolutionDestinationFolder, "index"); //The actual index files need to be written to the "index" subdirectory
+
+            Directory.CreateDirectory(Paths.SolutionDestinationFolder);
+
+            Log.ErrorLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.ErrorLogFile);
+            Log.MessageLogFilePath = Path.Combine(Paths.SolutionDestinationFolder, Log.MessageLogFile);
 
             using (Disposable.Timing("Generating website"))
             {
@@ -188,32 +200,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist);
                 FinalizeProjects(emitAssemblyList, federation);
-            }
-        }
-
-        /// <summary>
-        /// Workaround for a bug in MSBuild where it couldn't find the SdkResolver if run not in VS command prompt:
-        /// https://github.com/Microsoft/msbuild/issues/2369
-        /// Pretend we're in the VS Command Prompt to fix this.
-        /// </summary>
-        private static void HelpMSBuildFindToolset()
-        {
-            if (Environment.GetEnvironmentVariable("VSINSTALLDIR") == null)
-            {
-                var root = @"C:\Program Files (x86)\Microsoft Visual Studio\2017";
-                if (Directory.Exists(root))
-                {
-                    foreach (var sku in Directory.GetDirectories(root))
-                    {
-                        var msbuildExe = Path.Combine(sku, "MSBuild", "15.0", "Bin", "MSBuild.exe");
-                        if (File.Exists(msbuildExe))
-                        {
-                            Environment.SetEnvironmentVariable("VSINSTALLDIR", sku);
-                            Environment.SetEnvironmentVariable("VisualStudioVersion", @"15.0");
-                            break;
-                        }
-                    }
-                }
+                WebsiteFinalizer.Finalize(websiteDestination, emitAssemblyList, federation);
             }
         }
 
@@ -273,6 +260,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
+            var processedAssemblyList = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Generating " + path))
@@ -286,7 +275,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         pluginBlacklist: pluginBlacklist))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
-                        solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                        solutionGenerator.Generate(processedAssemblyList, mergedSolutionExplorerRoot);
                     }
                 }
 
@@ -318,6 +307,91 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var projectGenerator = new ProjectGenerator(projectName, solutionDestinationPath);
             projectGenerator.GenerateNonProjectFolder();
+        }
+    }
+
+    internal static class WebsiteFinalizer
+    {
+        public static void Finalize(string destinationFolder, bool emitAssemblyList, Federation federation)
+        {
+            string sourcePath = Assembly.GetEntryAssembly().Location;
+            sourcePath = Path.GetDirectoryName(sourcePath);
+            string basePath = sourcePath;
+            sourcePath = Path.Combine(sourcePath, @"Web");
+            if (!Directory.Exists(sourcePath))
+            {
+                return;
+            }
+
+            sourcePath = Path.GetFullPath(sourcePath);
+            FileUtilities.CopyDirectory(sourcePath, destinationFolder);
+
+            StampOverviewHtmlWithDate(destinationFolder);
+
+            if (emitAssemblyList)
+            {
+                ToggleSolutionExplorerOff(destinationFolder);
+            }
+
+            SetExternalUrlMap(destinationFolder, federation);
+        }
+
+        private static void StampOverviewHtmlWithDate(string destinationFolder)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot", "overview.html");
+            var dst = Path.Combine(destinationFolder, "index", "overview.html");
+            if (File.Exists(source))
+            {
+                var text = File.ReadAllText(source);
+                text = StampOverviewHtmlText(text);
+                File.WriteAllText(dst, text);
+            }
+        }
+
+        private static string StampOverviewHtmlText(string text)
+        {
+            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
+            return text;
+        }
+
+        private static void ToggleSolutionExplorerOff(string destinationFolder)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot/scripts.js");
+            var dst = Path.Combine(destinationFolder, "index/scripts.js");
+            if (File.Exists(source))
+            {
+                var text = File.ReadAllText(source);
+                text = text.Replace("/*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/", "false");
+                File.WriteAllText(dst, text);
+            }
+        }
+
+        private static void SetExternalUrlMap(string destinationFolder, Federation federation)
+        {
+            var source = Path.Combine(destinationFolder, "wwwroot/scripts.js");
+            var dst = Path.Combine(destinationFolder, "index/scripts.js");
+            if (File.Exists(source))
+            {
+                var sb = new StringBuilder();
+                foreach (var server in federation.GetServers())
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(",");
+                    }
+
+                    sb.Append("\"");
+                    sb.Append(server);
+                    sb.Append("\"");
+                }
+
+                if (sb.Length > 0)
+                {
+                    var text = File.ReadAllText(source);
+                    text = Regex.Replace(text, @"/\*EXTERNAL_URL_MAP\*/.*/\*EXTERNAL_URL_MAP\*/", sb.ToString());
+                    File.WriteAllText(dst, text);
+                }
+            }
         }
     }
 }
