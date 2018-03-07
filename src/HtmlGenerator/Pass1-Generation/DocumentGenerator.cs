@@ -279,7 +279,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private string DocumentUrl { get { return Document.Project.AssemblyName + "/" + documentRelativeFilePathWithoutHtmlExtension.Replace('\\', '/'); } }
+        private string DocumentUrl
+        {
+            get
+            {
+                return Document.Project.AssemblyName + "/" + documentRelativeFilePathWithoutHtmlExtension.Replace('\\', '/');
+            }
+        }
 
         private void GenerateHeader(Action<string> writeLine)
         {
@@ -287,7 +293,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string projectDisplayName = projectGenerator.ProjectSourcePath;
             string projectUrl = "/#" + Document.Project.AssemblyName;
 
-            string documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", DocumentUrl, documentDisplayName);
+            string documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", "/#" + DocumentUrl, documentDisplayName);
             string projectLink = string.Format("Project: <a id=\"projectPath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a> ({2})", projectUrl, projectDisplayName, projectGenerator.AssemblyName);
 
             string fileShareLink = GetFileShareLink();

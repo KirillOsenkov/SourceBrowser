@@ -3,12 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>HtmlGenerator</AssemblyName>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.14</NuGetVersion>
+    <NuGetVersion>1.0.17</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
@@ -28,22 +28,23 @@
   <ItemGroup>
     <PackageReference Include="ExceptionAnalysis.Diagnostics" Version="1.0.0.39796" />
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
-    <PackageReference Include="Microsoft.Build" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.3.409" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.3.0-beta1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="2.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.1" />
+    <PackageReference Include="Microsoft.Build" Version="15.6.82" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.0.7-preview-ge60d679b53" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.6.82" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.6.1" />
     <PackageReference Include="Microsoft.Language.Xml" Version="1.1.20" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="15.0.26606" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="15.6.27413" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuildLogParser\BuildLogParser.csproj" />
@@ -54,7 +55,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <Target Name="PublishWebsite" AfterTargets="CoreBuild" BeforeTargets="BuildNuGet">
-    <Exec Command="dotnet publish &quot;$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj'))&quot; -f netcoreapp1.1 -c Release -o &quot;$([System.IO.Path]::GetFullPath('$(OutDir)\Web'))&quot;" />
+    <MSBuild Targets="Publish" Projects="$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj" Properties="PublishDir=$(TargetDir)\Web;Configuration=Release" RemoveProperties="TargetFramework" />
   </Target>
   <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
     <Exec Command="&quot;$(SolutionDir)\.nuget\NuGet.exe&quot; Pack Microsoft.SourceBrowser.nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
