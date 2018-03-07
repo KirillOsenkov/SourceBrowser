@@ -38,7 +38,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             // it is possible that the solution has more projects than mentioned in the .sln file
             // because Roslyn might add more projects from project references that aren't mentioned
             // in the .sln
-            projectToSolutionFolderMap.TryGetValue(fullPath, out folders);
+            projectToSolutionFolderMap?.TryGetValue(fullPath, out folders);
             AddProjectToFolder(root, project, folders);
         }
 
