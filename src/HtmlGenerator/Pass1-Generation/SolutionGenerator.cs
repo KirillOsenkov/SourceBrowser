@@ -317,12 +317,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             new TypeScriptSupport().Generate(typeScriptFiles, SolutionDestinationFolder);
 
-            if (currentBatch.Length > 1)
-            {
-                AddProjectsToSolutionExplorer(
-                    solutionExplorerRoot,
-                    currentBatch);
-            }
+            AddProjectsToSolutionExplorer(
+                solutionExplorerRoot,
+                currentBatch);
 
             return currentBatch.Length < projectsToProcess.Length;
         }
