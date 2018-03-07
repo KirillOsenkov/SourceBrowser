@@ -11,27 +11,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public void AddProjectsToSolutionExplorer(Folder root, IEnumerable<Project> projects)
         {
-            if (!ProjectFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
             Dictionary<string, IEnumerable<string>> projectToSolutionFolderMap = null;
             if (!Configuration.FlattenSolutionExplorer)
             {
                 projectToSolutionFolderMap = GetProjectToSolutionFolderMap(ProjectFilePath);
             }
 
-            var processedAssemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
             foreach (var project in projects)
             {
-                if (!processedAssemblyNames.Add(project.AssemblyName))
-                {
-                    // filter out multiple projects with the same assembly name
-                    continue;
-                }
-
                 if (Configuration.FlattenSolutionExplorer)
                 {
                     AddProjectToFolder(root, project);
@@ -70,6 +57,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static Dictionary<string, IEnumerable<string>> GetProjectToSolutionFolderMap(string solutionFilePath)
         {
+            if (!solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
             var solutionFile = SolutionFile.Parse(solutionFilePath);
 
             var result = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);

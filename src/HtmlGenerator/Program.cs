@@ -260,6 +260,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
+            var processedAssemblyList = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var path in solutionFilePaths)
             {
                 using (Disposable.Timing("Generating " + path))
@@ -273,7 +275,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         pluginBlacklist: pluginBlacklist))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
-                        solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                        solutionGenerator.Generate(processedAssemblyList, mergedSolutionExplorerRoot);
                     }
                 }
 
