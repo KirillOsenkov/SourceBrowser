@@ -126,8 +126,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             // See https://github.com/dotnet/roslyn/issues/560
             propertiesOpt = propertiesOpt.Add("CheckForSystemRuntimeDependency", "true");
             propertiesOpt = propertiesOpt.Add("VisualStudioVersion", "15.0");
+            propertiesOpt = propertiesOpt.Add("AlwaysCompileMarkupFilesInSeparateDomain", "false");
 
-            var w = MSBuildWorkspace.Create(properties: propertiesOpt, hostServices: WorkspaceHacks.Pack);
+            var w = MSBuildWorkspace.Create(properties: propertiesOpt);
             w.LoadMetadataForReferencedProjects = true;
             return w;
         }
