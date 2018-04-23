@@ -17,7 +17,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var assemblyNames = new[]
             {
                 "Microsoft.CodeAnalysis.Workspaces",
-                "Microsoft.CodeAnalysis.Workspaces.Desktop",
+                "Microsoft.CodeAnalysis.Workspaces.MSBuild",
                 "Microsoft.CodeAnalysis.CSharp.Workspaces",
                 "Microsoft.CodeAnalysis.VisualBasic.Workspaces",
                 "Microsoft.CodeAnalysis.Features",
