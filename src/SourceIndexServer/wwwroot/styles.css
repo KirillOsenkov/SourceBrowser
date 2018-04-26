@@ -671,6 +671,10 @@ a i {
     border-style: solid;
 }
 
+.unknownClassification {
+    color: red;
+}
+
 .k, a.k {
     color: blue;
 }

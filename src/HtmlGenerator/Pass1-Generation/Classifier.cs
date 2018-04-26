@@ -213,7 +213,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return replacement;
             }
 
-            return classificationType;
+            return Constants.ClassificationUnknown;
         }
     }
 }
