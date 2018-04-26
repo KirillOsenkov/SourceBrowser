@@ -417,7 +417,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     return "<b>" + html + "</b>";
                 }
-
             }
 
             var sb = new StringBuilder();

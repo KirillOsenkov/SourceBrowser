@@ -67,7 +67,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return null;
             }
 
-            if (range.ClassificationType == Constants.ClassificationLiteral)
+            if (range.ClassificationType == Constants.ClassificationLiteral ||
+                range.ClassificationType == Constants.ClassificationUnknown)
             {
                 return classificationType;
             }
