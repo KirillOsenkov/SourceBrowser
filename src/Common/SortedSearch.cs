@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Microsoft.SourceBrowser.SourceIndexServer.Models
+namespace Microsoft.SourceBrowser.Common
 {
     public class SortedSearch
     {
@@ -20,6 +20,11 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             int low;
             int high;
             search.FindBounds(word, out low, out high);
+            if (high < low)
+            {
+                return -1;
+            }
+
             return low;
         }
 

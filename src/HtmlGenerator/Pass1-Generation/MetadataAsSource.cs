@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.SourceBrowser.Common;
 
@@ -41,7 +42,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     var assemblyName = Path.GetFileNameWithoutExtension(assemblyFilePath);
 
-                    var solution = new AdhocWorkspace(WorkspaceHacks.Pack).CurrentSolution;
+                    var solution = new AdhocWorkspace(MefHostServices.DefaultHost).CurrentSolution;
                     var workspace = solution.Workspace;
                     var project = solution.AddProject(assemblyName, assemblyName, LanguageNames.CSharp);
                     var metadataReference = CreateReferenceFromFilePath(assemblyFilePath);

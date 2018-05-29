@@ -35,6 +35,7 @@
         public static readonly string ClassificationConstructor = "constructor";
         public static readonly string ClassificationPreprocessKeyword = "k preprocess";
         public static readonly string ClassificationProperty = "property";
+        public static readonly string ClassificationUnknown = "unknownClassification";
 
         public static readonly string ClassificationExcludedCode = "e";
         public static readonly string RoslynClassificationKeyword = "keyword";
