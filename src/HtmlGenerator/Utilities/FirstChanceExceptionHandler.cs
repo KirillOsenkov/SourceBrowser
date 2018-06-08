@@ -91,6 +91,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     return;
                 }
 
+                if (ex is FileLoadException && ex.Message.Contains("The assembly '' has already loaded from a different location"))
+                {
+                    return;
+                }
+
                 if (ex is FileNotFoundException)
                 {
                     return;

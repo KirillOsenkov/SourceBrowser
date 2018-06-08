@@ -1,45 +1,12 @@
 ﻿using System;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Host;
-using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public static class WorkspaceHacks
     {
-        public static HostServices Pack { get; set; }
-
-        static WorkspaceHacks()
-        {
-            var assemblyNames = new[]
-            {
-                "Microsoft.CodeAnalysis.Workspaces",
-                "Microsoft.CodeAnalysis.Workspaces.Desktop",
-                "Microsoft.CodeAnalysis.CSharp.Workspaces",
-                "Microsoft.CodeAnalysis.VisualBasic.Workspaces",
-                "Microsoft.CodeAnalysis.Features",
-                "Microsoft.CodeAnalysis.CSharp.Features",
-                "Microsoft.CodeAnalysis.VisualBasic.Features"
-            };
-            var assemblies = assemblyNames
-                .Select(n => Assembly.Load(n));
-            try
-            {
-                Pack = MefHostServices.Create(assemblies);
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                foreach (var e in ex.LoaderExceptions)
-                {
-                    Console.Error.WriteLine(e.ToString());
-                }
-                throw;
-            }
-        }
-
         public static dynamic GetSemanticFactsService(Document document)
         {
             return GetService(document, "Microsoft.CodeAnalysis.LanguageServices.ISemanticFactsService", "Microsoft.CodeAnalysis.Workspaces");

@@ -2,11 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.23.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0073" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MEF\MEF.csproj" />

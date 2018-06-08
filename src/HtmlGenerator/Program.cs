@@ -6,6 +6,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -160,7 +162,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             AssertTraceListener.Register();
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler.HandleFirstChanceException;
 
-            HelpMSBuildFindToolset();
+            // This loads the real MSBuild from the toolset so that all targets and SDKs can be found
+            // as if a real build is happening
+            MSBuildLocator.RegisterDefaults();
 
             if (Paths.SolutionDestinationFolder == null)
             {
@@ -198,32 +202,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist);
                 FinalizeProjects(emitAssemblyList, federation);
                 WebsiteFinalizer.Finalize(websiteDestination, emitAssemblyList, federation);
-            }
-        }
-
-        /// <summary>
-        /// Workaround for a bug in MSBuild where it couldn't find the SdkResolver if run not in VS command prompt:
-        /// https://github.com/Microsoft/msbuild/issues/2369
-        /// Pretend we're in the VS Command Prompt to fix this.
-        /// </summary>
-        private static void HelpMSBuildFindToolset()
-        {
-            if (Environment.GetEnvironmentVariable("VSINSTALLDIR") == null)
-            {
-                var root = @"C:\Program Files (x86)\Microsoft Visual Studio\2017";
-                if (Directory.Exists(root))
-                {
-                    foreach (var sku in Directory.GetDirectories(root))
-                    {
-                        var msbuildExe = Path.Combine(sku, "MSBuild", "15.0", "Bin", "MSBuild.exe");
-                        if (File.Exists(msbuildExe))
-                        {
-                            Environment.SetEnvironmentVariable("VSINSTALLDIR", sku);
-                            Environment.SetEnvironmentVariable("VisualStudioVersion", @"15.0");
-                            break;
-                        }
-                    }
-                }
             }
         }
 
@@ -283,6 +261,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
+            var processedAssemblyList = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var typeForwards = new Dictionary<ValueTuple<string, string>, string>();
 
             var domain = AppDomain.CreateDomain("TypeForwards");
@@ -310,7 +289,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         typeForwards: typeForwards))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
-                        solutionGenerator.Generate(solutionExplorerRoot: mergedSolutionExplorerRoot);
+                        solutionGenerator.Generate(processedAssemblyList, mergedSolutionExplorerRoot);
                     }
                 }
 
@@ -383,8 +362,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void StampOverviewHtmlWithDate(string destinationFolder)
         {
-            var source = Path.Combine(destinationFolder, "wwwroot/overview.html");
-            var dst = Path.Combine(destinationFolder, "index/overview.html");
+            var source = Path.Combine(destinationFolder, "wwwroot", "overview.html");
+            var dst = Path.Combine(destinationFolder, "index", "overview.html");
             if (File.Exists(source))
             {
                 var text = File.ReadAllText(source);

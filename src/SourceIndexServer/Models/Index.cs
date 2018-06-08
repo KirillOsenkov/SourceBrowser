@@ -116,6 +116,11 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         public AssemblyInfo FindAssembly(string assemblyName)
         {
             int i = SortedSearch.FindItem(assemblies, assemblyName, a => a.AssemblyName);
+            if (i == -1)
+            {
+                return default(AssemblyInfo);
+            }
+
             return assemblies[i];
         }
 
