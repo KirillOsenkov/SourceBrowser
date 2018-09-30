@@ -90,14 +90,6 @@ function processHash() {
             return;
         }
 
-        while (anchor.indexOf("%2C") != -1) {
-            anchor = anchor.replace("%2C", ",");
-        }
-
-        while (anchor.indexOf("%2c") != -1) {
-            anchor = anchor.replace("%2c", ",");
-        }
-
         var hashParts = anchor.split(anchorSplitChar);
         if (anchor.indexOf(anchorSplitChar) == -1 && anchor.indexOf("#") > -1) {
             // keep old URLs working for compat
