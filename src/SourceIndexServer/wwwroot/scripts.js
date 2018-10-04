@@ -97,8 +97,22 @@ function processHash() {
         }
 
         var potentialFile = anchor;
+        var entireAnchorIsFile = true;
+        var specialAnchorType = "";
+        var hashOrLine = "";
         if (hashParts.length > 1) {
-            potentialFile = hashParts[0];
+            var lastPart = hashParts[hashParts.length - 1];
+            if (lastPart == "references" || lastPart == "namespaces") {
+                specialAnchorType = hashParts.pop();
+                entireAnchorIsFile = false;
+            }
+            var lastPart = hashParts[hashParts.length - 1];
+            // match a line number (any number of decimal digits) or a hash (16 hex digits)
+            if (lastPart.match(/^[0-9]+$/) || lastPart.match(/^[0-9a-f]{16}$/)) {
+                hashOrLine = hashParts.pop();
+                entireAnchorIsFile = false;
+            }
+            potentialFile = hashParts.join(anchorSplitChar);
         }
 
         potentialFile = decodeURIComponent(potentialFile);
@@ -118,16 +132,16 @@ function processHash() {
                 fileUrl = fileUrl + ".html";
             }
 
-            if (hashParts.length > 1) {
-                fileUrl = fileUrl + "#" + createSafeLineNumber(hashParts[1]);
+            if (hashOrLine) {
+                fileUrl = fileUrl + "#" + createSafeLineNumber(hashOrLine);
             }
 
             redirectLocation(s, fileUrl);
 
             var pathParts = potentialFile.split("/");
             if (pathParts.length > 1) {
-                if (hashParts.length == 3 && hashParts[2] == "references") {
-                    redirectLocation(n, "/" + pathParts[0] + "/R/" + hashParts[1] + ".html");
+                if (specialAnchorType == "references") {
+                    redirectLocation(n, "/" + pathParts[0] + "/R/" + hashOrLine + ".html");
                 }
                 else {
                     if (pathParts[0] != "MSBuildFiles" && pathParts[0] != "TypeScriptFiles") {
@@ -135,9 +149,9 @@ function processHash() {
                     }
                 }
             }
-        } else if (hashParts.length == 1 && potentialFile.indexOf("/") == -1) {
+        } else if (entireAnchorIsFile && potentialFile.indexOf("/") == -1) {
             redirectLocation(n, "/" + potentialFile + "/ProjectExplorer.html");
-        } else if (hashParts.length == 2 && potentialFile.indexOf("/") == -1 && hashParts[1] == "namespaces") {
+        } else if (specialAnchorType == "namespaces" && potentialFile.indexOf("/") == -1) {
             redirectLocation(n, "/" + potentialFile + "/namespaces.html");
         }
     } else if (useSolutionExplorer) {
@@ -642,7 +656,14 @@ function redirect(map, prefixLength) {
     if (anchor) {
         anchor = anchor.slice(1);
         var hashParts = anchor.split(anchorSplitChar);
-        var id = hashParts[0];
+        var anchorHasReferencesSuffix = false;
+        if (hashParts.length > 1) {
+            if (hashParts[hashParts.length - 1] == "references") {
+                anchorHasReferencesSuffix = true;
+                hashParts.pop();
+            }
+        }
+        var id = hashParts.join(anchorSplitChar);
         var shortId = id;
         if (prefixLength < shortId.length) {
             shortId = shortId.slice(0, prefixLength);
@@ -655,7 +676,7 @@ function redirect(map, prefixLength) {
         var redirectTo = map[shortId];
         if (redirectTo) {
             var destination = redirectTo + ".html" + "#" + createSafeLineNumber(id);
-            if (hashParts.length == 2) {
+            if (anchorHasReferencesSuffix) {
                 destination = destination + anchorSplitChar + "references";
             }
 
@@ -670,10 +691,17 @@ function redirectToNextLevelRedirectFile() {
     if (anchor) {
         anchor = anchor.slice(1);
         var hashParts = anchor.split(anchorSplitChar);
-        var id = hashParts[0];
+        var anchorHasReferencesSuffix = false;
+        if (hashParts.length > 1) {
+            if (hashParts[hashParts.length - 1] == "references") {
+                anchorHasReferencesSuffix = true;
+                hashParts.pop();
+            }
+        }
+        var id = hashParts.join(anchorSplitChar);
 
         var destination = "A" + id.slice(0, 1) + ".html" + "#" + createSafeLineNumber(id);
-        if (hashParts.length == 2) {
+        if (anchorHasReferencesSuffix) {
             destination = destination + anchorSplitChar + "references";
         }
 
