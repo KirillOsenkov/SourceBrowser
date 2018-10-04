@@ -106,9 +106,10 @@ function processHash() {
                 specialAnchorType = hashParts.pop();
                 entireAnchorIsFile = false;
             }
-            var lastPart = hashParts[hashParts.length - 1];
-            // match a line number (any number of decimal digits) or a hash (16 hex digits)
-            if (lastPart.match(/^[0-9]+$/) || lastPart.match(/^[0-9a-f]{16}$/)) {
+            lastPart = hashParts[hashParts.length - 1];
+            var lineNumberRegex = new RegExp("^\\d+$");
+            var hashRegex = new RegExp("^[0-9a-f]{16}$")
+            if (lineNumberRegex.test(lastPart) || hashRegex.test(lastPart)) {
                 hashOrLine = hashParts.pop();
                 entireAnchorIsFile = false;
             }
@@ -657,11 +658,9 @@ function redirect(map, prefixLength) {
         anchor = anchor.slice(1);
         var hashParts = anchor.split(anchorSplitChar);
         var anchorHasReferencesSuffix = false;
-        if (hashParts.length > 1) {
-            if (hashParts[hashParts.length - 1] == "references") {
-                anchorHasReferencesSuffix = true;
-                hashParts.pop();
-            }
+        if (hashParts.length > 1 && hashParts[hashParts.length - 1] == "references") {
+            anchorHasReferencesSuffix = true;
+            hashParts.pop();
         }
         var id = hashParts.join(anchorSplitChar);
         var shortId = id;
@@ -692,11 +691,9 @@ function redirectToNextLevelRedirectFile() {
         anchor = anchor.slice(1);
         var hashParts = anchor.split(anchorSplitChar);
         var anchorHasReferencesSuffix = false;
-        if (hashParts.length > 1) {
-            if (hashParts[hashParts.length - 1] == "references") {
-                anchorHasReferencesSuffix = true;
-                hashParts.pop();
-            }
+        if (hashParts.length > 1 && hashParts[hashParts.length - 1] == "references") {
+            anchorHasReferencesSuffix = true;
+            hashParts.pop();
         }
         var id = hashParts.join(anchorSplitChar);
 
