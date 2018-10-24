@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace Microsoft.SourceBrowser.Common
 {
-    public class Measure : IDisposable
+    public sealed class Measure : IDisposable
     {
-        private Stopwatch stopwatch = Stopwatch.StartNew();
-        private string title;
+        private readonly Stopwatch stopwatch = Stopwatch.StartNew();
+        private readonly string title;
 
         public static IDisposable Time(string title)
         {

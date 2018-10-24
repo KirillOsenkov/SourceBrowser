@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Microsoft.SourceBrowser.Common
 {
-    public class Huffman
+    public sealed class Huffman
     {
         public const byte MinChar = 32;
         public const byte MaxChar = 126;
@@ -123,7 +123,7 @@ namespace Microsoft.SourceBrowser.Common
 
             if (reusableBitList == null)
             {
-                reusableBitList = new List<bool>(text.Length * 8 + 1);
+                reusableBitList = new List<bool>((text.Length * 8) + 1);
             }
             else
             {

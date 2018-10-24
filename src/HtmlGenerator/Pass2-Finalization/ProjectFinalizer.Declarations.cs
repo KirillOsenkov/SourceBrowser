@@ -108,8 +108,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void AddLocationToPatch(Dictionary<string, List<long>> locationsToPatch, string filePath, long offset)
         {
-            List<long> offsets = null;
-            if (!locationsToPatch.TryGetValue(filePath, out offsets))
+            if (!locationsToPatch.TryGetValue(filePath, out List<long> offsets))
             {
                 offsets = new List<long>();
                 locationsToPatch.Add(filePath, offsets);

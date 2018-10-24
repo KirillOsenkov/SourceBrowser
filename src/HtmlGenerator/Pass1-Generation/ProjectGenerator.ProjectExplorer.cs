@@ -29,14 +29,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             sb.AppendLine("<p class=\"projectInfo\">");
 
             var namedTypes = this.DeclaredSymbols.Keys.OfType<INamedTypeSymbol>();
-            sb.AppendLine("Project&nbsp;path:&nbsp;" + ProjectSourcePath + "<br>");
-            sb.AppendLine("Files:&nbsp;" + DocumentCount.WithThousandSeparators() + "<br>");
-            sb.AppendLine("Lines&nbsp;of&nbsp;code:&nbsp;" + LinesOfCode.WithThousandSeparators() + "<br>");
-            sb.AppendLine("Bytes:&nbsp;" + BytesOfCode.WithThousandSeparators() + "<br>");
-            sb.AppendLine("Declared&nbsp;symbols:&nbsp;" + this.DeclaredSymbols.Count.WithThousandSeparators() + "<br>");
-            sb.AppendLine("Declared&nbsp;types:&nbsp;" + namedTypes.Count().WithThousandSeparators() + "<br>");
-            sb.AppendLine("Public&nbsp;types:&nbsp;" + namedTypes.Where(t => t.DeclaredAccessibility == Accessibility.Public).Count().WithThousandSeparators() + "<br>");
-            sb.AppendLine("Indexed&nbsp;on:&nbsp;" + DateTime.Now.ToString("MMMM dd", CultureInfo.InvariantCulture));
+            sb.Append("Project&nbsp;path:&nbsp;").Append(ProjectSourcePath).AppendLine("<br>");
+            sb.Append("Files:&nbsp;").Append(DocumentCount.WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Lines&nbsp;of&nbsp;code:&nbsp;").Append(LinesOfCode.WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Bytes:&nbsp;").Append(BytesOfCode.WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Declared&nbsp;symbols:&nbsp;").Append(this.DeclaredSymbols.Count.WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Declared&nbsp;types:&nbsp;").Append(namedTypes.Count().WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Public&nbsp;types:&nbsp;").Append(namedTypes.Where(t => t.DeclaredAccessibility == Accessibility.Public).Count().WithThousandSeparators()).AppendLine("<br>");
+            sb.Append("Indexed&nbsp;on:&nbsp;").AppendLine(DateTime.Now.ToString("MMMM dd", CultureInfo.InvariantCulture));
 
             sb.AppendLine("</p>");
         }
@@ -67,8 +67,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 folder.Name);
             sb.AppendLine("<div>");
 
-            Folder properties = null;
-            if (folder.Folders != null && folder.Folders.TryGetValue("Properties", out properties))
+            if (folder.Folders != null && folder.Folders.TryGetValue("Properties", out Folder<string> properties))
             {
                 WriteFolder(properties, sb);
                 folder.Folders.Remove("Properties");
@@ -117,7 +116,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
                 else
                 {
-                    sb.AppendLine("<span class=\"referenceDisabled\">" + reference + "</span>");
+                    sb.Append("<span class=\"referenceDisabled\">").Append(reference).AppendLine("</span>");
                 }
             }
 
@@ -157,7 +156,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void WriteFolderName(Folder folder, StringBuilder sb)
         {
-            sb.Append("<div class=\"folderTitle\">" + folder.Name + "</div>");
+            sb.Append("<div class=\"folderTitle\">").Append(folder.Name).Append("</div>");
         }
 
         private void WriteDocument(Folder folder, string document, StringBuilder sb)

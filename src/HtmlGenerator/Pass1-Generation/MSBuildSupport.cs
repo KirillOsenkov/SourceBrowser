@@ -83,26 +83,24 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             if (range.Classification == XmlClassificationTypes.XmlAttributeName)
             {
-                text = ProcessAttributeName(range, text, isRootProject);
+                return ProcessAttributeName(range, text, isRootProject);
             }
             else if (range.Classification == XmlClassificationTypes.XmlAttributeValue)
             {
-                text = ProcessAttributeValue(range, text, isRootProject);
+                return ProcessAttributeValue(range, text, isRootProject);
             }
             else if (range.Classification == XmlClassificationTypes.XmlText || range.Classification == XmlClassificationTypes.None)
             {
-                text = ProcessXmlText(range, text, isRootProject);
+                return ProcessXmlText(range, text, isRootProject);
             }
             else if (range.Classification == XmlClassificationTypes.XmlName)
             {
-                text = ProcessXmlName(range, text, isRootProject);
+                return ProcessXmlName(range, text, isRootProject);
             }
             else
             {
-                text = base.ProcessRange(range, text);
+                return base.ProcessRange(range, text);
             }
-
-            return text;
         }
 
         private string ProcessXmlName(ClassifiedRange range, string text, bool isRootProject)
@@ -111,16 +109,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var parent = node.Parent;
             if (parent is XmlElementStartTagSyntax)
             {
-                var element = parent.Parent as IXmlElement;
-                if (element != null)
+                if (parent.Parent is IXmlElement element)
                 {
                     return ProcessXmlElementName(range, text, isRootProject, element);
                 }
             }
             else if (parent is XmlEmptyElementSyntax)
             {
-                var emptyElement = parent as IXmlElement;
-                if (emptyElement != null)
+                if (parent is IXmlElement emptyElement)
                 {
                     return ProcessXmlElementName(range, text, isRootProject, emptyElement);
                 }
@@ -393,10 +389,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var element = range.Node == null ? null : range.Node.ParentElement;
             if (element != null &&
-                element.Name != null &&
-                element.Name.EndsWith("DependsOn") &&
-                element.Parent != null &&
-                element.Parent.Name == "PropertyGroup")
+                element.Name?.EndsWith("DependsOn") == true &&
+                element.Parent?.Name == "PropertyGroup")
             {
                 return ProcessExpressions(range, text, isRootProject, ProcessSemicolonSeparatedList);
             }
@@ -413,12 +407,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             var element = node.GetParent(2) as IXmlElement ?? node.GetParent(3) as IXmlElement;
-            if (element != null)
+            if (element != null && element.Name == "Import" && text == "Project")
             {
-                if (element.Name == "Import" && text == "Project")
-                {
-                    return ProcessImportAttributeName(range, text, element["Project"]);
-                }
+                return ProcessImportAttributeName(range, text, element["Project"]);
             }
 
             return text;
@@ -432,8 +423,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 var parentElement = attributeSyntax.ParentElement;
 
-                if (parentElement != null &&
-                    parentElement.Name == "Output" &&
+                if (parentElement?.Name == "Output" &&
                     (attributeSyntax.Name == "ItemName" || attributeSyntax.Name == "PropertyName") &&
                     !text.Contains("%"))
                 {
@@ -459,7 +449,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
                 }
 
-                if (parentElement != null && parentElement.Name == "Target")
+                if (parentElement?.Name == "Target")
                 {
                     if (attributeSyntax.Name == "Name")
                     {
@@ -480,12 +470,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
                 }
 
-                if (parentElement != null && parentElement.Name == "CallTarget" && attributeSyntax.Name == "Targets")
+                if (parentElement?.Name == "CallTarget" && attributeSyntax.Name == "Targets")
                 {
                     return ProcessExpressions(range, text, isRootProject, ProcessSemicolonSeparatedList);
                 }
 
-                if (parentElement != null && parentElement.Name == "UsingTask" && attributeSyntax.Name == "TaskName")
+                if (parentElement?.Name == "UsingTask" && attributeSyntax.Name == "TaskName")
                 {
                     var taskName = attributeSyntax.Value;
                     var assemblyFileAttribute = parentElement.Attributes.FirstOrDefault(a => a.Key == "AssemblyFile");
@@ -541,14 +531,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var processed = text;
                 if (customStringProcessor != null)
                 {
-                    processed = customStringProcessor(range, processed, isRootProject, range.Start);
+                    return customStringProcessor(range, processed, isRootProject, range.Start);
                 }
                 else
                 {
-                    processed = Markup.HtmlEscape(processed);
+                    return Markup.HtmlEscape(processed);
                 }
-
-                return processed;
             }
 
             var sb = new StringBuilder();
@@ -586,7 +574,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     !part.Contains("%") &&
                     part.Length > 3)
                 {
-                    int suffixLength = 1;
+                    const int suffixLength = 1;
                     var itemName = part.Substring(2, part.Length - 2 - suffixLength);
                     string suffix = part.Substring(part.Length - suffixLength, suffixLength);
 
@@ -602,7 +590,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         isRootProject,
                         isUsage: true);
 
-                    sb.Append("@(" + url + Markup.HtmlEscape(suffix));
+                    sb.Append("@(").Append(url).Append(Markup.HtmlEscape(suffix));
                 }
                 else
                 {
@@ -630,7 +618,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var sb = new StringBuilder();
 
-            var parts = TextUtilities.SplitSemicolonSeparatedList(text);
+            var parts = text.SplitSemicolonSeparatedList();
             foreach (var part in parts)
             {
                 if (string.IsNullOrWhiteSpace(part) || part == ";")
@@ -675,20 +663,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return text;
         }
 
-        private string SolutionDestinationFolder
-        {
-            get
-            {
-                return SolutionGenerator.SolutionDestinationFolder;
-            }
-        }
+        private string SolutionDestinationFolder => SolutionGenerator.SolutionDestinationFolder;
 
-        private SolutionGenerator SolutionGenerator
-        {
-            get
-            {
-                return projectGenerator.SolutionGenerator;
-            }
-        }
+        private SolutionGenerator SolutionGenerator => projectGenerator.SolutionGenerator;
     }
 }

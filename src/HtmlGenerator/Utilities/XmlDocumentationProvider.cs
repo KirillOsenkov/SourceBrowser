@@ -29,8 +29,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             CultureInfo preferredCulture,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            string result = null;
-            members.TryGetValue(documentationMemberID, out result);
+            members.TryGetValue(documentationMemberID, out string result);
             return result;
         }
 

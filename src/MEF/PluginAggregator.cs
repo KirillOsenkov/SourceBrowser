@@ -21,13 +21,7 @@ namespace Microsoft.SourceBrowser.MEF
 
         private Dictionary<string, Dictionary<string, string>> PluginConfigurations;
 
-        public int Count
-        {
-            get
-            {
-                return Plugins.Count;
-            }
-        }
+        public int Count => Plugins.Count;
 
         public PluginAggregator(Dictionary<string, Dictionary<string, string>> pluginConfigurations, ILog logger, IEnumerable<string> blackList)
         {
@@ -52,8 +46,7 @@ namespace Microsoft.SourceBrowser.MEF
         {
             foreach (var plugin in Plugins)
             {
-                Dictionary<string, string> config;
-                if (!PluginConfigurations.TryGetValue(plugin.Name, out config))
+                if (!PluginConfigurations.TryGetValue(plugin.Name, out Dictionary<string, string> config))
                 {
                     config = new Dictionary<string, string>();
                 }
@@ -84,20 +77,10 @@ namespace Microsoft.SourceBrowser.MEF
             return Plugins.SelectMany(p => p.ManufactureTextVisitors(project.FilePath));
         }
 
-        public void Dispose()
-        {
-            if (container != null)
-                container.Dispose();
-        }
+        public void Dispose() => container?.Dispose();
 
-        public IEnumerator<SourceBrowserPluginWrapper> GetEnumerator()
-        {
-            return Plugins.GetEnumerator();
-        }
+        public IEnumerator<SourceBrowserPluginWrapper> GetEnumerator() => Plugins.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Plugins.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => Plugins.GetEnumerator();
     }
 }

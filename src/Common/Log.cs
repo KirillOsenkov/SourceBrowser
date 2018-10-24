@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.SourceBrowser.Common
 {
-    public class Log
+    public static class Log
     {
         private static readonly object consoleLock = new object();
         public const string ErrorLogFile = "Errors.txt";

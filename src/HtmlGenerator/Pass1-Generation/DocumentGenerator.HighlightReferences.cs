@@ -46,8 +46,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private int GetLocalId(ISymbol symbol)
         {
-            int localId = 0;
-            if (!localIds.TryGetValue(symbol, out localId))
+            if (!localIds.TryGetValue(symbol, out int localId))
             {
                 localId = localIds.Count;
                 localIds.Add(symbol, localId);

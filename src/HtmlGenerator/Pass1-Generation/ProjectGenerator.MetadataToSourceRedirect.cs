@@ -30,7 +30,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 Markup.WriteMetadataToSourceRedirectPrefix(writer);
 
-                if (prefix == "")
+                if (prefix?.Length == 0)
                 {
                     writer.WriteLine("redirectToNextLevelRedirectFile();");
 
@@ -67,8 +67,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var key = kvp.Key;
                 var values = kvp.Value;
 
-                Dictionary<string, IEnumerable<string>> bucket;
-                if (!result.TryGetValue(key[0], out bucket))
+                if (!result.TryGetValue(key[0], out Dictionary<string, IEnumerable<string>> bucket))
                 {
                     bucket = new Dictionary<string, IEnumerable<string>>();
                     result.Add(key[0], bucket);

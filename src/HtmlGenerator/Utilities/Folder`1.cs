@@ -42,8 +42,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Folders = new SortedList<string, Folder<T>>(StringComparer.OrdinalIgnoreCase);
             }
 
-            Folder<T> result = null;
-            if (!Folders.TryGetValue(folderName, out result))
+            if (!Folders.TryGetValue(folderName, out Folder<T> result))
             {
                 result = new Folder<T> { Name = folderName };
                 Folders.Add(folderName, result);

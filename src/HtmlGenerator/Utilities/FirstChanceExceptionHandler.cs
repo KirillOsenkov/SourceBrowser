@@ -13,7 +13,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class FirstChanceExceptionHandler
     {
-        private static HashSet<Module> IgnoredModules = new HashSet<Module>();
+        private static readonly HashSet<Module> IgnoredModules = new HashSet<Module>();
 
         public static void IgnoreModules(IEnumerable<Module> t)
         {

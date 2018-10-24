@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Microsoft.SourceBrowser.Common
 {
-    public class FileUtilities
+    public static class FileUtilities
     {
         public static void CopyDirectory(string sourceDirectory, string destinationDirectory)
         {
@@ -16,7 +16,7 @@ namespace Microsoft.SourceBrowser.Common
 
             if (string.IsNullOrEmpty(destinationDirectory))
             {
-                throw new ArgumentNullException("destinationDirectory");
+                throw new ArgumentNullException(nameof(destinationDirectory));
             }
 
             destinationDirectory = destinationDirectory.TrimSlash();
