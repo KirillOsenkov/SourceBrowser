@@ -51,21 +51,21 @@ namespace GitGlyph
 
         private string FormatCommit(Commit c)
         {
-            var RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
+            const string RFC2822Format = "ddd dd MMM HH:mm:ss yyyy K";
             StringBuilder result = new StringBuilder();
 
-            result.AppendLine(string.Format("commit {0}", c.Id));
+            result.AppendFormat("commit {0}", c.Id).AppendLine();
 
             if (c.Parents.Count() > 1)
             {
-                result.AppendLine(string.Format(
+                result.AppendFormat(
                     "Merge: {0}",
                     string.Join(" ", c.Parents.Select(ShortenObjectId).ToArray())
-                ));
+                ).AppendLine();
             }
 
-            result.AppendLine(string.Format("Author: {0} <{1}>", c.Author.Name, c.Author.Email));
-            result.AppendLine(string.Format("Date:   {0}", c.Author.When.ToString(RFC2822Format, System.Globalization.CultureInfo.InvariantCulture)));
+            result.AppendFormat("Author: {0} <{1}>", c.Author.Name, c.Author.Email).AppendLine();
+            result.AppendFormat("Date:   {0}", c.Author.When.ToString(RFC2822Format, System.Globalization.CultureInfo.InvariantCulture)).AppendLine();
             result.AppendLine();
             result.AppendLine(c.Message);
             result.AppendLine();
@@ -76,11 +76,10 @@ namespace GitGlyph
         /// <summary>
         /// Cache used to memoize the GetBlame method.
         /// </summary>
-        private Dictionary<string, IEnumerable<BlameHunk>> getBlameResultCache = new Dictionary<string, IEnumerable<BlameHunk>>();
+        private readonly Dictionary<string, IEnumerable<BlameHunk>> getBlameResultCache = new Dictionary<string, IEnumerable<BlameHunk>>();
         private IEnumerable<BlameHunk> GetBlame(string path)
         {
-            IEnumerable<BlameHunk> result;
-            if (!getBlameResultCache.TryGetValue(path, out result))
+            if (!getBlameResultCache.TryGetValue(path, out IEnumerable<BlameHunk> result))
             {
                 try
                 {

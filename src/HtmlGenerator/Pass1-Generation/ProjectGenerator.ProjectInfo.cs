@@ -18,13 +18,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var projectInfoFile = Path.Combine(ProjectDestinationFolder, Constants.ProjectInfoFileName) + ".txt";
             var namedTypes = this.DeclaredSymbols.Keys.OfType<INamedTypeSymbol>();
             var sb = new StringBuilder();
-            sb.AppendLine("ProjectSourcePath=" + ProjectSourcePath);
-            sb.AppendLine("DocumentCount=" + DocumentCount);
-            sb.AppendLine("LinesOfCode=" + LinesOfCode);
-            sb.AppendLine("BytesOfCode=" + BytesOfCode);
-            sb.AppendLine("DeclaredSymbols=" + this.DeclaredSymbols.Count);
-            sb.AppendLine("DeclaredTypes=" + namedTypes.Count());
-            sb.AppendLine("PublicTypes=" + namedTypes.Where(t => t.DeclaredAccessibility == Accessibility.Public).Count());
+            sb.Append("ProjectSourcePath=").AppendLine(ProjectSourcePath)
+                .Append("DocumentCount=").Append(DocumentCount).AppendLine()
+                .Append("LinesOfCode=").Append(LinesOfCode).AppendLine()
+                .Append("BytesOfCode=").Append(BytesOfCode).AppendLine()
+                .Append("DeclaredSymbols=").Append(DeclaredSymbols.Count).AppendLine()
+                .Append("DeclaredTypes=").Append(namedTypes.Count()).AppendLine()
+                .Append("PublicTypes=").Append(namedTypes.Count(t => t.DeclaredAccessibility == Accessibility.Public)).AppendLine();
             File.WriteAllText(projectInfoFile, sb.ToString());
         }
     }

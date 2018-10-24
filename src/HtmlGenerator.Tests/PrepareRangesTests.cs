@@ -22,7 +22,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         [TestMethod]
         public void TestRemoveOverlappingRanges()
         {
-            var text = "abcd";
+            const string text = "abcd";
             var actualRanges = TypeScriptSupport.RemoveOverlappingRanges(
                 text,
                 new[] {

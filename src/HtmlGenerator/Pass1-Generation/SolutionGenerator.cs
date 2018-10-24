@@ -305,10 +305,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     generator.Generate().GetAwaiter().GetResult();
 
                     File.AppendAllText(Paths.ProcessedAssemblies, project.AssemblyName + Environment.NewLine, Encoding.UTF8);
-                    if (processedAssemblyList != null)
-                    {
-                        processedAssemblyList.Add(project.AssemblyName);
-                    }
+                    processedAssemblyList?.Add(project.AssemblyName);
                 }
                 finally
                 {
@@ -340,10 +337,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 var references = project.MetadataReferences
                     .OfType<PortableExecutableReference>()
-                    .Where(m => File.Exists(m.FilePath))
-                    .Where(m => !assemblyList.Contains(Path.GetFileNameWithoutExtension(m.FilePath)))
-                    .Where(m => !IsPartOfSolution(Path.GetFileNameWithoutExtension(m.FilePath)))
-                    .Where(m => GetExternalAssemblyIndex(Path.GetFileNameWithoutExtension(m.FilePath)) == -1)
+                    .Where(m => File.Exists(m.FilePath) &&
+                                !assemblyList.Contains(Path.GetFileNameWithoutExtension(m.FilePath)) &&
+                                !IsPartOfSolution(Path.GetFileNameWithoutExtension(m.FilePath)) &&
+                                GetExternalAssemblyIndex(Path.GetFileNameWithoutExtension(m.FilePath)) == -1
+                    )
                     .Select(m => Path.GetFullPath(m.FilePath));
                 foreach (var reference in references)
                 {
@@ -418,11 +416,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         solution.Workspace.WorkspaceFailed += WorkspaceFailed;
                         workspace = solution.Workspace;
                     }
-                }
-
-                if (solution == null)
-                {
-                    return null;
                 }
 
                 return solution;

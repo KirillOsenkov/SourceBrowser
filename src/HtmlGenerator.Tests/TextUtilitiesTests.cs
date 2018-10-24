@@ -270,19 +270,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         private void S(string text, params string[] expected)
         {
             var actual = TextUtilities.SplitSemicolonSeparatedList(text);
-            var equal = Enumerable.SequenceEqual(actual, expected);
+            var equal = actual.SequenceEqual(expected);
             Assert.IsTrue(equal);
         }
 
         private void T(string text, params int[] lineLengths)
         {
             var actual = TextUtilities.GetLineLengths(text);
-            var equal = Enumerable.SequenceEqual(actual, lineLengths);
+            var equal = actual.SequenceEqual(lineLengths);
             Assert.IsTrue(equal);
 
             File.WriteAllText("test.txt", text);
             actual = File.ReadAllLines("test.txt").Select(l => l.Length).ToArray();
-            equal = Enumerable.SequenceEqual(actual, lineLengths);
+            equal = actual.SequenceEqual(lineLengths);
         }
 
         [TestMethod]

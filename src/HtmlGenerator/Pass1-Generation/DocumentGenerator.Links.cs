@@ -137,7 +137,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     return IsZeroLengthArrayAllocationVB(token);
                 }
             }
-            catch (Exception)
+            catch
             {
             }
 
@@ -304,8 +304,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return null;
             }
 
-            Guid guid;
-            if (!Guid.TryParse(text, out guid))
+            if (!Guid.TryParse(text, out Guid guid))
             {
                 return null;
             }
@@ -377,8 +376,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            IMethodSymbol method = declaredSymbol as IMethodSymbol;
-            if (method != null)
+            if (declaredSymbol is IMethodSymbol method)
             {
                 var overriddenMethod = method.OverriddenMethod;
                 if (overriddenMethod != null)
@@ -391,8 +389,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
-            IPropertySymbol property = declaredSymbol as IPropertySymbol;
-            if (property != null)
+            if (declaredSymbol is IPropertySymbol property)
             {
                 var overriddenProperty = property.OverriddenProperty;
                 if (overriddenProperty != null)
@@ -405,8 +402,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
-            IEventSymbol eventSymbol = declaredSymbol as IEventSymbol;
-            if (eventSymbol != null)
+            if (declaredSymbol is IEventSymbol eventSymbol)
             {
                 var overriddenEvent = eventSymbol.OverriddenEvent;
                 if (overriddenEvent != null)
@@ -422,20 +418,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private ISymbol GetExplicitlyImplementedMember(ISymbol symbol)
         {
-            IMethodSymbol methodSymbol = symbol as IMethodSymbol;
-            if (methodSymbol != null)
+            if (symbol is IMethodSymbol methodSymbol)
             {
                 return methodSymbol.ExplicitInterfaceImplementations.FirstOrDefault();
             }
 
-            IPropertySymbol propertySymbol = symbol as IPropertySymbol;
-            if (propertySymbol != null)
+            if (symbol is IPropertySymbol propertySymbol)
             {
                 return propertySymbol.ExplicitInterfaceImplementations.FirstOrDefault();
             }
 
-            IEventSymbol eventSymbol = symbol as IEventSymbol;
-            if (eventSymbol != null)
+            if (symbol is IEventSymbol eventSymbol)
             {
                 return eventSymbol.ExplicitInterfaceImplementations.FirstOrDefault();
             }

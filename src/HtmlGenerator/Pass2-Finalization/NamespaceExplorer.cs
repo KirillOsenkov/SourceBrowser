@@ -135,11 +135,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Children = new SortedList<string, NamespaceTreeNode>(StringComparer.OrdinalIgnoreCase);
                 }
 
-                NamespaceTreeNode result = null;
-
                 // need to try finding both folders and files
                 string other = title.StartsWith("{") ? title.TrimStart('{') : "{" + title;
-                if (!Children.TryGetValue(title, out result) && !Children.TryGetValue(other, out result))
+                if (!Children.TryGetValue(title, out NamespaceTreeNode result) && !Children.TryGetValue(other, out result))
                 {
                     result = new NamespaceTreeNode(title);
                     Children.Add(title, result);

@@ -97,9 +97,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var parentFolderChain = new List<string>();
             var parentGuid = project.ParentProjectGuid;
-            ProjectInSolution parentFolder;
 
-            while (!string.IsNullOrEmpty(parentGuid) && solutionFile.ProjectsByGuid.TryGetValue(parentGuid, out parentFolder) && parentFolder != null)
+            while (!string.IsNullOrEmpty(parentGuid) && solutionFile.ProjectsByGuid.TryGetValue(parentGuid, out ProjectInSolution parentFolder) && parentFolder != null)
             {
                 parentFolderChain.Add(parentFolder.ProjectName);
                 parentGuid = parentFolder.ParentProjectGuid;

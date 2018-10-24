@@ -170,11 +170,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var position = r.ClassifiedSpan.TextSpan.Start;
             var token = Root.FindToken(position, findInsideTrivia: true);
 
-            if (token != null)
-            {
-                return SemanticModel.GetDeclaredSymbol(token.Parent);
-            }
-            return null;
+            return SemanticModel.GetDeclaredSymbol(token.Parent);
+
         }
 
         private string GenerateGlyphs(IEnumerable<Classification.Range> ranges)
@@ -193,12 +190,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     { MEF.ContextKeys.LineNumber, "-1" }
             };
 
-            Action<string> maybeLog = g =>
+            void maybeLog(string g)
             {
                 if (!string.IsNullOrWhiteSpace(g))
                 {
-                    HashSet<string> lineGlyphs;
-                    if (!lines.TryGetValue(lineNumber, out lineGlyphs))
+                    if (!lines.TryGetValue(lineNumber, out HashSet<string> lineGlyphs))
                     {
                         lineGlyphs = new HashSet<string>();
                         lines.Add(lineNumber, lineGlyphs);
@@ -206,9 +202,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                     lineGlyphs.Add(g);
                 }
-            };
+            }
 
-            Func<MEF.ITextVisitor, string> VisitText = v =>
+            string VisitText(MEF.ITextVisitor v)
             {
                 try
                 {
@@ -219,9 +215,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Log.Write("Exception in text visitor: " + ex.Message);
                     return null;
                 }
-            };
+            }
 
-            Func<MEF.ISymbolVisitor, string> VisitSymbol = v =>
+            string VisitSymbol(MEF.ISymbolVisitor v)
             {
                 try
                 {
@@ -232,7 +228,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Log.Write("Exception in symbol visitor: " + ex.Message);
                     return null;
                 }
-            };
+            }
 
             foreach (var r in ranges)
             {
@@ -259,8 +255,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var sb = new StringBuilder();
                 for (var i = 1; i <= lines.Keys.Max(); i++)
                 {
-                    HashSet<string> glyphs;
-                    if (lines.TryGetValue(i, out glyphs))
+                    if (lines.TryGetValue(i, out HashSet<string> glyphs))
                     {
                         foreach (var g in glyphs)
                         {
@@ -279,13 +274,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private string DocumentUrl
-        {
-            get
-            {
-                return Document.Project.AssemblyName + "/" + documentRelativeFilePathWithoutHtmlExtension.Replace('\\', '/');
-            }
-        }
+        private string DocumentUrl => Document.Project.AssemblyName + "/" + documentRelativeFilePathWithoutHtmlExtension.Replace('\\', '/');
 
         private void GenerateHeader(Action<string> writeLine)
         {
@@ -341,7 +330,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string filePath = GetDocumentPathFromSourceSolutionRoot();
             filePath = filePath.Replace('\\', '/');
 
-            string urlTemplate = @"{0}{1}";
+            const string urlTemplate = "{0}{1}";
 
             string url = string.Format(
                 urlTemplate,
@@ -427,7 +416,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 elementName = hyperlinkInfo.Name;
             }
 
-            sb.Append("<" + elementName);
+            sb.Append("<").Append(elementName);
             bool overridingClassAttributeSpecified = false;
             if (hyperlinkInfo != null)
             {
@@ -451,11 +440,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             html = AddIdSpanForImplicitConstructorIfNecessary(hyperlinkInfo, html);
 
             sb.Append(html);
-            sb.Append("</" + elementName + ">");
+            sb.Append("</").Append(elementName).Append(">");
 
             html = sb.ToString();
 
-            if (hyperlinkInfo != null && hyperlinkInfo.DeclaredSymbol != null)
+            if (hyperlinkInfo?.DeclaredSymbol != null)
             {
                 writer.Flush();
                 long streamPosition = writer.BaseStream.Length;
@@ -473,10 +462,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string AddIdSpanForImplicitConstructorIfNecessary(HtmlElementInfo hyperlinkInfo, string html)
         {
-            if (hyperlinkInfo != null && hyperlinkInfo.DeclaredSymbol != null)
+            if (hyperlinkInfo?.DeclaredSymbol != null)
             {
-                INamedTypeSymbol namedTypeSymbol = hyperlinkInfo.DeclaredSymbol as INamedTypeSymbol;
-                if (namedTypeSymbol != null)
+                if (hyperlinkInfo.DeclaredSymbol is INamedTypeSymbol namedTypeSymbol)
                 {
                     var implicitInstanceConstructor = namedTypeSymbol.Constructors.FirstOrDefault(c => !c.IsStatic && c.IsImplicitlyDeclared);
                     if (implicitInstanceConstructor != null)
@@ -499,7 +487,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             if (value != null)
             {
-                sb.Append(" " + name + "=\"" + value + "\"");
+                sb.Append(" ").Append(name).Append("=\"").Append(value).Append("\"");
             }
         }
     }
