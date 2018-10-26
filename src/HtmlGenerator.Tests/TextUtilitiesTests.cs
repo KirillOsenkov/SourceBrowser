@@ -244,7 +244,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
             T("");
             T("a", 1);
             T("\r", 1, 0);
+            T("\r\r", 1, 1, 0);
+            T("\r\r\r", 1, 1, 1, 0);
             T("\n", 1, 0);
+            T("\n\n", 1, 1, 0);
             T("\n\r", 1, 1, 0);
             T("\r\n", 2, 0);
             T("\r\n\r", 2, 1, 0);

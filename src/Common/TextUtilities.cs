@@ -29,10 +29,8 @@ namespace Microsoft.SourceBrowser.Common
                 {
                     if (previousWasCarriageReturn)
                     {
-                        currentLineLength++;
                         result.Add(currentLineLength);
-                        currentLineLength = 0;
-                        previousWasCarriageReturn = false;
+                        currentLineLength = 1;
                     }
                     else
                     {
