@@ -213,7 +213,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
                 return text;
             }
 
-            if (text.StartsWith("\"") && text.EndsWith("\""))
+            if (text.StartsWith("\"") && text.EndsWith("\"") && text.Length > 1)
             {
                 text = text.Substring(1, text.Length - 2);
                 isQuoted = true;
