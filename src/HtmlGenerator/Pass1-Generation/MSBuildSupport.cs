@@ -478,8 +478,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 if (parentElement?.Name == "UsingTask" && attributeSyntax.Name == "TaskName")
                 {
                     var taskName = attributeSyntax.Value;
-                    var assemblyFileAttribute = parentElement.Attributes.FirstOrDefault(a => a.Key == "AssemblyFile");
-                    var assemblyNameAttribute = parentElement.Attributes.FirstOrDefault(a => a.Key == "AssemblyName");
+                    var assemblyFileAttribute = parentElement.Attributes.FirstOrDefault(a => a.Name == "AssemblyFile");
+                    var assemblyNameAttribute = parentElement.Attributes.FirstOrDefault(a => a.Name == "AssemblyName");
                     string assemblyName = null;
                     if (!string.IsNullOrWhiteSpace(assemblyFileAttribute.Value))
                     {
