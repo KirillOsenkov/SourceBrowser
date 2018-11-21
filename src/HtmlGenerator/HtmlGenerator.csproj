@@ -7,8 +7,8 @@
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.17</NuGetVersion>
+    <NuSpecFile>$(MSBuildProjectDirectory)\SourceBrowser.nuspec</NuSpecFile>
+    <NuGetVersion>1.0.18</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
