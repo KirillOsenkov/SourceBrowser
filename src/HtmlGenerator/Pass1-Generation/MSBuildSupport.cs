@@ -481,13 +481,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var assemblyFileAttribute = parentElement.Attributes.FirstOrDefault(a => a.Name == "AssemblyFile");
                     var assemblyNameAttribute = parentElement.Attributes.FirstOrDefault(a => a.Name == "AssemblyName");
                     string assemblyName = null;
-                    if (!string.IsNullOrWhiteSpace(assemblyFileAttribute.Value))
+                    if (assemblyFileAttribute != null && !string.IsNullOrWhiteSpace(assemblyFileAttribute.Value))
                     {
                         var assemblyFilePath = assemblyFileAttribute.Value;
                         assemblyFilePath = project.ExpandString(assemblyFilePath);
                         assemblyName = Path.GetFileNameWithoutExtension(assemblyFilePath);
                     }
-                    else if (!string.IsNullOrWhiteSpace(assemblyNameAttribute.Value))
+                    else if (assemblyNameAttribute != null && !string.IsNullOrWhiteSpace(assemblyNameAttribute.Value))
                     {
                         assemblyName = assemblyNameAttribute.Value;
                         assemblyName = project.ExpandString(assemblyName);
