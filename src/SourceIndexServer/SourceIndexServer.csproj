@@ -14,10 +14,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <!-- workaround for https://github.com/KirillOsenkov/SourceBrowser/issues/93 -->
-    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-    <PreserveCompilationContext>false</PreserveCompilationContext>
-  </PropertyGroup>
-
 </Project>
