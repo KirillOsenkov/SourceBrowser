@@ -86,6 +86,9 @@ namespace Microsoft.SourceBrowser.Common
                         return assemblyName;
                     }
                 }
+                catch
+                {
+                }
                 finally
                 {
                     ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
