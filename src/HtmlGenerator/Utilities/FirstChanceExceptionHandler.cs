@@ -125,21 +125,24 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
 
                 string stackTrace = ex.StackTrace;
-                if (stackTrace.Contains("Antlr"))
+                if (stackTrace != null)
                 {
-                    return;
-                }
+                    if (stackTrace.Contains("Antlr"))
+                    {
+                        return;
+                    }
 
-                if (stackTrace.Contains("at System.Guid.StringToInt"))
-                {
-                    return;
-                }
+                    if (stackTrace.Contains("at System.Guid.StringToInt"))
+                    {
+                        return;
+                    }
 
-                var trace = new TraceFactory().Manufacture(ex);
+                    var trace = new TraceFactory().Manufacture(ex);
 
-                if ( trace.Select(f => f.Method.Module).Any(IgnoredModules.Contains) )
-                {
-                    return;
+                    if (trace.Select(f => f.Method.Module).Any(IgnoredModules.Contains))
+                    {
+                        return;
+                    }
                 }
 
                 var message = DateTime.Now.ToString() + ": First chance exception";
