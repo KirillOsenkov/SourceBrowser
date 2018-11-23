@@ -282,6 +282,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var distinctProjectReferences = project.AllProjectReferences.Distinct().ToArray();
                 if (distinctProjectReferences.Length < project.AllProjectReferences.Count)
                 {
+                    var duplicates = project.AllProjectReferences.GroupBy(p => p).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+                    foreach (var duplicate in duplicates)
+                    {
+                        Log.Write($"Duplicate project reference to {duplicate.ProjectId.ToString()} in project: {project.Name}", ConsoleColor.Yellow);
+                    }
+
                     var newProject = project.WithProjectReferences(distinctProjectReferences);
                     solution = newProject.Solution;
                 }
