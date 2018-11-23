@@ -152,6 +152,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             solution = RemoveNonExistingFiles(solution);
             solution = AddAssemblyAttributesFile(language, outputAssemblyPath, solution);
             solution = DisambiguateSameNameLinkedFiles(solution);
+            solution = DeduplicateProjectReferences(solution);
 
             solution.Workspace.WorkspaceFailed += WorkspaceFailed;
 
@@ -266,6 +267,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         assemblyAttributesFileText,
                         filePath: newAssemblyAttributesDocumentName);
                     solution = document.Project.Solution;
+                }
+            }
+
+            return solution;
+        }
+
+        private static Solution DeduplicateProjectReferences(Solution solution)
+        {
+            foreach (var projectId in solution.ProjectIds.ToArray())
+            {
+                var project = solution.GetProject(projectId);
+
+                var distinctProjectReferences = project.AllProjectReferences.Distinct().ToArray();
+                if (distinctProjectReferences.Length < project.AllProjectReferences.Count)
+                {
+                    var newProject = project.WithProjectReferences(distinctProjectReferences);
+                    solution = newProject.Solution;
                 }
             }
 
@@ -394,6 +412,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     workspace.SkipUnrecognizedProjects = true;
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenSolutionAsync(solutionFilePath).GetAwaiter().GetResult();
+                    solution = DeduplicateProjectReferences(solution);
                     this.workspace = workspace;
                 }
                 else if (
@@ -403,6 +422,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var workspace = CreateWorkspace(properties);
                     workspace.WorkspaceFailed += WorkspaceFailed;
                     solution = workspace.OpenProjectAsync(solutionFilePath).GetAwaiter().GetResult().Solution;
+                    solution = DeduplicateProjectReferences(solution);
                     this.workspace = workspace;
                 }
                 else if (
