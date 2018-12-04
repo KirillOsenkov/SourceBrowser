@@ -111,8 +111,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static string Resolve(string assembly)
         {
-            string assemblyFilePath = null;
-            if (GenerateFromBuildLog.AssemblyNameToFilePathMap.TryGetValue(assembly, out assemblyFilePath))
+            if (GenerateFromBuildLog.AssemblyNameToFilePathMap.TryGetValue(assembly, out string assemblyFilePath))
             {
                 return assemblyFilePath;
             }
@@ -159,20 +158,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 metadataReference
             };
-
-            Compilation compilation = null;
             if (language == LanguageNames.CSharp)
             {
-                compilation = Microsoft.CodeAnalysis.CSharp.CSharpCompilation.Create(
+                return Microsoft.CodeAnalysis.CSharp.CSharpCompilation.Create(
                     "Temp", references: references);
             }
             else
             {
-                compilation = Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation.Create(
+                return Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation.Create(
                     "Temp", references: references);
             }
-
-            return compilation;
         }
 
         public static ImmutableArray<AssemblyIdentity> GetReferences(IAssemblySymbol assemblySymbol)

@@ -221,15 +221,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private bool IncludeDocument(Document document)
-        {
-            if (document.Name == assemblyAttributesFileName)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        private bool IncludeDocument(Document document) => document.Name != assemblyAttributesFileName;
 
         private string GetProjectDestinationPath(Project project, string solutionDestinationPath)
         {

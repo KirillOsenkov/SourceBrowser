@@ -29,10 +29,8 @@ namespace Microsoft.SourceBrowser.Common
                 {
                     if (previousWasCarriageReturn)
                     {
-                        currentLineLength++;
                         result.Add(currentLineLength);
-                        currentLineLength = 0;
-                        previousWasCarriageReturn = false;
+                        currentLineLength = 1;
                     }
                     else
                     {
@@ -263,7 +261,7 @@ namespace Microsoft.SourceBrowser.Common
             while (min < max)
             {
                 // in case max == min + 1 this always chooses min
-                int mid = min + (max - min) / 2;
+                int mid = min + ((max - min) / 2);
                 if (DoesPrefixLengthCreateCollisions(strings, mid))
                 {
                     min = mid + 1;

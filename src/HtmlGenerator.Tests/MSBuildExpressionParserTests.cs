@@ -51,7 +51,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         private void T(string text, params string[] expectedParts)
         {
             var actual = MSBuildExpressionParser.SplitStringByPropertiesAndItems(text);
-            var equal = Enumerable.SequenceEqual(expectedParts, actual);
+            var equal = expectedParts.SequenceEqual(actual);
             Assert.IsTrue(equal);
         }
     }

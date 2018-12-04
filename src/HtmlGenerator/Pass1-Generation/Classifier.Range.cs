@@ -20,21 +20,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Text = text;
             }
 
-            public string ClassificationType
-            {
-                get
-                {
-                    return ClassifiedSpan.ClassificationType;
-                }
-            }
+            public string ClassificationType => ClassifiedSpan.ClassificationType;
 
-            public TextSpan TextSpan
-            {
-                get
-                {
-                    return ClassifiedSpan.TextSpan;
-                }
-            }
+            public TextSpan TextSpan => ClassifiedSpan.TextSpan;
         }
     }
 }

@@ -33,11 +33,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return text;
         }
 
-        private static string IntersperseLineBreaks(string text)
-        {
-            text = text.Replace("\n\r", "\n \r");
-            return text;
-        }
+        private static string IntersperseLineBreaks(string text) => text.Replace("\n\r", "\n \r");
 
         public static string HtmlEscape(string text, ref int start, ref int end)
         {
@@ -107,7 +103,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static string referencesFileHeader = @"<!DOCTYPE html>
+        private const string referencesFileHeader = @"<!DOCTYPE html>
 <html><head><title>{0}</title><link rel=""stylesheet"" href=""../../styles.css""/><script src=""../../scripts.js""></script></head><body onload=""ro();"">";
 
         public static void WriteReferencesFileHeader(StreamWriter writer, string title)
@@ -115,11 +111,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             writer.WriteLine(referencesFileHeader, title);
         }
 
-        private static string zeroFileName = "0000000000.html";
+        private const string zeroFileName = "0000000000.html";
 
         public static void WriteReferencesNotFoundFile(string folder)
         {
-            string html = @"<!DOCTYPE html>
+            const string html = @"<!DOCTYPE html>
 <html><head><link rel=""stylesheet"" href=""styles.css""/></head>
 <body><div class=""rH"">No references found</div></body></html>";
             string filePath = Path.Combine(folder, zeroFileName);
@@ -209,12 +205,12 @@ redirectToReferences();
 
         public static string GetDocumentSuffix()
         {
-            return @"</pre></td></tr></table></div></body></html>";
+            return "</pre></td></tr></table></div></body></html>";
         }
 
         public static void WriteMetadataToSourceRedirectPrefix(StreamWriter writer)
         {
-            string contents = @"<!DOCTYPE html>
+            const string contents = @"<!DOCTYPE html>
 <html><head><title>Redirecting...</title><script src=""../scripts.js""></script>
 <script>
 ";
@@ -223,7 +219,7 @@ redirectToReferences();
 
         public static void WriteMetadataToSourceRedirectSuffix(StreamWriter writer)
         {
-            string contents = @"
+            const string contents = @"
 </script>
 </head><body>
 Don't use this page directly, pass #symbolId to get redirected.
@@ -289,7 +285,7 @@ Don't use this page directly, pass #symbolId to get redirected.
 
         public static void WriteNamespaceExplorerSuffix(StreamWriter sw)
         {
-            sw.WriteLine(@"<script>initializeNamespaceExplorer();</script></body></html>");
+            sw.WriteLine("<script>initializeNamespaceExplorer();</script></body></html>");
         }
 
         public static void WriteProjectIndex(StringBuilder sb, string assemblyName)
@@ -349,7 +345,7 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
                 ? @"<div class=""note"">Try also browsing the <a href=""solutionexplorer.html"" class=""blueLink"">solution explorer</a>.</div>"
                 : null;
 
-            return @"</div></div>" + solutionExplorerLink + @"</body></html>";
+            return "</div></div>" + solutionExplorerLink + "</body></html>";
         }
 
         private static string partialTypeDisambiguationFileTemplate = @"<!DOCTYPE html>

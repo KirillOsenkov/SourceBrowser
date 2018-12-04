@@ -68,13 +68,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return description.Substring(0, lastDot);
         }
 
-        public int Weight
-        {
-            get
-            {
-                return MatchLevel * 10 + KindRank;
-            }
-        }
+        public int Weight => (MatchLevel * 10) + KindRank;
 
         public bool Equals(DeclaredSymbolInfo other)
         {
@@ -93,15 +87,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Description == other.Description;
         }
 
-        public string GetUrl()
-        {
-            return "/" + AssemblyName + "/a.html#" + Serialization.ULongToHexString(ID);
-        }
+        public string GetUrl() => "/" + AssemblyName + "/a.html#" + Serialization.ULongToHexString(ID);
 
         public override bool Equals(object obj)
         {
-            DeclaredSymbolInfo other = obj as DeclaredSymbolInfo;
-            if (other == null)
+            if (!(obj is DeclaredSymbolInfo other))
             {
                 return false;
             }

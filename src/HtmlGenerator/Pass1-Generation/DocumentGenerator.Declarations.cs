@@ -36,9 +36,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Name = "a",
                 Attributes =
                 {
-                    { "id", symbolId },
-                    { "href", href },
-                    { "target", "n" },
+                    ["id"] = symbolId,
+                    ["href"] = href,
+                    ["target"] = "n",
                 },
                 DeclaredSymbol = symbol,
                 DeclaredSymbolId = symbolId
@@ -61,8 +61,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             int depth = 0;
             while (current != null)
             {
-                var namespaceSymbol = current as INamespaceSymbol;
-                if (namespaceSymbol != null)
+                if (current is INamespaceSymbol namespaceSymbol)
                 {
                     // if we've reached the global namespace, we're already at the top; bail
                     if (namespaceSymbol.IsGlobalNamespace)

@@ -62,12 +62,7 @@ namespace Microsoft.SourceBrowser.Common
                     fileStream.Position = dataDictionaryStart;
 
                     uint cliHeaderRva = binaryReader.ReadUInt32();
-                    if (cliHeaderRva == 0)
-                    {
-                        return false;
-                    }
-
-                    return true;
+                    return cliHeaderRva != 0;
                 }
             }
             catch (Exception)

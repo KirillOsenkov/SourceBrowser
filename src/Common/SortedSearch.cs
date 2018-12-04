@@ -5,8 +5,8 @@ namespace Microsoft.SourceBrowser.Common
 {
     public class SortedSearch
     {
-        private Func<int, string> item;
-        private int count;
+        private readonly Func<int, string> item;
+        private readonly int count;
 
         public SortedSearch(Func<int, string> listItem, int listCount)
         {

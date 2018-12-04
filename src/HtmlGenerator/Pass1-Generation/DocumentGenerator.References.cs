@@ -11,7 +11,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public partial class DocumentGenerator
     {
-        private HashSet<string> reportedSymbolDisplayStrings = new HashSet<string>();
+        private readonly HashSet<string> reportedSymbolDisplayStrings = new HashSet<string>();
         private bool reportedDiagnostics = false;
 
         private string ClassFromSymbol(ISymbol symbol, string currentClass = null)
@@ -40,8 +40,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
                     break;
                 case SymbolKind.Alias:
-                    result = Constants.ClassificationTypeName;
-                    break;
                 case SymbolKind.NamedType:
                     result = Constants.ClassificationTypeName;
                     break;
@@ -252,29 +250,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             if (baseList != null)
             {
                 var typeDeclaration = baseList.Parent;
-                if (typeDeclaration != null)
+                if (typeDeclaration != null &&
+                    SemanticModel.GetDeclaredSymbol(typeDeclaration) is INamedTypeSymbol derivedType &&
+                    referencedSymbol is INamedTypeSymbol baseSymbol)
                 {
-                    var derivedType = SemanticModel.GetDeclaredSymbol(typeDeclaration) as INamedTypeSymbol;
-                    if (derivedType != null)
+                    if (baseSymbol.TypeKind == TypeKind.Class && baseSymbol.Equals(derivedType.BaseType))
                     {
-                        INamedTypeSymbol baseSymbol = referencedSymbol as INamedTypeSymbol;
-                        if (baseSymbol != null)
+                        kind = ReferenceKind.DerivedType;
+                    }
+                    else if (baseSymbol.TypeKind == TypeKind.Interface)
+                    {
+                        if (derivedType.TypeKind == TypeKind.Interface && derivedType.Interfaces.Contains(baseSymbol))
                         {
-                            if (baseSymbol.TypeKind == TypeKind.Class && baseSymbol.Equals(derivedType.BaseType))
-                            {
-                                kind = ReferenceKind.DerivedType;
-                            }
-                            else if (baseSymbol.TypeKind == TypeKind.Interface)
-                            {
-                                if (derivedType.TypeKind == TypeKind.Interface && derivedType.Interfaces.Contains(baseSymbol))
-                                {
-                                    kind = ReferenceKind.InterfaceInheritance;
-                                }
-                                else if (derivedType.Interfaces.Contains(baseSymbol))
-                                {
-                                    kind = ReferenceKind.InterfaceImplementation;
-                                }
-                            }
+                            kind = ReferenceKind.InterfaceInheritance;
+                        }
+                        else if (derivedType.Interfaces.Contains(baseSymbol))
+                        {
+                            kind = ReferenceKind.InterfaceImplementation;
                         }
                     }
                 }
@@ -314,8 +306,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             if (symbol.IsImplicitlyDeclared)
             {
-                if (methodSymbol != null &&
-                    methodSymbol.MethodKind == MethodKind.Constructor &&
+                if (methodSymbol?.MethodKind == MethodKind.Constructor &&
                     symbol.ContainingSymbol != null)
                 {
                     return ProcessReference(range, symbol.ContainingSymbol, ReferenceKind.Instantiation);
@@ -334,8 +325,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return HighlightReference(symbol);
             }
 
-            if (methodSymbol != null &&
-                methodSymbol.MethodKind == MethodKind.Constructor &&
+            if (methodSymbol?.MethodKind == MethodKind.Constructor &&
                 methodSymbol.ContainingType != null)
             {
                 ProcessReference(range, methodSymbol.ContainingType, ReferenceKind.Instantiation);
@@ -367,9 +357,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     return result;
                 }
 
-                string target;
                 if (result.Attributes == null ||
-                    !result.Attributes.TryGetValue("href", out target) ||
+                    !result.Attributes.TryGetValue("href", out string target) ||
                     !target.Contains("@"))
                 {
                     // only register a reference to the symbol if it's not a symbol from an external assembly.
@@ -414,17 +403,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
             else if (IsFunctionValue(symbol))
             {
-                var method = symbol.ContainingSymbol as IMethodSymbol;
-                if (method != null)
+                if (symbol.ContainingSymbol is IMethodSymbol method)
                 {
-                    if (method.AssociatedSymbol != null)
-                    {
-                        return method.AssociatedSymbol;
-                    }
-                    else
-                    {
-                        return method;
-                    }
+                    return method.AssociatedSymbol != null ? method.AssociatedSymbol : method;
                 }
             }
 
@@ -474,7 +455,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static bool IsThisParameter(ISymbol symbol)
         {
-            return symbol != null && symbol.Kind == SymbolKind.Parameter && ((IParameterSymbol)symbol).IsThis;
+            return symbol?.Kind == SymbolKind.Parameter && ((IParameterSymbol)symbol).IsThis;
         }
 
         public HtmlElementInfo GenerateHyperlink(

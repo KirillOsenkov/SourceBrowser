@@ -175,12 +175,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             if (implementationMember == null)
             {
-                throw new ArgumentNullException("implementationMember");
+                throw new ArgumentNullException(nameof(implementationMember));
             }
 
             if (interfaceMember == null)
             {
-                throw new ArgumentNullException("interfaceMember");
+                throw new ArgumentNullException(nameof(interfaceMember));
             }
 
             lock (this.ImplementedInterfaceMembers)

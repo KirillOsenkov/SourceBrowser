@@ -16,11 +16,11 @@ namespace HtmlGenerator.Tests
         public void TestVisit()
         {
             string pathToRepo = Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
-            
+
             // Create the Git Repository for test
             Repository.Init(pathToRepo);
             var repo = new Repository(pathToRepo);
-            
+
             // Create the committer's signature and commit
             Signature author = new Signature("User", "user@example.com", DateTime.Now);
             Signature committer = author;
@@ -62,7 +62,7 @@ namespace HtmlGenerator.Tests
             Commands.Stage(repo, "Test.txt");
             return repo.Commit(commitMessage, author, committer);
         }
-        
+
         /// <summary>
         /// Recursively unsets the readonly bit for all files and repositories in a directory and delete this directory
         /// Necessary to remove Git Repositories

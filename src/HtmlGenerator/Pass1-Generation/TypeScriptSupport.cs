@@ -184,7 +184,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             sb.Append(prefix);
 
             var displayName = GetDisplayName(destinationHtmlFilePath);
-            var assemblyName = "TypeScriptFiles";
+            const string assemblyName = "TypeScriptFiles";
 
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
             displayName = @"\\" + displayName;
@@ -415,7 +415,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 if (classAttributeValue == "k")
                 {
-                    sb.Append("<b>" + html + "</b>");
+                    sb.Append("<b>").Append(html).Append("</b>");
                     return;
                 }
             }
@@ -426,7 +426,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 elementName = hyperlinkInfo.Name;
             }
 
-            sb.Append("<" + elementName);
+            sb.Append("<").Append(elementName);
             bool overridingClassAttributeSpecified = false;
             if (hyperlinkInfo != null)
             {
@@ -459,14 +459,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             sb.Append('>');
 
             sb.Append(html);
-            sb.Append("</" + elementName + ">");
+            sb.Append("</").Append(elementName).Append(">");
         }
 
         private void AddAttribute(StringBuilder sb, string name, string value)
         {
             if (value != null)
             {
-                sb.Append(" " + name + "=\"" + value + "\"");
+                sb.Append(" ").Append(name).Append("=\"").Append(value).Append("\"");
             }
         }
 
@@ -616,8 +616,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Url = linkToReference.Replace('\\', '/')
                 };
 
-                List<Reference> bucket = null;
-                if (!references.TryGetValue(symbolId, out bucket))
+                if (!references.TryGetValue(symbolId, out List<Reference> bucket))
                 {
                     bucket = new List<Reference>();
                     references.Add(symbolId, bucket);
