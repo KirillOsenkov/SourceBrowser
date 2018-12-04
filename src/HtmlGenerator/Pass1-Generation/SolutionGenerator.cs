@@ -130,6 +130,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var w = MSBuildWorkspace.Create(properties: propertiesOpt);
             w.LoadMetadataForReferencedProjects = true;
+            w.AssociateFileExtensionWithLanguage("depproj", LanguageNames.CSharp);
             return w;
         }
 
