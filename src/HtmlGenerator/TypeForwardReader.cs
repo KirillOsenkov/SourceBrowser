@@ -32,7 +32,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private IEnumerable<Tuple<string, string, string>> GetTypeForwardsImpl(string path)
         {
-            var workspace = MSBuildWorkspace.Create();
+            var workspace = SolutionGenerator.CreateWorkspace();
             Solution solution;
             if (path.EndsWith(".sln"))
             {
