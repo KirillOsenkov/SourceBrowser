@@ -5,8 +5,8 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0073" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.25.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MEF\MEF.csproj" />

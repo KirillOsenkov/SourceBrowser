@@ -48,9 +48,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string rawReferencesFile = referencesFile;
             referencesFile = Path.ChangeExtension(referencesFile, ".html");
 
-            string symbolName = null;
-            int totalReferenceCount = 0;
-            var referenceKindGroups = CreateReferences(referencesLines, out totalReferenceCount, out symbolName);
+            var referenceKindGroups = CreateReferences(referencesLines, out int totalReferenceCount, out string symbolName);
 
             using (var writer = new StreamWriter(referencesFile, append: false, encoding: Encoding.UTF8))
             {
@@ -181,8 +179,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void WriteImplementedInterfaceMembers(ulong symbolId, StreamWriter writer)
         {
-            HashSet<Tuple<string, ulong>> implementedInterfaceMembers;
-            if (!ImplementedInterfaceMembers.TryGetValue(symbolId, out implementedInterfaceMembers))
+            if (!ImplementedInterfaceMembers.TryGetValue(symbolId, out HashSet<Tuple<string, ulong>> implementedInterfaceMembers))
             {
                 return;
             }
@@ -194,14 +191,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var assemblyName = implementedInterfaceMember.Item1;
                 var interfaceSymbolId = implementedInterfaceMember.Item2;
 
-                ProjectFinalizer baseProject = null;
-                if (!this.SolutionFinalizer.assemblyNameToProjectMap.TryGetValue(assemblyName, out baseProject))
+                if (!this.SolutionFinalizer.assemblyNameToProjectMap.TryGetValue(assemblyName, out ProjectFinalizer baseProject))
                 {
                     return;
                 }
 
-                DeclaredSymbolInfo symbol = null;
-                if (baseProject.DeclaredSymbols.TryGetValue(interfaceSymbolId, out symbol))
+                if (baseProject.DeclaredSymbols.TryGetValue(interfaceSymbolId, out DeclaredSymbolInfo symbol))
                 {
                     var sb = new StringBuilder();
                     Markup.WriteSymbol(symbol, sb);
@@ -212,8 +207,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void WriteBaseMember(ulong symbolId, StreamWriter writer)
         {
-            Tuple<string, ulong> baseMemberLink;
-            if (!BaseMembers.TryGetValue(symbolId, out baseMemberLink))
+            if (!BaseMembers.TryGetValue(symbolId, out Tuple<string, ulong> baseMemberLink))
             {
                 return;
             }
@@ -223,14 +217,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var assemblyName = baseMemberLink.Item1;
             var baseSymbolId = baseMemberLink.Item2;
 
-            ProjectFinalizer baseProject = null;
-            if (!this.SolutionFinalizer.assemblyNameToProjectMap.TryGetValue(assemblyName, out baseProject))
+            if (!this.SolutionFinalizer.assemblyNameToProjectMap.TryGetValue(assemblyName, out ProjectFinalizer baseProject))
             {
                 return;
             }
 
-            DeclaredSymbolInfo symbol = null;
-            if (baseProject.DeclaredSymbols.TryGetValue(baseSymbolId, out symbol))
+            if (baseProject.DeclaredSymbols.TryGetValue(baseSymbolId, out DeclaredSymbolInfo symbol))
             {
                 var sb = new StringBuilder();
                 Markup.WriteSymbol(symbol, sb);

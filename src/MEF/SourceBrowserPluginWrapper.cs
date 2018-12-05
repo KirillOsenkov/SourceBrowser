@@ -77,12 +77,6 @@ namespace Microsoft.SourceBrowser.MEF
             }
         }
 
-        public Module PluginModule
-        {
-            get
-            {
-                return Plugin.GetType().Module;
-            }
-        }
+        public Module PluginModule => Plugin.GetType().Module;
     }
 }

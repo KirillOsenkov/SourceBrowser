@@ -14,6 +14,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public readonly Dictionary<string, Dictionary<string, List<Reference>>> ReferencesByTargetAssemblyAndSymbolId =
             new Dictionary<string, Dictionary<string, List<Reference>>>();
+
         public IEnumerable<string> UsedReferences { get; private set; }
 
         public void AddReference(

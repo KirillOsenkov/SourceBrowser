@@ -73,7 +73,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 b = ((byte)(bytes[i] >> 4));
                 c[i * 2] = (char)(b > 9 ? b + 87 : b + 0x30);
                 b = ((byte)(bytes[i] & 0xF));
-                c[i * 2 + 1] = (char)(b > 9 ? b + 87 : b + 0x30);
+                c[(i * 2) + 1] = (char)(b > 9 ? b + 87 : b + 0x30);
             }
 
             return new string(c);
@@ -85,8 +85,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             for (int i = 0; i < 8; i++)
             {
                 ulong b = GetHexVal(hex[i * 2]);
-                result = result | (b << (i * 8 + 4));
-                b = GetHexVal(hex[i * 2 + 1]);
+                result = result | (b << ((i * 8) + 4));
+                b = GetHexVal(hex[(i * 2) + 1]);
                 result = result | (b << (i * 8));
             }
 

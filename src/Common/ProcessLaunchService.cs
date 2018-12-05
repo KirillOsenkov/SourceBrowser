@@ -10,12 +10,14 @@ namespace Microsoft.SourceBrowser.Common
 
         public ProcessStartInfo CreateProcessStartInfo(string filePath, string arguments = null)
         {
-            var processStartInfo = new ProcessStartInfo();
-            processStartInfo.FileName = filePath;
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.RedirectStandardOutput = true;
-            processStartInfo.RedirectStandardError = true;
-            processStartInfo.CreateNoWindow = true;
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = filePath,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
             if (!string.IsNullOrEmpty(arguments))
             {
                 processStartInfo.Arguments = arguments;

@@ -232,16 +232,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static void PrintUsage()
         {
-            Console.WriteLine(@"Usage: HtmlGenerator "
-                + @"[/out:<outputdirectory>] "
-                + @"[/force] "
-                + @"[/noplugins] "
-                + @"[/noplugin:Git] "
-                + @"<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
-                + @"[/in:<filecontaingprojectlist>] "
-                + @"[/nobuiltinfederations] "
-                + @"[/offlinefederation:server=assemblyListFile] "
-                + @"[/assemblylist]");
+            Console.WriteLine("Usage: HtmlGenerator "
+                + "[/out:<outputdirectory>] "
+                + "[/force] "
+                + "[/noplugins] "
+                + "[/noplugin:Git] "
+                + "<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
+                + "[/in:<filecontaingprojectlist>] "
+                + "[/nobuiltinfederations] "
+                + "[/offlinefederation:server=assemblyListFile] "
+                + "[/assemblylist]");
         }
 
         private static readonly Folder<CodeAnalysis.Project> mergedSolutionExplorerRoot = new Folder<CodeAnalysis.Project>();
@@ -341,7 +341,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string sourcePath = Assembly.GetEntryAssembly().Location;
             sourcePath = Path.GetDirectoryName(sourcePath);
             string basePath = sourcePath;
-            sourcePath = Path.Combine(sourcePath, @"Web");
+            sourcePath = Path.Combine(sourcePath, "Web");
             if (!Directory.Exists(sourcePath))
             {
                 return;
@@ -374,8 +374,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static string StampOverviewHtmlText(string text)
         {
-            text = text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
-            return text;
+            return text.Replace("$(Date)", DateTime.Today.ToString("MMMM d", CultureInfo.InvariantCulture));
         }
 
         private static void ToggleSolutionExplorerOff(string destinationFolder)

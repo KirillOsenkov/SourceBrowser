@@ -5,10 +5,13 @@
     <AssemblyName>HtmlGenerator</AssemblyName>
     <TargetFramework>net461</TargetFramework>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <NuSpecFile>$(MSBuildProjectDirectory)\Microsoft.SourceBrowser.nuspec</NuSpecFile>
-    <NuGetVersion>1.0.17</NuGetVersion>
+    <NuGetPackageId>SourceBrowser</NuGetPackageId>
+    <NuSpecFile>$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
+    <NuGetVersion>1.0.20</NuGetVersion>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
@@ -28,26 +31,29 @@
   <ItemGroup>
     <PackageReference Include="ExceptionAnalysis.Diagnostics" Version="1.0.0.39796" />
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
-    <PackageReference Include="Microsoft.Build" Version="15.6.82" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.0.7-preview-ge60d679b53" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.6.82" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" ExcludeAssets="runtime" />
-    <!-- Temporarily use latest beta Roslyn packages until 2.9.0 is released on https://nuget.org. -->
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.9.0-beta4-62819-06" />
-    <PackageReference Include="Microsoft.Language.Xml" Version="1.1.20" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="15.6.27413" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.0.31" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.10.0" />
+    <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.27" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="15.8.525" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.7.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62925-02" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuildLogParser\BuildLogParser.csproj" />
@@ -60,7 +66,7 @@
   <Target Name="PublishWebsite" AfterTargets="CoreBuild" BeforeTargets="BuildNuGet">
     <MSBuild Targets="Publish" Projects="$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj" Properties="PublishDir=$(TargetDir)\Web;Configuration=Release" RemoveProperties="TargetFramework" />
   </Target>
-  <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\Microsoft.SourceBrowser.$(NuGetVersion).nupkg">
-    <Exec Command="&quot;$(SolutionDir)\.nuget\NuGet.exe&quot; Pack Microsoft.SourceBrowser.nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
+  <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\$(NuGetPackageId).$(NuGetVersion).nupkg">
+    <Exec Command="&quot;$(MSBuildThisFileDirectory)\..\..\.nuget\NuGet.exe&quot; Pack $(NuGetPackageId).nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
   </Target>
 </Project>

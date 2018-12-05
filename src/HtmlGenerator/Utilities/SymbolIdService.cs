@@ -21,20 +21,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static string GetSymbolString(ISymbol symbol)
         {
-            string result = null;
 
             if (symbol.Kind == SymbolKind.Parameter ||
                 symbol.Kind == SymbolKind.Local)
             {
                 string parent = GetDocumentationCommentId(symbol.ContainingSymbol);
-                result = parent + ":" + symbol.MetadataName;
+                return parent + ":" + symbol.MetadataName;
             }
             else
             {
-                result = GetDocumentationCommentId(symbol);
+                return GetDocumentationCommentId(symbol);
             }
-
-            return result;
         }
 
         public static readonly SymbolDisplayFormat CSharpFormat =
@@ -97,16 +94,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return result;
         }
 
-        public static string GetId(string result)
-        {
-            result = Paths.GetMD5Hash(result, 16);
-            return result;
-        }
+        public static string GetId(string result) => Paths.GetMD5Hash(result, 16);
 
-        public static ulong GetIdULong(string content)
-        {
-            return Paths.GetMD5HashULong(content, 16);
-        }
+        public static ulong GetIdULong(string content) => Paths.GetMD5HashULong(content, 16);
 
         public static string GetId(Document document)
         {
@@ -114,20 +104,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return GetId(documentRelativePath);
         }
 
-        public static string GetAssemblyId(string assemblyName)
-        {
-            return assemblyName;
-        }
+        public static string GetAssemblyId(string assemblyName) => assemblyName;
 
-        public static string GetAssemblyId(IAssemblySymbol assemblySymbol)
-        {
-            return assemblySymbol.Name;
-        }
+        public static string GetAssemblyId(IAssemblySymbol assemblySymbol) => assemblySymbol.Name;
 
-        public static string GetName(ISymbol symbol)
-        {
-            return symbol.ToDisplayString(ShortNameFormat);
-        }
+        public static string GetName(ISymbol symbol) => symbol.ToDisplayString(ShortNameFormat);
 
         private static readonly MethodInfo getGlyph =
             Assembly.Load("Microsoft.CodeAnalysis.Features")

@@ -60,8 +60,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var declarationLines = File.ReadAllLines(assemblyIndex);
             foreach (var declarationLine in declarationLines)
             {
-                var symbolInfo = new DeclaredSymbolInfo(declarationLine);
-                symbolInfo.AssemblyName = this.AssemblyId;
+                var symbolInfo = new DeclaredSymbolInfo(declarationLine)
+                {
+                    AssemblyName = this.AssemblyId
+                };
                 if (symbolInfo.IsValid)
                 {
                     DeclaredSymbols[symbolInfo.ID] = symbolInfo;
@@ -69,13 +71,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public string ProjectInfoLine
-        {
-            get
-            {
-                return projectSourcePath;
-            }
-        }
+        public string ProjectInfoLine => projectSourcePath;
 
         private void ReadBaseMembers()
         {

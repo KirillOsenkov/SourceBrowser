@@ -22,38 +22,20 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             get
             {
-                var root = SolutionDestinationFolder;
-                if (root == null)
-                {
-                    root = Common.Paths.BaseAppFolder;
-                }
+                string root = SolutionDestinationFolder ?? Common.Paths.BaseAppFolder;
 
-                return Path.Combine(root, @"ProcessedAssemblies.txt");
+                return Path.Combine(root, "ProcessedAssemblies.txt");
             }
         }
 
         public static HashSet<string> LoadProcessedAssemblies()
         {
-            HashSet<string> processed = null;
-            if (File.Exists(Paths.ProcessedAssemblies))
-            {
-                processed = new HashSet<string>(File.ReadAllLines(Paths.ProcessedAssemblies), StringComparer.OrdinalIgnoreCase);
-            }
-            else
-            {
-                processed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-
-            return processed;
+            return File.Exists(Paths.ProcessedAssemblies)
+                ? new HashSet<string>(File.ReadAllLines(Paths.ProcessedAssemblies), StringComparer.OrdinalIgnoreCase)
+                : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public static string AssemblyPathsFile
-        {
-            get
-            {
-                return Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, Constants.AssemblyPaths);
-            }
-        }
+        public static string AssemblyPathsFile => Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, Constants.AssemblyPaths);
 
         public static void PrepareDestinationFolder(bool forceOverwrite = false)
         {

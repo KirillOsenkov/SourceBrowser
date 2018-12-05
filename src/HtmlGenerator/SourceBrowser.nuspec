@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SourceBrowser</id>
+    <summary>Generates a website to browse a managed code solution online</summary>
+    <description>
+      Generates a static HTML website from a managed Visual Studio solution that allows you to search, browse and navigate the C#, VB, MSBuild and TypeScript code online.
+    </description>
+    <dependencies>
+    </dependencies>
+
+    <language>en-US</language>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <version>$currentVersion$</version>
+    <authors>KirillOsenkov</authors>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <projectUrl>https://github.com/KirillOsenkov/SourceBrowser</projectUrl>
+    <releaseNotes></releaseNotes>
+    <tags>Roslyn Source Browser</tags>
+  </metadata>
+  <files>
+    <file src="*.exe" target="tools" />
+    <file src="*.exe.config" target="tools" />
+    <file src="*.dll" target="tools" />
+    <file src="TypeScriptSupport\*.*" target="tools\TypeScriptSupport" />
+    <file src="web\*.*" target="tools\web" />
+    <file src="web\**\*.*" target="tools\web" />
+  </files>
+</package>

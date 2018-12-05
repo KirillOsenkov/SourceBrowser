@@ -115,7 +115,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                 sb.Append(' ');
             }
 
-            sb.Length -= 1;
+            sb.Length--;
 
             return sb.ToString();
         }
@@ -294,8 +294,8 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             public int GetHashCode(CompilerInvocation obj)
             {
                 return
-                    obj != null && obj.ProjectFilePath == "-" ? obj.AssemblyName.GetHashCode() :
-                    obj != null && obj.ProjectFilePath != null ? obj.ProjectFilePath.GetHashCode() :
+                    obj?.ProjectFilePath == "-" ? obj.AssemblyName.GetHashCode() :
+                    obj?.ProjectFilePath != null ? obj.ProjectFilePath.GetHashCode() :
                     0;
             }
         }

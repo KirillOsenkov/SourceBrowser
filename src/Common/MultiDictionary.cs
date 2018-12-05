@@ -5,7 +5,7 @@ namespace Microsoft.SourceBrowser.Common
 {
     public class MultiDictionary<K, V> : Dictionary<K, HashSet<V>>
     {
-        private IEqualityComparer<V> valueComparer;
+        private readonly IEqualityComparer<V> valueComparer;
 
         public MultiDictionary()
         {
@@ -21,11 +21,10 @@ namespace Microsoft.SourceBrowser.Common
         {
             if (EqualityComparer<K>.Default.Equals(default(K), key))
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
-            HashSet<V> bucket = null;
-            if (!TryGetValue(key, out bucket))
+            if (!TryGetValue(key, out HashSet<V> bucket))
             {
                 bucket = new HashSet<V>(valueComparer);
                 this.Add(key, bucket);

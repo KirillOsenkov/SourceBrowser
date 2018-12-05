@@ -163,23 +163,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public const string GeneratedAssemblyAttributesFileName = "GeneratedAssemblyAttributes0e71257b769ef";
 
         private static Dictionary<string, string> AssemblyNameToXmlDocFileMap
-        {
-            get
-            {
-                if (assemblyNameToXmlDocFileMap == null)
-                {
-                    assemblyNameToXmlDocFileMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                }
-
-                return assemblyNameToXmlDocFileMap;
-            }
-        }
+            => assemblyNameToXmlDocFileMap ?? (assemblyNameToXmlDocFileMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
         private static DocumentationProvider GetDocumentationProvider(string assemblyFilePath, string assemblyName)
         {
             var result = DocumentationProvider.Default;
-            string xmlFile;
-            if (AssemblyNameToXmlDocFileMap.TryGetValue(assemblyName, out xmlFile))
+            if (AssemblyNameToXmlDocFileMap.TryGetValue(assemblyName, out string xmlFile))
             {
                 result = new XmlDocumentationProvider(xmlFile);
             }
