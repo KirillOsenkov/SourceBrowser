@@ -22,6 +22,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 range.ClassificationType != Constants.ClassificationTypeName &&
                 text != "this" &&
                 text != "base" &&
+                text != "string" &&
                 text != "var" &&
                 text != "New" &&
                 text != "new" &&
