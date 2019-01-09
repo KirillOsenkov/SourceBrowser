@@ -51,10 +51,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 if (!forceOverwrite)
                 {
                     Log.Write(string.Format("Warning, {0} will be deleted! Are you sure? (y/n)", SolutionDestinationFolder), ConsoleColor.Red);
-                    if (Console.ReadKey().KeyChar != 'y')
+                    var ch = Console.ReadKey().KeyChar;
+                    if (ch != 'y')
                     {
                         if (!File.Exists(Paths.ProcessedAssemblies))
                         {
+                            Console.WriteLine($"You pressed '{ch}', exiting.");
                             Environment.Exit(0);
                         }
 

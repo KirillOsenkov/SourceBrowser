@@ -25,6 +25,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var projects = new List<string>();
             var properties = new Dictionary<string, string>();
             var emitAssemblyList = false;
+            var doNotIncludeReferencedProjects = false;
             var force = false;
             var noBuiltInFederations = false;
             var offlineFederations = new Dictionary<string, string>();
@@ -99,6 +100,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 if (arg == "/assemblylist")
                 {
                     emitAssemblyList = true;
+                    continue;
+                }
+
+                if (string.Equals(arg, "/donotincludereferencedprojects", StringComparison.OrdinalIgnoreCase))
+                {
+                    doNotIncludeReferencedProjects = true;
                     continue;
                 }
 
@@ -199,7 +206,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     federation.AddFederation(entry.Key, entry.Value);
                 }
 
-                IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist);
+                IndexSolutions(projects, properties, federation, serverPathMappings, pluginBlacklist, doNotIncludeReferencedProjects);
                 FinalizeProjects(emitAssemblyList, federation);
                 WebsiteFinalizer.Finalize(websiteDestination, emitAssemblyList, federation);
             }
@@ -246,7 +253,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static readonly Folder<CodeAnalysis.Project> mergedSolutionExplorerRoot = new Folder<CodeAnalysis.Project>();
 
-        private static void IndexSolutions(IEnumerable<string> solutionFilePaths, Dictionary<string, string> properties, Federation federation, Dictionary<string, string> serverPathMappings, IEnumerable<string> pluginBlacklist)
+        private static void IndexSolutions(
+            IEnumerable<string> solutionFilePaths,
+            Dictionary<string, string> properties,
+            Federation federation,
+            Dictionary<string, string> serverPathMappings,
+            IEnumerable<string> pluginBlacklist,
+            bool doNotIncludeReferencedProjects = false)
         {
             var assemblyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -286,6 +299,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         federation: federation,
                         serverPathMappings: serverPathMappings,
                         pluginBlacklist: pluginBlacklist,
+                        doNotIncludeReferencedProjects: doNotIncludeReferencedProjects,
                         typeForwards: typeForwards))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
