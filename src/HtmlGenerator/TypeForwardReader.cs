@@ -2,6 +2,7 @@
 using Microsoft.Build.Execution;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.SourceBrowser.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -43,9 +44,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 solution = workspace.OpenProjectAsync(path).GetAwaiter().GetResult().Solution;
             }
 
-            var assemblies = solution.Projects.Select(p => p.OutputFilePath).Where(File.Exists).ToList();
+            var assemblies = solution.Projects.Select(p => p.OutputFilePath).ToList();
             foreach (var assemblyFile in assemblies)
             {
+                if (File.Exists(assemblyFile))
+                {
+                    Log.Write("File exists: " + assemblyFile);
+                }
+                else
+                {
+                    Log.Write("File doesn't exist: " + assemblyFile);
+                    continue;
+                }
+
                 var thisAssemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
                 using (var peReader = new PEReader(File.ReadAllBytes(assemblyFile).ToImmutableArray()))
                 {
@@ -56,6 +67,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         var result = ProcessExportedType(exportedType, reader, thisAssemblyName);
                         if (result != null)
                         {
+                            Log.Write(result.ToString());
                             yield return result;
                         }
                     }
