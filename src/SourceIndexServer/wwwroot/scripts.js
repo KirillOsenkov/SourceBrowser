@@ -1108,7 +1108,7 @@ function initializeSolutionExplorerFolder(folder) {
 }
 
 function makeFoldersCollapsible(folderIcon, openFolderIcon, pathToIcons, initializeHandler) {
-    var elements = document.getElementsByClassName("folder");
+    var elements = document.querySelectorAll(".folder");
     var length = elements.length;
     for (var i = 0; i < length; i++) {
         var folder = elements[i];
