@@ -24,7 +24,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             sourceText = File.ReadAllText(sourceXmlFilePath);
             var lines = File.ReadAllLines(sourceXmlFilePath);
-            lineLengths = TextUtilities.GetLineLengths(sourceText);
+            lineLengths = sourceText.GetLineLengths();
             var lineCount = lines.Length;
             var root = Parser.ParseText(sourceText);
 
@@ -130,8 +130,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         protected virtual string ProcessRange(ClassifiedRange range, string text)
         {
-            text = Markup.HtmlEscape(text);
-            return text;
+            return Markup.HtmlEscape(text);
         }
 
         protected string GetSpanClass(XmlClassificationTypes classification)
@@ -172,6 +171,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             public int LineStart { get; set; }
             public int LineNumber { get; set; }
             public string LineText { get; set; }
+
             public int Column
             {
                 get

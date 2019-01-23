@@ -11,7 +11,7 @@ namespace GitGlyph
     public class GitSourceBrowserPlugin : ISourceBrowserPlugin, IDisposable
     {
         private ILog Logger { get; set; }
-        private List<Repository> repositoriesToDispose;
+        private readonly List<Repository> repositoriesToDispose;
 
         public GitSourceBrowserPlugin()
         {

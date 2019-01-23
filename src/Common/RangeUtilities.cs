@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.SourceBrowser.Common
 {
-    public class RangeUtilities
+    public static class RangeUtilities
     {
         public static T[] FillGaps<T>(
             string text,

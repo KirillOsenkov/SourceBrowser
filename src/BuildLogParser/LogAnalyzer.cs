@@ -333,15 +333,13 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                     intermediateAssemblyPath = intermediateAssemblyPath.Replace(@"\\", @"\");
                     lock (this.intermediateAssemblyPathToOutputAssemblyPathMap)
                     {
-                        string existing;
-                        if (!this.intermediateAssemblyPathToOutputAssemblyPathMap.TryGetValue(intermediateAssemblyPath, out existing))
+                        if (!this.intermediateAssemblyPathToOutputAssemblyPathMap.TryGetValue(intermediateAssemblyPath, out string existing))
                         {
                             this.intermediateAssemblyPathToOutputAssemblyPathMap[intermediateAssemblyPath] = outputAssemblyPath;
                         }
                         else if (!string.Equals(existing, outputAssemblyPath))
                         {
-                            List<string> bucket;
-                            if (!ambiguousFinalDestinations.TryGetValue(assemblyName, out bucket))
+                            if (!ambiguousFinalDestinations.TryGetValue(assemblyName, out List<string> bucket))
                             {
                                 bucket = new List<string>();
                                 ambiguousFinalDestinations.Add(assemblyName, bucket);
@@ -621,8 +619,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
         private static void AddAssemblyToMap(Dictionary<string, string> assemblyNameToFilePathMap, string reference)
         {
             var assemblyName = Path.GetFileNameWithoutExtension(reference);
-            string existing;
-            if (!assemblyNameToFilePathMap.TryGetValue(assemblyName, out existing) ||
+            if (!assemblyNameToFilePathMap.TryGetValue(assemblyName, out string existing) ||
                 existing.Length > reference.Length ||
                 (existing.Length == reference.Length && string.Compare(existing, reference) < 0))
             {
@@ -650,10 +647,9 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             foreach (var binary in invocations.SelectMany(i => i.ReferencedBinaries))
             {
                 var assemblyName = Path.GetFileNameWithoutExtension(binary);
-                if (!indexedAssemblies.Contains(assemblyName) && ShouldIncludeNotIndexedAssembly(binary, assemblyName))
+                if (!indexedAssemblies.Contains(assemblyName) && ShouldIncludeNotIndexedAssembly(binary))
                 {
-                    string existing = null;
-                    if (!notIndexedAssemblies.TryGetValue(assemblyName, out existing) ||
+                    if (!notIndexedAssemblies.TryGetValue(assemblyName, out string existing) ||
                         binary.Length < existing.Length ||
                         (binary.Length == existing.Length && binary.CompareTo(existing) > 0))
                     {
@@ -678,15 +674,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             }
         }
 
-        private static bool ShouldIncludeNotIndexedAssembly(string binary, string assemblyName)
-        {
-            if (!File.Exists(binary))
-            {
-                return false;
-            }
-
-            return true;
-        }
+        private static bool ShouldIncludeNotIndexedAssembly(string binary) => File.Exists(binary);
 
         public static void AddNonExistingReference(
             CompilerInvocation compilerInvocation,

@@ -22,38 +22,20 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             get
             {
-                var root = SolutionDestinationFolder;
-                if (root == null)
-                {
-                    root = Common.Paths.BaseAppFolder;
-                }
+                string root = SolutionDestinationFolder ?? Common.Paths.BaseAppFolder;
 
-                return Path.Combine(root, @"ProcessedAssemblies.txt");
+                return Path.Combine(root, "ProcessedAssemblies.txt");
             }
         }
 
         public static HashSet<string> LoadProcessedAssemblies()
         {
-            HashSet<string> processed = null;
-            if (File.Exists(Paths.ProcessedAssemblies))
-            {
-                processed = new HashSet<string>(File.ReadAllLines(Paths.ProcessedAssemblies), StringComparer.OrdinalIgnoreCase);
-            }
-            else
-            {
-                processed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-
-            return processed;
+            return File.Exists(Paths.ProcessedAssemblies)
+                ? new HashSet<string>(File.ReadAllLines(Paths.ProcessedAssemblies), StringComparer.OrdinalIgnoreCase)
+                : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public static string AssemblyPathsFile
-        {
-            get
-            {
-                return Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, Constants.AssemblyPaths);
-            }
-        }
+        public static string AssemblyPathsFile => Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, Constants.AssemblyPaths);
 
         public static void PrepareDestinationFolder(bool forceOverwrite = false)
         {
@@ -69,10 +51,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 if (!forceOverwrite)
                 {
                     Log.Write(string.Format("Warning, {0} will be deleted! Are you sure? (y/n)", SolutionDestinationFolder), ConsoleColor.Red);
-                    if (Console.ReadKey().KeyChar != 'y')
+                    var ch = Console.ReadKey().KeyChar;
+                    if (ch != 'y')
                     {
                         if (!File.Exists(Paths.ProcessedAssemblies))
                         {
+                            Console.WriteLine($"You pressed '{ch}', exiting.");
                             Environment.Exit(0);
                         }
 

@@ -10,8 +10,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public static IEnumerable<string> DefaultFederatedIndexUrls = new[]
         {
-            @"https://referencesource.microsoft.com",
-            @"http://source.roslyn.io"
+            "https://referencesource.microsoft.com",
+            "http://source.roslyn.io"
         };
 
         private class Info
@@ -23,18 +23,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     throw new ArgumentNullException(nameof(server));
                 }
 
-                if (assemblies == null)
-                {
-                    throw new ArgumentNullException(nameof(assemblies));
-                }
-
                 if (!server.EndsWith("/"))
                 {
                     server += "/";
                 }
 
                 Server = server;
-                Assemblies = assemblies;
+                Assemblies = assemblies ?? throw new ArgumentNullException(nameof(assemblies));
             }
 
             public string Server { get; }

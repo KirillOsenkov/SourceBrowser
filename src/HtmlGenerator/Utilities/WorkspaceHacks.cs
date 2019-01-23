@@ -48,7 +48,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var documentExtensions = assembly.GetType("Microsoft.CodeAnalysis.Shared.Extensions.DocumentExtensions");
             var serviceAssembly = Assembly.Load(assemblyName);
             var serviceInterfaceType = serviceAssembly.GetType(serviceType);
-            var getLanguageServiceMethod = documentExtensions.GetMethod("GetLanguageService");
+            var getLanguageServiceMethod = documentExtensions.GetMethod("GetLanguageService", new Type[] { typeof(Document) });
             getLanguageServiceMethod = getLanguageServiceMethod.MakeGenericMethod(serviceInterfaceType);
             var service = getLanguageServiceMethod.Invoke(null, new object[] { document });
             return service;
