@@ -452,7 +452,7 @@ function ro() {
 
     setHash(newHash);
 
-    var headers = document.getElementsByClassName("rA");
+    var headers = document.querySelectorAll(".rA");
     for (var i = 0; i < headers.length; i++) {
         var header = headers[i];
         header.onclick = function () {
@@ -467,7 +467,7 @@ function ro() {
         };
     }
 
-    var fileHeaders = document.getElementsByClassName("rN");
+    var fileHeaders = document.querySelectorAll(".rN");
     for (var i = 0; i < fileHeaders.length; i++) {
         var fileHeader = fileHeaders[i];
         var fileName = getInnerText(fileHeader);
@@ -494,7 +494,7 @@ function onDocumentOutlineLoad() {
     var root = document.getElementById('root');
     root.style.cursor = "pointer";
     var doc = top.s.document;
-    var links = doc.getElementsByTagName('a');
+    var links = doc.querySelectorAll('a');
     for (var i = 0; i < links.length; i++) {
         var link = links[i];
         var dataGlyphText = link.getAttribute('data-glyph');
@@ -812,7 +812,7 @@ function t(sender) {
 }
 
 function initializeHighlightReferences() {
-    elements = document.getElementsByClassName("r");
+    elements = document.querySelectorAll(".r");
     for (var i = 0; i < elements.length; i++) {
         elements[i].onclick = function () { t(this); };
     }
