@@ -73,7 +73,7 @@ namespace Microsoft.SourceBrowser.Common
                 {
                     var project = ProjectCollection.GlobalProjectCollection.LoadProject(
                         projectFilePath,
-                        toolsVersion: "15.0");
+                        toolsVersion: null);
 
                     assemblyName = project.GetPropertyValue("AssemblyName");
                     if (assemblyName?.Length == 0)
