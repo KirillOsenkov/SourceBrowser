@@ -317,7 +317,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             var projectsToProcess = allProjects
-                .Where(p => processedAssemblyList == null || !processedAssemblyList.Contains(p.AssemblyName))
+                .Where(p => processedAssemblyList == null || processedAssemblyList.Add(p.AssemblyName))
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
@@ -331,7 +331,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     generator.Generate().GetAwaiter().GetResult();
 
                     File.AppendAllText(Paths.ProcessedAssemblies, project.AssemblyName + Environment.NewLine, Encoding.UTF8);
-                    processedAssemblyList?.Add(project.AssemblyName);
                 }
                 finally
                 {
