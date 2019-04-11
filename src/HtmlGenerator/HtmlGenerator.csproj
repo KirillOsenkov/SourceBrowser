@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>HtmlGenerator</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>true</Prefer32Bit>
@@ -13,6 +13,9 @@
     <NuSpecFile>$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
     <NuGetVersion>1.0.20</NuGetVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="..\..\lib\Microsoft.CodeAnalysis.Workspaces.Desktop.dll" />
+  </ItemGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
     <NuGetInput Include="$(NuSpecFile)" />
@@ -33,25 +36,25 @@
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
     <PackageReference Include="Microsoft.Build" Version="15.9.20" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.2.2" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2">
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.0.0" />
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.27" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="15.8.525" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.0.467" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62925-02" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
