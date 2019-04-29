@@ -27,7 +27,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             // Roslyn 3.0.0 introduced `Symbol - Static` as an "additive" classification, meaning that multiple
-            // classified spans will be emited for the same TextSpan. This will filter our those classified spans
+            // classified spans will be emitted for the same TextSpan. This will filter our those classified spans
             // since they are "extra" information and do not represent the identifier type. This filter can be
             // removed after taking Roslyn 3.1.0 as the classifier will filter before returning classified spans.
             var ranges = classifiedSpans.Where(classifiedSpan => classifiedSpan.ClassificationType != ClassificationTypeNames.StaticSymbol)
