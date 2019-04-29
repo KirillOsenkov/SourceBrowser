@@ -143,6 +143,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static readonly HashSet<string> ignoreClassifications = new HashSet<string>(new[]
             {
                 "operator",
+                "operator - overloaded",
                 "number",
                 "punctuation",
                 "preprocessor text",
@@ -152,6 +153,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static readonly Dictionary<string, string> replaceClassifications = new Dictionary<string, string>
             {
                 ["keyword"] = Constants.ClassificationKeyword,
+                ["keyword - control"] = Constants.ClassificationKeyword,
                 ["identifier"] = Constants.ClassificationIdentifier,
                 ["field name"] = Constants.ClassificationIdentifier,
                 ["enum member name"] = Constants.ClassificationIdentifier,
@@ -162,6 +164,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 ["extension method name"] = Constants.ClassificationIdentifier,
                 ["property name"] = Constants.ClassificationIdentifier,
                 ["event name"] = Constants.ClassificationIdentifier,
+                ["namespace name"] = Constants.ClassificationIdentifier,
+                ["label name"] = Constants.ClassificationIdentifier,
                 ["class name"] = Constants.ClassificationTypeName,
                 ["struct name"] = Constants.ClassificationTypeName,
                 ["interface name"] = Constants.ClassificationTypeName,
