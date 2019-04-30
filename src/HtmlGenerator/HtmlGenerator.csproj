@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>HtmlGenerator</AssemblyName>
@@ -68,7 +69,18 @@
   <Target Name="PublishWebsite" AfterTargets="CoreBuild" BeforeTargets="BuildNuGet">
     <MSBuild Targets="Publish" Projects="$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj" Properties="PublishDir=$(TargetDir)\Web;Configuration=Release" RemoveProperties="TargetFramework" />
   </Target>
-  <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(OutDir)\$(NuGetPackageId).$(NuGetVersion).nupkg">
-    <Exec Command="&quot;$(MSBuildThisFileDirectory)\..\..\.nuget\NuGet.exe&quot; Pack $(NuGetPackageId).nuspec -NoPackageAnalysis -BasePath &quot;$(OutDir.TrimEnd('\'))&quot; -OutputDirectory &quot;$(OutDir.TrimEnd('\'))&quot; -prop currentVersion=$(NuGetVersion)" />
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <NupkgFilePath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)$(OutDir)$(NuGetPackageId).$(NuGetVersion).nupkg'))</NupkgFilePath>
+  </PropertyGroup>
+  <Target Name="BuildNuGet" AfterTargets="CoreBuild" Condition="Exists('$(NuSpecFile)')" DependsOnTargets="CopyFilesToOutputDirectory" Inputs="@(NuGetInput)" Outputs="$(NupkgFilePath)">
+    <PropertyGroup>
+      <NuGetOutputRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)$(OutDir.TrimEnd('\'))'))</NuGetOutputRoot>
+      <NuGetExePath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..'))</NuGetExePath>
+    </PropertyGroup>
+    <DownloadFile Condition="!Exists('$(NuGetExe)\NuGet.exe')" SourceUrl="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" SkipUnchangedFiles="true" DestinationFolder="$(NuGetExePath)" />
+    <Exec Command="&quot;$(NuGetExePath)\NuGet.exe&quot; Pack $(NuGetPackageId).nuspec -NoPackageAnalysis -BasePath &quot;$(NuGetOutputRoot)&quot; -OutputDirectory &quot;$(NuGetOutputRoot)&quot; -prop currentVersion=$(NuGetVersion)" />
   </Target>
 </Project>

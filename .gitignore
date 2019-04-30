@@ -196,3 +196,5 @@ FakesAssemblies/
 *.opt
 /src/SourceIndexServer/Index
 *.binlog
+
+nuget.exe
