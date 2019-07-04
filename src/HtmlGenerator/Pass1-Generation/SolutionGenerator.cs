@@ -335,6 +335,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 finally
                 {
                     CurrentAssemblyName = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
                 }
             }
 
