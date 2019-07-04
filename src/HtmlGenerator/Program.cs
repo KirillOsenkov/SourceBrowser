@@ -250,7 +250,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 + "[/assemblylist]");
         }
 
-        private static readonly Folder<Project> mergedSolutionExplorerRoot = new Folder<Project>();
+        private static readonly Folder<ProjectSkeleton> mergedSolutionExplorerRoot = new Folder<ProjectSkeleton>();
 
         private static void IndexSolutions(
             IEnumerable<string> solutionFilePaths,
