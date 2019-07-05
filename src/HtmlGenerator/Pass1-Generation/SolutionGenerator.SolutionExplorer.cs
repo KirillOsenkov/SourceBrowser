@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Construction;
 using Microsoft.CodeAnalysis;
-using Folder = Microsoft.SourceBrowser.HtmlGenerator.Folder<Microsoft.CodeAnalysis.Project>;
+using Folder = Microsoft.SourceBrowser.HtmlGenerator.Folder<Microsoft.SourceBrowser.HtmlGenerator.ProjectSkeleton>;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -46,7 +46,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             if (folders == null || !folders.Any())
             {
-                folder.Add(project);
+                folder.Add(new ProjectSkeleton(project.AssemblyName, project.Name));
             }
             else
             {

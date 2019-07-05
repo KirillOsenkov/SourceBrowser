@@ -301,7 +301,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public static string CurrentAssemblyName = null;
 
         /// <returns>true if only part of the solution was processed and the method needs to be called again, false if all done</returns>
-        public bool Generate(HashSet<string> processedAssemblyList = null, Folder<Project> solutionExplorerRoot = null)
+        public bool Generate(HashSet<string> processedAssemblyList = null, Folder<ProjectSkeleton> solutionExplorerRoot = null)
         {
             if (solution == null)
             {
@@ -335,6 +335,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 finally
                 {
                     CurrentAssemblyName = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
                 }
             }
 
