@@ -7,7 +7,6 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <NuGetPackageId>SourceBrowser</NuGetPackageId>
