@@ -1,18 +1,39 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Microsoft.SourceBrowser.Common
 {
     public static class Log
     {
-        private static readonly object consoleLock = new object();
         public const string ErrorLogFile = "Errors.txt";
         public const string MessageLogFile = "Messages.txt";
         private const string SeparatorBar = "===============================================";
 
         private static string errorLogFilePath = Path.GetFullPath(ErrorLogFile);
         private static string messageLogFilePath = Path.GetFullPath(MessageLogFile);
+
+        public delegate void MessageHandler(string message, ConsoleColor color);
+        public delegate void FileMessageHandler(string message, string filePath);
+        public static event MessageHandler RaiseMessage;
+        public static event FileMessageHandler RaiseMessageFile;
+
+        private static bool logIsActivated;
+        public static void Activate()
+        {
+            if (logIsActivated)
+                return;
+            var threadLogger = new Thread(() =>
+            {
+                RaiseMessage += InnerWrite;
+                RaiseMessageFile += InnerWriteToFile;
+            });
+            threadLogger.IsBackground = true;
+            threadLogger.Name = "threadLogger";
+            threadLogger.Start();
+            logIsActivated = true;
+        }
 
         public static void Exception(Exception e, string message, bool isSevere = true)
         {
@@ -31,25 +52,32 @@ namespace Microsoft.SourceBrowser.Common
             Write(message, ConsoleColor.Blue);
             WriteToFile(message, MessageLogFilePath);
         }
-
+        
         private static void WriteToFile(string message, string filePath)
         {
-            lock (consoleLock)
+            RaiseMessageFile?.Invoke(message, filePath);
+        }
+
+        private static void InnerWriteToFile(string message, string filePath)
+        {
+            try
             {
-                try
-                {
-                    File.AppendAllText(filePath, SeparatorBar + Environment.NewLine + message + Environment.NewLine, Encoding.UTF8);
-                }
-                catch (Exception ex)
-                {
-                    Write($"Failed to write to ${filePath}: ${ex}.", ConsoleColor.Red);
-                }
+                File.AppendAllText(filePath, SeparatorBar + Environment.NewLine + message + Environment.NewLine, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                Write($"Failed to write to ${filePath}: ${ex}.", ConsoleColor.Red);
             }
         }
 
         public static void Write(string message, ConsoleColor color = ConsoleColor.Gray)
         {
-            lock (consoleLock)
+            RaiseMessage?.Invoke(message, color);
+        }
+
+        private static void InnerWrite(string message, ConsoleColor color = ConsoleColor.Gray)
+        {
+            try
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(DateTime.Now.ToString("HH:mm:ss") + " ");
@@ -59,6 +87,10 @@ namespace Microsoft.SourceBrowser.Common
                 {
                     Console.ForegroundColor = ConsoleColor.Gray;
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
