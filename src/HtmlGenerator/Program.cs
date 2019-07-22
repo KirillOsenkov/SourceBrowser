@@ -16,7 +16,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         private static void Main(string[] args)
         {
-            Log.Activate();
             if (args.Length == 0)
             {
                 PrintUsage();

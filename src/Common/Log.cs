@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 
@@ -14,25 +17,30 @@ namespace Microsoft.SourceBrowser.Common
         private static string errorLogFilePath = Path.GetFullPath(ErrorLogFile);
         private static string messageLogFilePath = Path.GetFullPath(MessageLogFile);
 
-        public delegate void MessageHandler(string message, ConsoleColor color);
-        public delegate void FileMessageHandler(string message, string filePath);
-        public static event MessageHandler RaiseMessage;
-        public static event FileMessageHandler RaiseMessageFile;
+        private static readonly Subject<(string message, ConsoleColor color)> ConsoleMessages = new Subject<(string message, ConsoleColor color)>();
+        private static readonly Subject<(string message, string filePath)> FileMessages = new Subject<(string message, string filePath)>();
 
-        private static bool logIsActivated;
-        public static void Activate()
+        static Log()
         {
-            if (logIsActivated)
-                return;
-            var threadLogger = new Thread(() =>
+            var threadLogger = new NewThreadScheduler(start =>
             {
-                RaiseMessage += InnerWrite;
-                RaiseMessageFile += InnerWriteToFile;
+                var thread = new Thread(start);
+                thread.Name = "ThreadLogger";
+                thread.IsBackground = true;
+                return thread;
             });
-            threadLogger.IsBackground = true;
-            threadLogger.Name = "threadLogger";
-            threadLogger.Start();
-            logIsActivated = true;
+            ConsoleMessages.ObserveOn(threadLogger).Subscribe(OnNextMessage);
+            FileMessages.ObserveOn(threadLogger).Subscribe(OnNextMessage);
+        }
+
+        private static void OnNextMessage((string message, string filePath) obj)
+        {
+            InnerWriteToFile(obj.message, obj.filePath);
+        }
+
+        private static void OnNextMessage((string message, ConsoleColor color) obj)
+        {
+            InnerWrite(obj.message, obj.color);
         }
 
         public static void Exception(Exception e, string message, bool isSevere = true)
@@ -55,7 +63,7 @@ namespace Microsoft.SourceBrowser.Common
         
         private static void WriteToFile(string message, string filePath)
         {
-            RaiseMessageFile?.Invoke(message, filePath);
+            FileMessages.OnNext((message, filePath));
         }
 
         private static void InnerWriteToFile(string message, string filePath)
@@ -72,7 +80,7 @@ namespace Microsoft.SourceBrowser.Common
 
         public static void Write(string message, ConsoleColor color = ConsoleColor.Gray)
         {
-            RaiseMessage?.Invoke(message, color);
+            ConsoleMessages.OnNext((message, color));
         }
 
         private static void InnerWrite(string message, ConsoleColor color = ConsoleColor.Gray)
