@@ -17,30 +17,36 @@ namespace Microsoft.SourceBrowser.Common
         private static string errorLogFilePath = Path.GetFullPath(ErrorLogFile);
         private static string messageLogFilePath = Path.GetFullPath(MessageLogFile);
 
-        private static readonly Subject<(string message, ConsoleColor color)> ConsoleMessages = new Subject<(string message, ConsoleColor color)>();
-        private static readonly Subject<(string message, string filePath)> FileMessages = new Subject<(string message, string filePath)>();
+        private static readonly Subject<IMessage> Messages = new Subject<IMessage>();
+
+        private static void OnNext(IMessage msg)
+        {
+            switch (msg)
+            {
+                case ConsoleMessage consoleMessage:
+                    InnerWrite(consoleMessage.Message, consoleMessage.Color);
+                    break;
+                case FileMessage fileMessage:
+                    InnerWriteToFile(fileMessage.Message, fileMessage.FilePath);
+                    break;
+            }
+        }
+
+        private static Thread ThreadFactory(ThreadStart start)
+        {
+            var thread = new Thread(start);
+            thread.IsBackground = true;
+            thread.Name = "ThreadLogger";
+            return thread;
+        }
 
         static Log()
         {
-            var threadLogger = new NewThreadScheduler(start =>
-            {
-                var thread = new Thread(start);
-                thread.Name = "ThreadLogger";
-                thread.IsBackground = true;
-                return thread;
-            });
-            ConsoleMessages.ObserveOn(threadLogger).Subscribe(OnNextMessage);
-            FileMessages.ObserveOn(threadLogger).Subscribe(OnNextMessage);
+            Messages.ObserveOn(new NewThreadScheduler(ThreadFactory)).Subscribe(OnNext, OnCompleted);
         }
 
-        private static void OnNextMessage((string message, string filePath) obj)
+        private static void OnCompleted()
         {
-            InnerWriteToFile(obj.message, obj.filePath);
-        }
-
-        private static void OnNextMessage((string message, ConsoleColor color) obj)
-        {
-            InnerWrite(obj.message, obj.color);
         }
 
         public static void Exception(Exception e, string message, bool isSevere = true)
@@ -63,7 +69,7 @@ namespace Microsoft.SourceBrowser.Common
         
         private static void WriteToFile(string message, string filePath)
         {
-            FileMessages.OnNext((message, filePath));
+            Messages.OnNext(new FileMessage(message, filePath));
         }
 
         private static void InnerWriteToFile(string message, string filePath)
@@ -80,7 +86,7 @@ namespace Microsoft.SourceBrowser.Common
 
         public static void Write(string message, ConsoleColor color = ConsoleColor.Gray)
         {
-            ConsoleMessages.OnNext((message, color));
+            Messages.OnNext(new ConsoleMessage(message, color));
         }
 
         private static void InnerWrite(string message, ConsoleColor color = ConsoleColor.Gray)
@@ -113,5 +119,38 @@ namespace Microsoft.SourceBrowser.Common
             get { return messageLogFilePath; }
             set { messageLogFilePath = value.MustBeAbsolute(); }
         }
+
+        public static void Close()
+        {
+            Messages.OnCompleted();
+        }
     }
+
+    internal interface IMessage
+    {
+        string Message { get; }
+    }
+
+    internal class ConsoleMessage : IMessage
+    {
+        public string Message { get; }
+        public ConsoleColor Color { get; }
+        public ConsoleMessage(string message, ConsoleColor color)
+        {
+            Message = message;
+            Color = color;
+        }
+    }
+
+    internal class FileMessage : IMessage
+    {
+        public string Message { get; }
+        public string FilePath { get; }
+        public FileMessage(string message, string filePath)
+        {
+            Message = message;
+            FilePath = filePath;
+        }
+    }
+
 }
