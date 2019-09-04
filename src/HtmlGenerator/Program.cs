@@ -209,6 +209,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 FinalizeProjects(emitAssemblyList, federation);
                 WebsiteFinalizer.Finalize(websiteDestination, emitAssemblyList, federation);
             }
+            Log.Close();
         }
 
         private static void AddProject(List<string> projects, string path)
