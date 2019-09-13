@@ -282,7 +282,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 using (Disposable.Timing($"Reading type forwards from {path}"))
                 {
-                    GetTypeForwards(path, typeForwards, domain);
+                    GetTypeForwards(path, properties, typeForwards, domain);
                 }
             }
             AppDomain.Unload(domain);
@@ -313,10 +313,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static void GetTypeForwards(string path, Dictionary<ValueTuple<string, string>, string> typeForwards, AppDomain domain)
+        private static void GetTypeForwards(string path, IReadOnlyDictionary<string, string> properties, Dictionary<(string, string), string> typeForwards, AppDomain domain)
         {
             var obj = (TypeForwardReader)domain.CreateInstanceFromAndUnwrap(Assembly.GetEntryAssembly().CodeBase, "Microsoft.SourceBrowser.HtmlGenerator.TypeForwardReader");
-            var forwards = obj.GetTypeForwards(path);
+            var forwards = obj.GetTypeForwards(path, properties);
             foreach (var forward in forwards)
             {
                 typeForwards[ValueTuple.Create(forward.Item1, forward.Item2)] = forward.Item3;

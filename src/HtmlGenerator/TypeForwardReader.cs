@@ -18,11 +18,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class TypeForwardReader : MarshalByRefObject
     {
-        public IEnumerable<Tuple<string, string, string>> GetTypeForwards(string path)
+        public IEnumerable<Tuple<string, string, string>> GetTypeForwards(string path, IReadOnlyDictionary<string, string> properties)
         {
             try
             {
-                return GetTypeForwardsImpl(path).ToList();
+                return GetTypeForwardsImpl(path, properties).ToList();
             }
             catch (Exception ex)
             {
@@ -31,9 +31,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private IEnumerable<Tuple<string, string, string>> GetTypeForwardsImpl(string path)
+        private IEnumerable<Tuple<string, string, string>> GetTypeForwardsImpl(string path, IReadOnlyDictionary<string, string> properties)
         {
-            var workspace = SolutionGenerator.CreateWorkspace();
+            var workspace = SolutionGenerator.CreateWorkspace(properties.ToImmutableDictionary());
             Solution solution;
             if (path.EndsWith(".sln"))
             {
