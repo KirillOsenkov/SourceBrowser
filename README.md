@@ -2,7 +2,7 @@
 
 [![NuGet package](https://img.shields.io/nuget/v/SourceBrowser.svg)](https://nuget.org/packages/SourceBrowser)
 
-Source browser website generator that powers https://referencesource.microsoft.com, http://source.roslyn.io, https://source.dot.net, and https://aspnetsource.azurewebsites.net/ (unofficial ASP.NET Core 1.0 source).
+Source browser website generator that powers https://referencesource.microsoft.com, http://source.roslyn.io, https://source.dot.net, and others.
 
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code. **Note** that it does require an ASP.NET Core website for hosting (symbol index is kept server-side), so [without ASP.NET Core the search function doesn't work](https://github.com/KirillOsenkov/SourceBrowser/wiki/Architecture#server-side).
 
@@ -12,24 +12,25 @@ Of course Source Browser allows you to browse its own source code:
 Now also available on NuGet:
 [https://www.nuget.org/packages/SourceBrowser](https://www.nuget.org/packages/SourceBrowser)
 
-## Instructions (requires Visual Studio 2017):
- 1. git clone https://github.com/KirillOsenkov/SourceBrowser.git
+## Instructions to Build (requires Visual Studio 2019):
+ 1. git clone https://github.com/KirillOsenkov/SourceBrowser
  2. cd SourceBrowser
- 3. dotnet restore
- 4. msbuild
- 5. cd bin\Debug\HtmlGenerator
- 6. HtmlGenerator.exe ..\\..\\..\TestCode\TestSolution.sln
- 7. the website in bin\Debug\HtmlGenerator\Index is ready to be served
+ 3. Build.cmd
+ 
+## Instructions to generate and run a test website
+ 
+ 1. GenerateTestSite.cmd
+ 2. RunTestSite.cmd
 
-## In Visual Studio 2017:
+## In Visual Studio 2019:
  1. Open SourceBrowser.sln.
- 2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln (you may need to unload the SourceIndexServer project if you see an error message that IIS can't serve from bin\Debug\HtmlGenerator\Index). 
+ 2. Set HtmlGenerator project as startup and hit F5 - it is preconfigured to generate a website for TestCode\TestSolution.sln.
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. Pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to. This path will be used in step 6 as your "physicalPath".
  5. Pass /in:<path> to pass a file with a list of full paths to projects and solutions to include in the index
- 6. Set SourceIndexServer project as startup and run/debug the website. It is pre-configured to run from \bin\Debug\HtmlGenerator\Index but you can customize in project properties -> Web -> Custom server.
+ 6. Set SourceIndexServer project as startup and run/debug the website.
 
-**Note:** Visual Studio 2017 is required to build Source Browser.
+**Note:** Visual Studio 2019 is required to build Source Browser.
 
 ## Conceptual design
 
@@ -62,4 +63,4 @@ The generator is not incremental. You have to generate into an empty folder from
 
 This is a reference implementation that showcases the concepts and Roslyn usage. It comes with no guarantees, use at your own risk. We will consider accepting high-quality pull requests that add non-trivial value, however we have no plans to do significant work on the application in its current form. Any significant rearchitecture, adding large features, big refactorings won't be accepted because of resource constraints. Feel free to use it to generate websites for your own code, integrate in your CI servers etc. Feel free to do whatever you want in your own forks. Bug reports are gratefully accepted.
 
-For any questions, feel free to reach out to [@KirillOsenkov](https://twitter.com/KirillOsenkov) on Twitter. Thanks to [@v2_matveev](https://twitter.com/v2_matveev) for contributing TypeScript support!
+For any questions, feel free to reach out to [@KirillOsenkov](https://twitter.com/KirillOsenkov) on Twitter. Thanks to [@v2_matveev](https://twitter.com/v2_matveev) for contributing TypeScript support! Thanks to numerous other contributors for various fixes and contributions!
