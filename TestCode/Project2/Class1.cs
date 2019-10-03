@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 public static class Extensions
 {
+    public static string NewLine => "\r\n";
     public static void ExtensionMethod(this string s)
     {
         var s1 = new string(new char[0]);
