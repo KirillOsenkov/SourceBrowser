@@ -358,16 +358,9 @@ namespace Microsoft.SourceBrowser.Common
             }
         }
 
-        public static Huffman Read(string huffmanFile)
+        public static Huffman Read(Stream huffmanStream)
         {
-            using (var fileStream = new FileStream(
-                huffmanFile,
-                FileMode.Open,
-                FileAccess.Read,
-                FileShare.None,
-                262144,
-                FileOptions.SequentialScan))
-            using (var reader = new BinaryReader(fileStream))
+            using (var reader = new BinaryReader(huffmanStream))
             {
                 var node = ReadNode(reader);
                 var result = new Huffman(node);

@@ -48,11 +48,16 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Use(Helpers.ServeProxiedIndex);
+
             app.UseDefaultFiles();
-            app.UseStaticFiles(new StaticFileOptions
+            if (Directory.Exists(RootPath))
             {
-                FileProvider = new PhysicalFileProvider(RootPath),
-            });
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(RootPath),
+                });
+            }
             app.UseStaticFiles();
             app.UseMvc();
         }

@@ -6,7 +6,7 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 {
-    public class IndexLoader
+    public static class IndexLoader
     {
         public static void ReadIndex(Index index, string rootPath)
         {
@@ -43,12 +43,21 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
         private static void ReadFilesCore(Index index, string rootPath)
         {
+            IFileSystem fs;
+            if (string.IsNullOrEmpty(Helpers.IndexProxyUrl))
+            {
+                fs = new StaticFileSystem(rootPath);
+            }
+            else
+            {
+                fs = new AzureBlobFileSystem(Helpers.IndexProxyUrl);
+            }
             using (Measure.Time("Read index"))
             {
                 using (Measure.Time("Read project info"))
                 {
                     ReadProjectInfo(
-                        rootPath,
+                        fs,
                         index.assemblies,
                         index.projects,
                         index.projectToAssemblyIndexMap);
@@ -57,7 +66,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
                 using (Measure.Time("Read declared symbols"))
                 {
                     ReadDeclaredSymbols(
-                        rootPath,
+                        fs,
                         index.symbols,
                         index.assemblies,
                         index.projects,
@@ -65,23 +74,23 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
                         ref index.progress);
                 }
 
-                ReadGuids(rootPath, index.guids);
-                ReadMSBuildProperties(rootPath, index.msbuildProperties);
-                ReadMSBuildItems(rootPath, index.msbuildItems);
-                ReadMSBuildTargets(rootPath, index.msbuildTargets);
-                ReadMSBuildTasks(rootPath, index.msbuildTasks);
+                ReadGuids(fs, index.guids);
+                ReadMSBuildProperties(fs, index.msbuildProperties);
+                ReadMSBuildItems(fs, index.msbuildItems);
+                ReadMSBuildTargets(fs, index.msbuildTargets);
+                ReadMSBuildTasks(fs, index.msbuildTasks);
             }
         }
 
-        private static void ReadMSBuildProperties(string rootPath, List<string> msbuildProperties)
+        private static void ReadMSBuildProperties(IFileSystem fs, List<string> msbuildProperties)
         {
-            var msbuildPropertiesFolder = Path.Combine(rootPath, Constants.MSBuildPropertiesAssembly, Constants.ReferencesFileName);
-            if (!Directory.Exists(msbuildPropertiesFolder))
+            var msbuildPropertiesFolder = Path.Combine(Constants.MSBuildPropertiesAssembly, Constants.ReferencesFileName);
+            if (!fs.DirectoryExists(msbuildPropertiesFolder))
             {
                 return;
             }
 
-            foreach (var msbuildPropertiesFile in Directory.GetFiles(msbuildPropertiesFolder))
+            foreach (var msbuildPropertiesFile in fs.ListFiles(msbuildPropertiesFolder))
             {
                 var propertyName = Path.GetFileNameWithoutExtension(msbuildPropertiesFile);
                 msbuildProperties.Add(propertyName);
@@ -90,15 +99,15 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             msbuildProperties.Sort(StringComparer.OrdinalIgnoreCase);
         }
 
-        private static void ReadMSBuildItems(string rootPath, List<string> msbuildItems)
+        private static void ReadMSBuildItems(IFileSystem fs, List<string> msbuildItems)
         {
-            var msbuildItemsFolder = Path.Combine(rootPath, Constants.MSBuildItemsAssembly, Constants.ReferencesFileName);
-            if (!Directory.Exists(msbuildItemsFolder))
+            var msbuildItemsFolder = Path.Combine(Constants.MSBuildItemsAssembly, Constants.ReferencesFileName);
+            if (!fs.DirectoryExists(msbuildItemsFolder))
             {
                 return;
             }
 
-            foreach (var msbuildPropertiesFile in Directory.GetFiles(msbuildItemsFolder))
+            foreach (var msbuildPropertiesFile in fs.ListFiles(msbuildItemsFolder))
             {
                 var propertyName = Path.GetFileNameWithoutExtension(msbuildPropertiesFile);
                 msbuildItems.Add(propertyName);
@@ -107,15 +116,15 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             msbuildItems.Sort(StringComparer.OrdinalIgnoreCase);
         }
 
-        private static void ReadMSBuildTargets(string rootPath, List<string> msbuildTargets)
+        private static void ReadMSBuildTargets(IFileSystem fs, List<string> msbuildTargets)
         {
-            var msbuildTargetsFolder = Path.Combine(rootPath, Constants.MSBuildTargetsAssembly, Constants.ReferencesFileName);
-            if (!Directory.Exists(msbuildTargetsFolder))
+            var msbuildTargetsFolder = Path.Combine(Constants.MSBuildTargetsAssembly, Constants.ReferencesFileName);
+            if (!fs.DirectoryExists(msbuildTargetsFolder))
             {
                 return;
             }
 
-            foreach (var msbuildTargetsFile in Directory.GetFiles(msbuildTargetsFolder))
+            foreach (var msbuildTargetsFile in fs.ListFiles(msbuildTargetsFolder))
             {
                 var targetName = Path.GetFileNameWithoutExtension(msbuildTargetsFile);
                 msbuildTargets.Add(targetName);
@@ -124,15 +133,15 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             msbuildTargets.Sort(StringComparer.OrdinalIgnoreCase);
         }
 
-        private static void ReadMSBuildTasks(string rootPath, List<string> msbuildTasks)
+        private static void ReadMSBuildTasks(IFileSystem fs, List<string> msbuildTasks)
         {
-            var msbuildTasksFolder = Path.Combine(rootPath, Constants.MSBuildTasksAssembly, Constants.ReferencesFileName);
-            if (!Directory.Exists(msbuildTasksFolder))
+            var msbuildTasksFolder = Path.Combine(Constants.MSBuildTasksAssembly, Constants.ReferencesFileName);
+            if (!fs.DirectoryExists(msbuildTasksFolder))
             {
                 return;
             }
 
-            foreach (var msbuildTasksFile in Directory.GetFiles(msbuildTasksFolder))
+            foreach (var msbuildTasksFile in fs.ListFiles(msbuildTasksFolder))
             {
                 var taskName = Path.GetFileNameWithoutExtension(msbuildTasksFile);
                 msbuildTasks.Add(taskName);
@@ -141,15 +150,15 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             msbuildTasks.Sort(StringComparer.OrdinalIgnoreCase);
         }
 
-        private static void ReadGuids(string rootPath, List<string> guids)
+        private static void ReadGuids(IFileSystem fs, List<string> guids)
         {
-            var guidsFolder = Path.Combine(rootPath, Constants.GuidAssembly, Constants.ReferencesFileName);
-            if (!Directory.Exists(guidsFolder))
+            var guidsFolder = Path.Combine(Constants.GuidAssembly, Constants.ReferencesFileName);
+            if (!fs.DirectoryExists(guidsFolder))
             {
                 return;
             }
 
-            foreach (var guidFile in Directory.GetFiles(guidsFolder))
+            foreach (var guidFile in fs.ListFiles(guidsFolder))
             {
                 var guid = Path.GetFileNameWithoutExtension(guidFile);
                 guids.Add(guid);
@@ -159,16 +168,16 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         }
 
         public static void ReadProjectInfo(
-            string rootPath,
+            IFileSystem fs,
             List<AssemblyInfo> assemblies,
             List<string> projects,
             Dictionary<string, int> projectToAssemblyMap)
         {
             projects.Clear();
-            projects.AddRange(Serialization.ReadProjects(rootPath));
+            projects.AddRange(Serialization.ReadProjects(fs));
 
             assemblies.Clear();
-            assemblies.AddRange(Serialization.ReadAssemblies(rootPath));
+            assemblies.AddRange(Serialization.ReadAssemblies(fs));
 
             FillProjectToAssemblyMap(assemblies, projects, projectToAssemblyMap);
         }
@@ -189,36 +198,33 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         }
 
         public static void ReadDeclaredSymbols(
-            string rootPath,
+            IFileSystem fs,
             List<IndexEntry> symbols,
             List<AssemblyInfo> assemblies,
             List<string> projects,
             ref Huffman huffman,
             ref double progress)
         {
-            var masterIndexFile = Path.Combine(rootPath, "DeclaredSymbols.txt");
-            if (!File.Exists(masterIndexFile))
+            var masterIndexFile = "DeclaredSymbols.txt";
+            if (!fs.FileExists("DeclaredSymbols.txt"))
             {
                 return;
             }
 
             using (Measure.Time("Read huffman tables"))
             {
-                var huffmanFile = Path.Combine(rootPath, "Huffman.txt");
-                huffman = Huffman.Read(huffmanFile);
+                using (var stream = fs.OpenSequentialReadStream("Huffman.txt"))
+                {
+                    huffman = Huffman.Read(stream);
+                }
             }
 
             using (Measure.Time("Read binary file"))
             {
                 symbols.Clear();
-                using (var fileStream = new FileStream(
-                    masterIndexFile,
-                    FileMode.Open,
-                    FileAccess.Read,
-                    FileShare.None,
-                    262144,
-                    FileOptions.SequentialScan))
-                using (var reader = new BinaryReader(fileStream))
+
+                using (var stream = fs.OpenSequentialReadStream(masterIndexFile))
+                using (var reader = new BinaryReader(stream))
                 {
                     int count = reader.ReadInt32();
                     int onePercent = Math.Max(count / 100, 1);
