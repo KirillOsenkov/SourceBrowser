@@ -2,7 +2,7 @@
 
 [![NuGet package](https://img.shields.io/nuget/v/SourceBrowser.svg)](https://nuget.org/packages/SourceBrowser)
 
-Source browser website generator that powers https://referencesource.microsoft.com, http://source.roslyn.io, https://source.dot.net, and others.
+Source browser website generator that powers https://referencesource.microsoft.com, http://sourceroslyn.io, https://source.dot.net, and others.
 
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code. **Note** that it does require an ASP.NET Core website for hosting (symbol index is kept server-side), so [without ASP.NET Core the search function doesn't work](https://github.com/KirillOsenkov/SourceBrowser/wiki/Architecture#server-side).
 
