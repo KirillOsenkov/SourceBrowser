@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SourceBrowser.Common;
 using Microsoft.SourceBrowser.SourceIndexServer.Models;
+using Index = Microsoft.SourceBrowser.SourceIndexServer.Models.Index;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
 {
+    [ApiController]
     public class SymbolsController : Controller
     {
         private readonly IServiceProvider _provider;

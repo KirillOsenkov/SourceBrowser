@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer
 {
@@ -10,9 +11,11 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+        public static IHost BuildWebHost(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(
+                    builder => { builder
+                        .UseStartup<Startup>(); })
                 .Build();
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.SourceBrowser.Common;
 using Microsoft.SourceBrowser.SourceIndexServer;
 using Microsoft.SourceBrowser.SourceIndexServer.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Index = Microsoft.SourceBrowser.SourceIndexServer.Models.Index;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
 {
