@@ -15,7 +15,6 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(
                     builder => { builder
-                                 .UseContentRoot(@"C:\Dev\GitHub\Reegeek\SourceBrowser\src\HtmlGenerator\bin\Debug\net472\Web")
                         .UseStartup<Startup>(); })
                 .Build();
     }
