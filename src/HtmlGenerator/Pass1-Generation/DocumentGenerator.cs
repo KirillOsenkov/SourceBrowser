@@ -151,7 +151,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             writer.Write(prefix);
             GenerateHeader(writer.WriteLine);
 
-            var ranges = (await classifier.Classify(Document, Text)).ToArray();
+            var ranges = (await classifier.Classify(Document, Text))?.ToArray();
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix(
