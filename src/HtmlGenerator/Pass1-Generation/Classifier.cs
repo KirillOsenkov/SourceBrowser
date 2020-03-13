@@ -23,7 +23,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             catch (Exception ex)
             {
                 Log.Exception(ex, "Exception during Classification of document: " + document.FilePath);
-                return null;
+                return Array.Empty<Range>();
             }
 
             // Roslyn 3.0.0 introduced `Symbol - Static` as an "additive" classification, meaning that multiple
