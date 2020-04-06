@@ -38,11 +38,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private readonly List<Info> federations = new List<Info>();
 
-        static Federation()
-        {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-        }
-
         public Federation()
         {
         }
