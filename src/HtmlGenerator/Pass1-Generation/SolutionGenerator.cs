@@ -508,12 +508,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public void AddTypeScriptFile(string filePath)
         {
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
-
-            filePath = Path.GetFullPath(filePath);
             this.typeScriptFiles.Add(filePath);
         }
 

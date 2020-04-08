@@ -421,6 +421,46 @@ a i {
         color: white;
     }
 
+.xml {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/xml.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .xml:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+.resx {
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    padding-left: 32px;
+    margin-left: 21px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-image: url('content/icons/resx.png');
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-position: 10px 6px;
+    background-origin: border-box;
+}
+
+    .resx:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
 .ts {
     cursor: pointer;
     white-space: nowrap;

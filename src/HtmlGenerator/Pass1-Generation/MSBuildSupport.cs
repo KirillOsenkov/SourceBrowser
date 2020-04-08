@@ -10,15 +10,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class MSBuildSupport : XmlSupport
     {
-        private ProjectGenerator projectGenerator;
         private Project project;
         private bool isRootProject;
 
         private static readonly char[] complexCharsInProperties = new char[] { '$', ':', '[', ']' };
 
         public MSBuildSupport(ProjectGenerator projectGenerator)
+            : base(projectGenerator)
         {
-            this.projectGenerator = projectGenerator;
         }
 
         public string EnsureFileGeneratedAndGetUrl(string localFileSystemPath, Project project)
@@ -41,7 +40,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             if (!File.Exists(htmlFilePath))
             {
-                var msbuildSupport = new MSBuildSupport(this.projectGenerator);
+                var msbuildSupport = new MSBuildSupport(ProjectGenerator);
                 msbuildSupport.Generate(localFileSystemPath, htmlFilePath, project, false);
             }
 
@@ -53,12 +52,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             this.project = project;
             this.isRootProject = isRootProject;
-            base.Generate(localFileSystemFilePath, htmlFilePath, SolutionDestinationFolder);
+            base.Generate(localFileSystemFilePath, htmlFilePath, GetDisplayName(htmlFilePath));
         }
 
         protected override string GetAssemblyName()
         {
-            var result = projectGenerator.AssemblyName;
+            var result = ProjectGenerator.AssemblyName;
             if (!isRootProject)
             {
                 result = Constants.MSBuildFiles;
@@ -67,7 +66,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return result;
         }
 
-        protected override string GetDisplayName()
+        protected string GetDisplayName(string destinationHtmlFilePath)
         {
             var result = Path.GetFileNameWithoutExtension(destinationHtmlFilePath);
             if (!isRootProject)
@@ -234,13 +233,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 text.Substring(0, leadingTriviaWidth),
                 text.Substring(text.Length - trailingTriviaWidth));
 
-            projectGenerator.AddReference(
+            ProjectGenerator.AddReference(
                 destinationHtmlFilePath,
                 lineText,
                 startPositionOnLine,
                 propertyName.Length,
                 lineNumber,
-                isRootProject ? this.projectGenerator.AssemblyName : Constants.MSBuildFiles,
+                isRootProject ? ProjectGenerator.AssemblyName : Constants.MSBuildFiles,
                 Constants.MSBuildPropertiesAssembly,
                 null,
                 propertyName,
@@ -283,13 +282,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 text.Substring(0, leadingTriviaWidth),
                 text.Substring(text.Length - trailingTriviaWidth));
 
-            projectGenerator.AddReference(
+            ProjectGenerator.AddReference(
                 destinationHtmlFilePath,
                 lineText,
                 startPositionOnLine,
                 itemName.Length,
                 lineNumber,
-                isRootProject ? this.projectGenerator.AssemblyName : Constants.MSBuildFiles,
+                isRootProject ? ProjectGenerator.AssemblyName : Constants.MSBuildFiles,
                 Constants.MSBuildItemsAssembly,
                 null,
                 itemName,
@@ -326,13 +325,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 text.Substring(0, leadingTriviaWidth),
                 text.Substring(text.Length - trailingTriviaWidth));
 
-            projectGenerator.AddReference(
+            ProjectGenerator.AddReference(
                 destinationHtmlFilePath,
                 lineText,
                 startPositionOnLine,
                 targetName.Length,
                 lineNumber,
-                isRootProject ? this.projectGenerator.AssemblyName : Constants.MSBuildFiles,
+                isRootProject ? ProjectGenerator.AssemblyName : Constants.MSBuildFiles,
                 Constants.MSBuildTargetsAssembly,
                 null,
                 targetName,
@@ -370,13 +369,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 text.Substring(0, leadingTriviaWidth),
                 text.Substring(text.Length - trailingTriviaWidth));
 
-            projectGenerator.AddReference(
+            ProjectGenerator.AddReference(
                 destinationHtmlFilePath,
                 lineText,
                 startPositionOnLine,
                 trimmedText.Length,
                 lineNumber,
-                isRootProject ? this.projectGenerator.AssemblyName : Constants.MSBuildFiles,
+                isRootProject ? ProjectGenerator.AssemblyName : Constants.MSBuildFiles,
                 Constants.MSBuildTasksAssembly,
                 null,
                 taskName,
@@ -501,13 +500,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     if (assemblyName != null)
                     {
                         var symbolId = SymbolIdService.GetId("T:" + taskName);
-                        projectGenerator.AddReference(
+                        ProjectGenerator.AddReference(
                             destinationHtmlFilePath,
                             range.LineText,
                             range.Column,
                             taskName.Length,
                             range.LineNumber,
-                            isRootProject ? this.projectGenerator.AssemblyName : Constants.MSBuildFiles,
+                            isRootProject ? ProjectGenerator.AssemblyName : Constants.MSBuildFiles,
                             assemblyName,
                             null,
                             symbolId,
@@ -665,6 +664,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private string SolutionDestinationFolder => SolutionGenerator.SolutionDestinationFolder;
 
-        private SolutionGenerator SolutionGenerator => projectGenerator.SolutionGenerator;
+        private SolutionGenerator SolutionGenerator => ProjectGenerator.SolutionGenerator;
     }
 }

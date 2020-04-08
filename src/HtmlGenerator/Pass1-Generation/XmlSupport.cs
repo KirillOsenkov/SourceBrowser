@@ -8,14 +8,21 @@ using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
-    public abstract class XmlSupport
+    public class XmlSupport
     {
         protected string sourceXmlFilePath;
         protected string destinationHtmlFilePath;
         protected string sourceText;
         protected int[] lineLengths;
 
-        public void Generate(string sourceXmlFilePath, string destinationHtmlFilePath, string solutionDestinationFolder)
+        protected ProjectGenerator ProjectGenerator { get; private set; }
+
+        public XmlSupport(ProjectGenerator generator)
+        {
+            ProjectGenerator = generator;
+        }
+
+        public void Generate(string sourceXmlFilePath, string destinationHtmlFilePath, string displayName)
         {
             Log.Write(destinationHtmlFilePath);
 
@@ -30,12 +37,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var sb = new StringBuilder();
 
-            var relativePathToRoot = Paths.CalculateRelativePathToRoot(destinationHtmlFilePath, solutionDestinationFolder);
+            var relativePathToRoot = Paths.CalculateRelativePathToRoot(destinationHtmlFilePath, ProjectGenerator.SolutionGenerator.SolutionDestinationFolder);
 
             var prefix = Markup.GetDocumentPrefix(Path.GetFileName(sourceXmlFilePath), relativePathToRoot, lineCount, "ix");
             sb.Append(prefix);
 
-            var displayName = GetDisplayName();
             var assemblyName = GetAssemblyName();
 
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
@@ -97,9 +103,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             File.WriteAllText(destinationHtmlFilePath, sb.ToString());
         }
 
-        protected abstract string GetDisplayName();
-
-        protected abstract string GetAssemblyName();
+        protected virtual string GetAssemblyName()
+        {
+            return ProjectGenerator.AssemblyName;
+        }
 
         protected void GenerateRange(ClassifiedRange range, StringBuilder sb)
         {

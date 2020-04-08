@@ -43,7 +43,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var msbuildSupport = new MSBuildSupport(this);
                 msbuildSupport.Generate(ProjectFilePath, destinationFileName, msbuildProject, true);
 
+                GenerateXmlFiles(msbuildProject);
+
                 GenerateXamlFiles(msbuildProject);
+
+                GenerateResxFiles(msbuildProject);
 
                 GenerateTypeScriptFiles(msbuildProject);
 
@@ -68,62 +72,75 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var typeScriptCompileItems = msbuildProject.GetItems("TypeScriptCompile");
             foreach (var typeScriptFile in typeScriptCompileItems)
             {
-                var filePath = typeScriptFile.EvaluatedInclude;
-                GenerateTypeScriptFile(filePath);
+                GenerateTypeScriptFile(typeScriptFile.EvaluatedInclude);
+            }
+        }
+
+        private void GenerateXmlFiles(Project msbuildProject)
+        {
+            GenerateXmlFilesOfProjectItemType(msbuildProject, "Resource");
+        }
+
+        private void GenerateXamlFiles(Project msbuildProject)
+        {
+            GenerateXmlFilesOfProjectItemType(msbuildProject, "Page");
+        }
+
+        private void GenerateResxFiles(Project msbuildProject)
+        {
+            GenerateXmlFilesOfProjectItemType(msbuildProject, "EmbeddedResource");
+        }
+
+        private void GenerateXmlFilesOfProjectItemType(Project msbuildProject, string itemType)
+        {
+            var resxItems = msbuildProject.GetItems("EmbeddedResource").Concat(msbuildProject.GetItems("ApplicationDefinition"));
+            foreach (var resxItem in resxItems)
+            {
+                var resxFile = resxItem.EvaluatedInclude;
+                GenerateXmlFile(resxFile);
             }
         }
 
         private void GenerateTypeScriptFile(string filePath)
         {
-            var projectSourceFolder = Path.GetDirectoryName(ProjectFilePath);
+            if (File.Exists(filePath = NormalizeFilePath(filePath)))
+            {
+                AddOtherFileRelativeToProject(filePath);
+                SolutionGenerator.AddTypeScriptFile(filePath);
+            }
+        }
+
+        private void GenerateXmlFile(string filePath)
+        {
+            if (File.Exists(filePath = NormalizeFilePath(filePath)))
+            {
+                var relativePath = AddOtherFileRelativeToProject(filePath);
+
+                var destinationHtmlFile = Path.Combine(ProjectDestinationFolder, relativePath) + ".html";
+                new XmlSupport(this).Generate(filePath, destinationHtmlFile, relativePath);
+
+                AddDeclaredSymbolToRedirectMap(SymbolIDToListOfLocationsMap, SymbolIdService.GetId(relativePath), relativePath, 0);
+            }
+        }
+
+        private string NormalizeFilePath(string filePath)
+        {
             if (!Path.IsPathRooted(filePath))
             {
                 filePath = Path.Combine(Path.GetDirectoryName(ProjectFilePath), filePath);
             }
 
-            SolutionGenerator.AddTypeScriptFile(filePath);
+            return Path.GetFullPath(filePath);
+        }
 
+        private string AddOtherFileRelativeToProject(string filePath)
+        {
             var relativePath = Paths.MakeRelativeToFile(filePath, ProjectFilePath);
             relativePath = relativePath.Replace("..", "parent");
-            OtherFiles.Add(relativePath);
-        }
-
-        private void GenerateXamlFiles(Project msbuildProject)
-        {
-            var xamlItems = msbuildProject.GetItems("Page").Concat(msbuildProject.GetItems("ApplicationDefinition"));
-            foreach (var xamlItem in xamlItems)
-            {
-                var xamlFile = xamlItem.EvaluatedInclude;
-                GenerateXamlFile(xamlFile);
-            }
-        }
-
-        private void GenerateXamlFile(string xamlFile)
-        {
-            var projectSourceFolder = Path.GetDirectoryName(ProjectFilePath);
-            if (!Path.IsPathRooted(xamlFile))
-            {
-                xamlFile = Path.Combine(Path.GetDirectoryName(ProjectFilePath), xamlFile);
-            }
-
-            xamlFile = Path.GetFullPath(xamlFile);
-            var sourceXmlFile = xamlFile;
-
-            if (!File.Exists(sourceXmlFile))
-            {
-                return;
-            }
-
-            var relativePath = Paths.MakeRelativeToFolder(sourceXmlFile, projectSourceFolder);
-            relativePath = relativePath.Replace("..", "parent");
-
-            var destinationHtmlFile = Path.Combine(ProjectDestinationFolder, relativePath) + ".html";
-
-            var xamlSupport = new XamlSupport(this);
-            xamlSupport.GenerateXaml(sourceXmlFile, destinationHtmlFile, relativePath);
 
             OtherFiles.Add(relativePath);
-            AddDeclaredSymbolToRedirectMap(SymbolIDToListOfLocationsMap, SymbolIdService.GetId(relativePath), relativePath, 0);
+
+            return relativePath;
         }
     }
 }
