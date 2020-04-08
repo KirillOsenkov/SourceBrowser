@@ -93,7 +93,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void GenerateXmlFilesOfProjectItemType(Project msbuildProject, string itemType)
         {
-            var resxItems = msbuildProject.GetItems("EmbeddedResource").Concat(msbuildProject.GetItems("ApplicationDefinition"));
+            var resxItems = msbuildProject.GetItems(itemType);
             foreach (var resxItem in resxItems)
             {
                 var resxFile = resxItem.EvaluatedInclude;
