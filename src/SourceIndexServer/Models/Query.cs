@@ -37,7 +37,9 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             "vbproj",
             "targets",
             "props",
-            "xaml"
+            "xaml",
+            "xml",
+            "resx"
         };
 
         public string OriginalString { get; set; }

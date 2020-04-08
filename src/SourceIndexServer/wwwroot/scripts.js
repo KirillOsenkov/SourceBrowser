@@ -15,7 +15,9 @@ var supportedFileExtensions = [
     "vbproj",
     "targets",
     "props",
-    "xaml"
+    "xaml",
+    "xml",
+    "resx"
 ];
 
 function redirectLocation(frame, newLocation) {
