@@ -6,7 +6,6 @@
     <RootNamespace>Microsoft.SourceBrowser.SourceIndexServer</RootNamespace>
   </PropertyGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
