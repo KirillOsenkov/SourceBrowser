@@ -99,7 +99,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 Log.Write(ProjectDestinationFolder, ConsoleColor.DarkCyan);
 
-                ProjectSourcePath = Paths.MakeRelativeToFolder(ProjectFilePath, SolutionGenerator.SolutionSourceFolder);
+                if (SolutionGenerator.SolutionSourceFolder is string solutionFolder)
+                {
+                    ProjectSourcePath = Paths.MakeRelativeToFolder(ProjectFilePath, solutionFolder);
+                }
+                else
+                {
+                    ProjectSourcePath = ProjectFilePath;
+                }
 
                 if (File.Exists(Path.Combine(ProjectDestinationFolder, Constants.DeclaredSymbolsFileName + ".txt")))
                 {

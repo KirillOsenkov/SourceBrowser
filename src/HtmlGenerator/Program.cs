@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -233,8 +234,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             return filePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".binlog", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".buildlog", StringComparison.OrdinalIgnoreCase) ||
                    filePath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                   filePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase);
+                   filePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                   filePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase);
         }
 
         private static void PrintUsage()
@@ -244,7 +249,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 + "[/force] "
                 + "[/noplugins] "
                 + "[/noplugin:Git] "
-                + "<pathtosolution1.csproj|vbproj|sln> [more solutions/projects..] "
+                + "<pathtosolution1.csproj|vbproj|sln|binlog|buildlog|dll|exe> [more solutions/projects..] "
                 + "[/in:<filecontaingprojectlist>] "
                 + "[/nobuiltinfederations] "
                 + "[/offlinefederation:server=assemblyListFile] "
@@ -252,6 +257,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         }
 
         private static readonly Folder<ProjectSkeleton> mergedSolutionExplorerRoot = new Folder<ProjectSkeleton>();
+
+        private static IEnumerable<string> GetAssemblyNames(string filePath)
+        {
+            if (filePath.EndsWith(".binlog", System.StringComparison.OrdinalIgnoreCase) ||
+                filePath.EndsWith(".buildlog", System.StringComparison.OrdinalIgnoreCase))
+            {
+                var invocations = BinLogCompilerInvocationsReader.ExtractInvocations(filePath);
+                return invocations.Select(i => Path.GetFileNameWithoutExtension(i.Parsed.OutputFileName)).ToArray();
+            }
+
+            return AssemblyNameExtractor.GetAssemblyNames(filePath);
+        }
 
         private static void IndexSolutions(
             IEnumerable<string> solutionFilePaths,
@@ -267,7 +284,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 using (Disposable.Timing("Reading assembly names from " + path))
                 {
-                    foreach (var assemblyName in AssemblyNameExtractor.GetAssemblyNames(path))
+                    foreach (var assemblyName in GetAssemblyNames(path))
                     {
                         assemblyNames.Add(assemblyName);
                     }
@@ -280,6 +297,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 using (Disposable.Timing("Generating " + path))
                 {
+                    if (path.EndsWith(".binlog", StringComparison.OrdinalIgnoreCase) ||
+                        path.EndsWith(".buildlog", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var invocations = BinLogCompilerInvocationsReader.ExtractInvocations(path);
+                        foreach (var invocation in invocations)
+                        {
+                            GenerateFromBuildLog.GenerateInvocation(
+                                invocation,
+                                serverPathMappings,
+                                processedAssemblyList,
+                                assemblyNames,
+                                mergedSolutionExplorerRoot);
+                        }
+                        
+                        continue;
+                    }
+
                     using (var solutionGenerator = new SolutionGenerator(
                         path,
                         Paths.SolutionDestinationFolder,

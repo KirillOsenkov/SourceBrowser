@@ -28,13 +28,13 @@ namespace Microsoft.SourceBrowser.MEF
             PluginConfigurations = pluginConfigurations;
             Logger = logger;
 
-            //Create the CompositionContainer with the parts in the catalog
+            // Create the CompositionContainer with the parts in the catalog
             container = new CompositionContainer(new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
 
-            //Fill the imports of this object
+            // Fill the imports of this object
             container.ComposeParts(this);
 
-            var blackListSet = new HashSet<string>(blackList);
+            var blackListSet = new HashSet<string>(blackList ?? Array.Empty<string>());
 
             Plugins = plugins
             .Select(pair => new SourceBrowserPluginWrapper(pair.Value, pair.Metadata, Logger))
