@@ -57,10 +57,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public static bool LoadPlugins { get; set; } = true;
+        public static bool LoadPlugins { get; set; } = false;
 
         private void SetupPluginAggregator()
         {
+            if (!LoadPlugins)
+            {
+                return;
+            }
+
             var settings = System.Configuration.ConfigurationManager.AppSettings;
             var configs = settings
                 .AllKeys

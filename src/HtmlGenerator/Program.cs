@@ -144,6 +144,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
+                if (string.Equals(arg, "/useplugins", StringComparison.OrdinalIgnoreCase))
+                {
+                    SolutionGenerator.LoadPlugins = true;
+                    continue;
+                }
+
                 if (arg.StartsWith("/noplugin:"))
                 {
                     pluginBlacklist.Add(arg.Substring("/noplugin:".Length));
@@ -247,13 +253,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Console.WriteLine("Usage: HtmlGenerator "
                 + "[/out:<outputdirectory>] "
                 + "[/force] "
+                + "[/useplugins] "
                 + "[/noplugins] "
                 + "[/noplugin:Git] "
                 + "<pathtosolution1.csproj|vbproj|sln|binlog|buildlog|dll|exe> [more solutions/projects..] "
                 + "[/in:<filecontaingprojectlist>] "
                 + "[/nobuiltinfederations] "
                 + "[/offlinefederation:server=assemblyListFile] "
-                + "[/assemblylist]");
+                + "[/assemblylist]" +
+                "" +
+                "Plugins are now off by default.");
         }
 
         private static readonly Folder<ProjectSkeleton> mergedSolutionExplorerRoot = new Folder<ProjectSkeleton>();
