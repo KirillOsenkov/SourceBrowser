@@ -1133,7 +1133,9 @@ function makeFoldersCollapsible(folderIcon, openFolderIcon, pathToIcons, initial
         var folder = elements[i];
         folder.style.display = 'none';
         folder.initialize = initializeHandler;
-        if (folder.parentNode.id === 'rootFolder') {
+        if (folder.parentNode.id === 'rootFolder'
+         || folder.parentNode.previousSibling.id === 'rootFolder'
+         || folder.parentNode.className === 'namespaceExplorerBody') {
             addImagesToFolder(folder, folderIcon, openFolderIcon, pathToIcons);
         }
     }
@@ -1180,7 +1182,9 @@ function expandCollapseFolder(capturedFolder, capturedPlusMinus, capturedFolderI
             if (capturedFolder.initialize) {
                 capturedFolder.initialize(capturedFolder);
                 capturedFolder.initialize = null;
-
+            }
+            
+            if (!capturedFolder.everExpanded) {
                 for (var i = 0; i < capturedFolder.children.length; i++) {
                     if (capturedFolder.children[i].className === 'folder') {
                         addImagesToFolder(capturedFolder.children[i], folderIcon, openFolderIcon, pathToIcons);
@@ -1188,6 +1192,7 @@ function expandCollapseFolder(capturedFolder, capturedPlusMinus, capturedFolderI
                 }
             }
 
+            capturedFolder.everExpanded = true;
             capturedFolder.style.display = 'block';
         }
         else {
