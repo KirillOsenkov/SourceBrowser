@@ -13,7 +13,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <version>$currentVersion$</version>
     <authors>KirillOsenkov</authors>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/KirillOsenkov/SourceBrowser</projectUrl>
     <releaseNotes></releaseNotes>
     <tags>Roslyn Source Browser</tags>

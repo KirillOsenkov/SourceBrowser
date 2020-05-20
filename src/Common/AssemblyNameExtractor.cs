@@ -22,9 +22,17 @@ namespace Microsoft.SourceBrowser.Common
                 return null;
             }
 
-            if (projectOrSolutionFilePath.EndsWith(".sln"))
+            if (projectOrSolutionFilePath.EndsWith(".sln", System.StringComparison.OrdinalIgnoreCase))
             {
                 return GetAssemblyNamesFromSolution(projectOrSolutionFilePath);
+            }
+            else if (projectOrSolutionFilePath.EndsWith(".dll", System.StringComparison.OrdinalIgnoreCase) ||
+                     projectOrSolutionFilePath.EndsWith(".exe", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return new[]
+                {
+                    Path.GetFileNameWithoutExtension(projectOrSolutionFilePath)
+                };
             }
             else
             {

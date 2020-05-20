@@ -4,7 +4,7 @@ var useSolutionExplorer = /*USE_SOLUTION_EXPLORER*/true/*USE_SOLUTION_EXPLORER*/
 var anchorSplitChar = ",";
 
 var externalUrlMap = [
-    /*EXTERNAL_URL_MAP*/"https://referencesource.microsoft.com/", "http://source.roslyn.io/"/*EXTERNAL_URL_MAP*/
+    /*EXTERNAL_URL_MAP*/"https://referencesource.microsoft.com/", "http://sourceroslyn.io/"/*EXTERNAL_URL_MAP*/
 ];
 
 var supportedFileExtensions = [
@@ -15,7 +15,9 @@ var supportedFileExtensions = [
     "vbproj",
     "targets",
     "props",
-    "xaml"
+    "xaml",
+    "xml",
+    "resx"
 ];
 
 function redirectLocation(frame, newLocation) {
@@ -1131,29 +1133,37 @@ function makeFoldersCollapsible(folderIcon, openFolderIcon, pathToIcons, initial
         var folder = elements[i];
         folder.style.display = 'none';
         folder.initialize = initializeHandler;
-        var div = folder.previousSibling;
-        var firstChild = div.firstChild;
-
-        var imagePlusMinus = document.createElement("img");
-        imagePlusMinus.src = pathToIcons + "plus.png";
-        imagePlusMinus.className = "imagePlusMinus";
-
-        var imageFolder = document.createElement("img");
-        imageFolder.src = pathToIcons + folderIcon;
-        imageFolder.className = "imageFolder";
-        setFolderImage(imageFolder, div, firstChild, pathToIcons, folderIcon);
-
-        var handler = expandCollapseFolder(folder, imagePlusMinus, imageFolder, div, firstChild, pathToIcons, folderIcon, openFolderIcon);
-
-        var skipImage = isLink(firstChild);
-        if (skipImage) {
-            div.insertBefore(imagePlusMinus, firstChild);
-            imagePlusMinus.onclick = handler;
-        } else {
-            div.insertBefore(imageFolder, firstChild);
-            div.insertBefore(imagePlusMinus, imageFolder);
-            div.onclick = handler;
+        if (folder.parentNode.id === 'rootFolder'
+         || folder.parentNode.previousSibling.id === 'rootFolder'
+         || folder.parentNode.className === 'namespaceExplorerBody') {
+            addImagesToFolder(folder, folderIcon, openFolderIcon, pathToIcons);
         }
+    }
+}
+
+function addImagesToFolder(folder, folderIcon, openFolderIcon, pathToIcons) {
+    var div = folder.previousSibling;
+    var firstChild = div.firstChild;
+
+    var imagePlusMinus = document.createElement("img");
+    imagePlusMinus.src = pathToIcons + "plus.png";
+    imagePlusMinus.className = "imagePlusMinus";
+
+    var imageFolder = document.createElement("img");
+    imageFolder.src = pathToIcons + folderIcon;
+    imageFolder.className = "imageFolder";
+    setFolderImage(imageFolder, div, firstChild, pathToIcons, folderIcon);
+
+    var handler = expandCollapseFolder(folder, imagePlusMinus, imageFolder, div, firstChild, pathToIcons, folderIcon, openFolderIcon);
+
+    var skipImage = isLink(firstChild);
+    if (skipImage) {
+        div.insertBefore(imagePlusMinus, firstChild);
+        imagePlusMinus.onclick = handler;
+    } else {
+        div.insertBefore(imageFolder, firstChild);
+        div.insertBefore(imagePlusMinus, imageFolder);
+        div.onclick = handler;
     }
 }
 
@@ -1173,7 +1183,16 @@ function expandCollapseFolder(capturedFolder, capturedPlusMinus, capturedFolderI
                 capturedFolder.initialize(capturedFolder);
                 capturedFolder.initialize = null;
             }
+            
+            if (!capturedFolder.everExpanded) {
+                for (var i = 0; i < capturedFolder.children.length; i++) {
+                    if (capturedFolder.children[i].className === 'folder') {
+                        addImagesToFolder(capturedFolder.children[i], folderIcon, openFolderIcon, pathToIcons);
+                    }
+                }
+            }
 
+            capturedFolder.everExpanded = true;
             capturedFolder.style.display = 'block';
         }
         else {

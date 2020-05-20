@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.SourceBrowser.BuildLogParser;
 using Microsoft.SourceBrowser.Common;
 
@@ -40,7 +44,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public static void GenerateInvocation(CompilerInvocation invocation)
+        public static void GenerateInvocation(CompilerInvocation invocation,
+            IReadOnlyDictionary<string, string> serverPathMappings = null,
+            HashSet<string> processedAssemblyList = null,
+            HashSet<string> assemblyNames = null,
+            Folder<ProjectSkeleton> solutionExplorerRoot = null)
         {
             try
             {
@@ -61,7 +69,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         Paths.SolutionDestinationFolder,
                         invocation.ServerPath,
                         invocation.NetworkShare);
-                    solutionGenerator.Generate();
+                    solutionGenerator.ServerPathMappings = serverPathMappings;
+                    solutionGenerator.GlobalAssemblyList = assemblyNames;
+                    solutionGenerator.Generate(processedAssemblyList, solutionExplorerRoot);
                 }
                 else
                 {
@@ -118,6 +128,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public class CompilerInvocation
         {
             public string ProjectFilePath { get; set; }
+            public string ProjectDirectory => ProjectFilePath == null ? "" : Path.GetDirectoryName(ProjectFilePath);
             public string OutputAssemblyPath { get; set; }
             public string CommandLineArguments { get; set; }
             public string ServerPath { get; set; }
@@ -133,22 +144,64 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
             }
 
+            private string language;
             public string Language
             {
                 get
                 {
-                    if (ProjectFilePath == null && TypeScriptFiles != null)
+                    if (language == null)
                     {
-                        return "TypeScript";
+                        if (ProjectFilePath == null && TypeScriptFiles != null)
+                        {
+                            language = "TypeScript";
+                        }
+                        else if (".vbproj".Equals(Path.GetExtension(ProjectFilePath), StringComparison.OrdinalIgnoreCase))
+                        {
+                            language = "Visual Basic";
+                        }
+                        else
+                        {
+                            language = "C#";
+                        }
                     }
-                    else if (".vbproj".Equals(Path.GetExtension(ProjectFilePath), StringComparison.OrdinalIgnoreCase))
+
+                    return language;
+                }
+
+                set
+                {
+                    language = value;
+                }
+            }
+
+            private string[] GetCommandLineArguments()
+            {
+                return CommandLineParser.SplitCommandLineIntoArguments(CommandLineArguments, removeHashComments: false).ToArray();
+            }
+
+            private CommandLineArguments parsed;
+            public CommandLineArguments Parsed
+            {
+                get
+                {
+                    if (parsed != null)
                     {
-                        return "Visual Basic";
+                        return parsed;
+                    }
+
+                    var sdkDirectory = RuntimeEnvironment.GetRuntimeDirectory();
+                    var args = GetCommandLineArguments();
+
+                    if (Language == LanguageNames.CSharp)
+                    {
+                        parsed = CSharpCommandLineParser.Default.Parse(args, ProjectDirectory, sdkDirectory);
                     }
                     else
                     {
-                        return "C#";
+                        parsed = VisualBasicCommandLineParser.Default.Parse(args, ProjectDirectory, sdkDirectory);
                     }
+
+                    return parsed;
                 }
             }
         }
