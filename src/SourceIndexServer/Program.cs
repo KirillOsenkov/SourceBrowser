@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.SourceBrowser.SourceIndexServer
@@ -16,6 +15,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
                 .ConfigureWebHostDefaults(
                     builder => { builder
                         .UseStartup<Startup>(); })
+                .UseWindowsService()
                 .Build();
     }
 }
