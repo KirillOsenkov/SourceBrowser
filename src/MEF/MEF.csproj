@@ -10,12 +10,12 @@
   <ItemGroup>
     <PackageReference Include="ManagedEsent" Version="1.9.4" />
     <PackageReference Include="Microsoft.Build" Version="16.6.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.4">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.3.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.6.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.6.0" />
     <PackageReference Include="System.Composition" Version="1.2.0" />
   </ItemGroup>
 </Project>
