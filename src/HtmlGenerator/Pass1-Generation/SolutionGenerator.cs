@@ -323,6 +323,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var projectsToProcess = allProjects
                 .Where(p => processedAssemblyList == null || processedAssemblyList.Add(p.AssemblyName))
+                .Where(p => !IsTestProject(p))
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
@@ -353,6 +354,30 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 currentBatch);
 
             return currentBatch.Length < projectsToProcess.Length;
+        }
+
+        private static bool IsTestProject(Project proj)
+        {
+            return proj.MetadataReferences.Any(mdr =>
+            {
+                var peRef = mdr as PortableExecutableReference;
+                return IsXUnitTestProject(peRef) || IsNUnitTestProject(peRef) || IsMSTestProject(peRef);
+            });
+        }
+
+        private static bool IsXUnitTestProject(PortableExecutableReference peRef)
+        {
+            return peRef?.FilePath.EndsWith("xunit.core.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
+        }
+
+        private static bool IsNUnitTestProject(PortableExecutableReference peRef)
+        {
+            return peRef?.FilePath.EndsWith("nunit.framework.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
+        }
+
+        private static bool IsMSTestProject(PortableExecutableReference peRef)
+        {
+            return peRef?.FilePath.EndsWith("Microsoft.VisualStudio.TestPlatform.TestFramework.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
         }
 
         private void SetFieldValue(object instance, string fieldName, object value)
