@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApplication1", "WpfAppli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScript", "TypeScript\TypeScript.csproj", "{0842EE0E-D38E-46DA-B14F-7BDC68EEC424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSolution_Tests", "TestSolution_Tests\TestSolution_Tests.csproj", "{6241E299-3E1F-4CDB-9CE7-EDD4ACAC0002}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSolution_XUnit_Tests", "TestSolution_XUnit_Tests\TestSolution_XUnit_Tests.csproj", "{6241E299-3E1F-4CDB-9CE7-EDD4ACAC0002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
