@@ -58,6 +58,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         }
 
         public static bool LoadPlugins { get; set; } = false;
+        public static bool ExcludeTests { get; set; } = false;
 
         private void SetupPluginAggregator()
         {
@@ -323,7 +324,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var projectsToProcess = allProjects
                 .Where(p => processedAssemblyList == null || processedAssemblyList.Add(p.AssemblyName))
-                .Where(p => !IsTestProject(p))
+                .Where(p => !IsTestProject(p) || !ExcludeTests)
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
