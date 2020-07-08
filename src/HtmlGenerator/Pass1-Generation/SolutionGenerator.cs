@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.SourceBrowser.Common;
@@ -359,26 +361,39 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static bool IsTestProject(Project proj)
         {
-            return proj.MetadataReferences.Any(mdr =>
+            return
+                IsTestProject(proj, "xunit") ||
+                IsTestProject(proj, "nunit") ||
+                IsTestProject(proj, "MSTest.TestFramework") ||
+                proj.MetadataReferences.Any(mdr =>
             {
                 var peRef = mdr as PortableExecutableReference;
-                return IsXUnitTestProject(peRef) || IsNUnitTestProject(peRef) || IsMSTestProject(peRef);
+                return
+                    IsTestProject(peRef, "xunit.core.dll") ||
+                    IsTestProject(peRef, "nunit.framework.dll") ||
+                    IsTestProject(peRef, "Microsoft.VisualStudio.TestPlatform.TestFramework.dll");
             });
         }
 
-        private static bool IsXUnitTestProject(PortableExecutableReference peRef)
+        private static IEnumerable<string> GetPackageRefs(Project proj)
         {
-            return peRef?.FilePath.EndsWith("xunit.core.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
+            var projRoot = XElement.Load(proj.FilePath);
+            var packageRefs = projRoot.Elements()
+                .Where(elem => elem.Name.LocalName == "ItemGroup")
+                .SelectMany(elem => elem.Elements())
+                .Where(elem => elem.Name.LocalName == "PackageReference")
+                .Select(elem => (string)elem.Attribute("Include"));
+            return packageRefs;
         }
 
-        private static bool IsNUnitTestProject(PortableExecutableReference peRef)
+        private static bool IsTestProject(Project proj, string marker)
         {
-            return peRef?.FilePath.EndsWith("nunit.framework.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
+            return GetPackageRefs(proj).Any(pr => string.Equals(pr, marker, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private static bool IsMSTestProject(PortableExecutableReference peRef)
+        private static bool IsTestProject(PortableExecutableReference peRef, string marker)
         {
-            return peRef?.FilePath.EndsWith("Microsoft.VisualStudio.TestPlatform.TestFramework.dll", StringComparison.InvariantCultureIgnoreCase) ?? false;
+            return peRef?.FilePath.EndsWith(marker, StringComparison.InvariantCultureIgnoreCase) ?? false;
         }
 
         private void SetFieldValue(object instance, string fieldName, object value)
