@@ -326,7 +326,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var projectsToProcess = allProjects
                 .Where(p => processedAssemblyList == null || processedAssemblyList.Add(p.AssemblyName))
-                .Where(p => !IsTestProject(p) || !ExcludeTests)
+                .Where(p => !ExcludeTests || !IsTestProject(p))
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
@@ -362,17 +362,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static bool IsTestProject(Project proj)
         {
             return
+                proj.MetadataReferences.Any(mdr =>
+                {
+                    var peRef = mdr as PortableExecutableReference;
+                    return
+                        IsTestProject(peRef, "xunit.core.dll") ||
+                        IsTestProject(peRef, "nunit.framework.dll") ||
+                        IsTestProject(peRef, "Microsoft.VisualStudio.TestPlatform.TestFramework.dll");
+                }) ||
                 IsTestProject(proj, "xunit") ||
                 IsTestProject(proj, "nunit") ||
-                IsTestProject(proj, "MSTest.TestFramework") ||
-                proj.MetadataReferences.Any(mdr =>
-            {
-                var peRef = mdr as PortableExecutableReference;
-                return
-                    IsTestProject(peRef, "xunit.core.dll") ||
-                    IsTestProject(peRef, "nunit.framework.dll") ||
-                    IsTestProject(peRef, "Microsoft.VisualStudio.TestPlatform.TestFramework.dll");
-            });
+                IsTestProject(proj, "MSTest.TestFramework");
         }
 
         private static IEnumerable<string> GetPackageRefs(Project proj)
