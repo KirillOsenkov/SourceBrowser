@@ -25,7 +25,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
         public static IEnumerable<string> ReadProjects(string folderPath)
         {
             var projectInfoFile = Path.Combine(folderPath, Constants.MasterProjectMap + ".txt");
-            if (!File.Exists(folderPath))
+            if (!File.Exists(projectInfoFile))
             {
                 return Array.Empty<string>();
             }
