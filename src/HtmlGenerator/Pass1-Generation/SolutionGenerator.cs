@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.SourceBrowser.Common;
@@ -58,6 +60,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         }
 
         public static bool LoadPlugins { get; set; } = false;
+        public static bool ExcludeTests { get; set; } = false;
 
         private void SetupPluginAggregator()
         {
@@ -323,6 +326,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var projectsToProcess = allProjects
                 .Where(p => processedAssemblyList == null || processedAssemblyList.Add(p.AssemblyName))
+                .Where(p => !ExcludeTests || !IsTestProject(p))
                 .ToArray();
             var currentBatch = projectsToProcess
                 .ToArray();
@@ -353,6 +357,43 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 currentBatch);
 
             return currentBatch.Length < projectsToProcess.Length;
+        }
+
+        private static bool IsTestProject(Project proj)
+        {
+            return
+                proj.MetadataReferences.Any(mdr =>
+                {
+                    var peRef = mdr as PortableExecutableReference;
+                    return
+                        IsTestProject(peRef, "xunit.core.dll") ||
+                        IsTestProject(peRef, "nunit.framework.dll") ||
+                        IsTestProject(peRef, "Microsoft.VisualStudio.TestPlatform.TestFramework.dll");
+                }) ||
+                IsTestProject(proj, "xunit") ||
+                IsTestProject(proj, "nunit") ||
+                IsTestProject(proj, "MSTest.TestFramework");
+        }
+
+        private static IEnumerable<string> GetPackageRefs(Project proj)
+        {
+            var projRoot = XElement.Load(proj.FilePath);
+            var packageRefs = projRoot.Elements()
+                .Where(elem => elem.Name.LocalName == "ItemGroup")
+                .SelectMany(elem => elem.Elements())
+                .Where(elem => elem.Name.LocalName == "PackageReference")
+                .Select(elem => (string)elem.Attribute("Include"));
+            return packageRefs;
+        }
+
+        private static bool IsTestProject(Project proj, string marker)
+        {
+            return GetPackageRefs(proj).Any(pr => string.Equals(pr, marker, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        private static bool IsTestProject(PortableExecutableReference peRef, string marker)
+        {
+            return peRef?.FilePath.EndsWith(marker, StringComparison.InvariantCultureIgnoreCase) ?? false;
         }
 
         private void SetFieldValue(object instance, string fieldName, object value)
