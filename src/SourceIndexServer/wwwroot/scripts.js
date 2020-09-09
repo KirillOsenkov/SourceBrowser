@@ -139,7 +139,7 @@ function processHash() {
                 fileUrl = fileUrl + "#" + createSafeLineNumber(hashOrLine);
             }
 
-            redirectLocation(s, fileUrl);
+            redirectLocation(s, "/" + fileUrl);
 
             var pathParts = potentialFile.split("/");
             if (pathParts.length > 1) {
