@@ -1,5 +1,12 @@
 # Security Policy
 
+## Please update to 1.0.32 or newer
+
+Ensure that you have this commit:
+https://github.com/KirillOsenkov/SourceBrowser/commit/23dc70b28af2baf082904688027b7314403844f7
+
+If you maintain SourceBrowser-generated websites please update scripts.js so that it contains the above change (or redeploy using the latest version).
+
 ## Supported Versions
 
 The .NET Core and ASP.NET Core support policy, including supported versions can be found at the [.NET Core Support Policy Page](https://dotnet.microsoft.com/platform/support/policy/dotnet-core).
