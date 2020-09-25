@@ -1097,6 +1097,10 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         color: #aaa;
     }
 
+    html {
+        background: black;
+    }
+
     body {
         background: black;
     }
@@ -1428,7 +1432,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     a.s, a.s:hover {
-        color: #a31515;
+        color: #8C6A5C;
     }
 
     p a, p a:link, p a:hover, p a:focus, p a:active,
@@ -1486,7 +1490,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         }
 
     .documentOutlineDiv:hover {
-        background-color: #f6f6f6;
+        background-color: #345;
     }
 
     .tabChannel {
@@ -1495,15 +1499,16 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
 
     .activeTab {
         background-color: #203;
+        color: white;
     }
 
     .inactiveTab {
         background-color: #100020;
-        color: white;
+        color: #777;
     }
 
         .inactiveTab:link, .inactiveTab:visited, .inactiveTab:hover, .inactiveTab:active {
-            color: white;
+            color: #777;
         }
 
     #sourcesList li {
