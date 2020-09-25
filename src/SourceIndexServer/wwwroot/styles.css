@@ -1090,3 +1090,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         display: inline-block;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+  @import "dark.css";
+}
