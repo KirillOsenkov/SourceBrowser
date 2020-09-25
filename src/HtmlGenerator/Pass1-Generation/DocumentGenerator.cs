@@ -54,7 +54,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Delegate.CreateDelegate(typeof(Func<SemanticModel, SyntaxNode, CancellationToken, bool>), SemanticFactsService, isWrittenTo);
 
                 var syntaxFactsServiceType = SyntaxFactsService.GetType();
-                var getBindableParent = syntaxFactsServiceType.GetMethod("GetBindableParent");
+                var getBindableParent = syntaxFactsServiceType.GetMethod("TryGetBindableParent");
                 this.getBindableParentDelegate = (Func<SyntaxToken, SyntaxNode>)
                     Delegate.CreateDelegate(typeof(Func<SyntaxToken, SyntaxNode>), SyntaxFactsService, getBindableParent);
 

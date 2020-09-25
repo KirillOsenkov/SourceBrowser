@@ -1090,3 +1090,449 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         display: inline-block;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    * {
+        background: transparent;
+        color: #aaa;
+    }
+
+    html {
+        background: black;
+    }
+
+    body {
+        background: black;
+    }
+
+    h1 {
+        background: linear-gradient(to right, #789 0%,#012 80%,#000 100%);
+        /*color: white;*/
+    }
+
+    pre a:focus {
+        color: inherit;
+        background-color: #255;
+    }
+
+    pre b {
+        color: #569CD6;
+    }
+
+    a:link {
+        color: inherit;
+    }
+
+    a:visited {
+        color: inherit;
+    }
+
+    a:hover {
+        color: inherit;
+    }
+
+    a:active {
+        color: inherit;
+    }
+
+    table.ex {
+        border-color: #333;
+    }
+
+    thead td.ex {
+        background: linear-gradient(to right, #444 0%,#111 100%);
+    }
+
+    tr td.ex {
+        border-color: #333;
+    }
+
+    .note {
+        background-color: #443;
+        border-color: #665;
+    }
+
+    .resultGroupHeader {
+        background-color: #333;
+    }
+
+        .resultGroupHeader:hover {
+            background-color: #555;
+        }
+
+    .rA {
+        background-color: #123;
+    }
+
+        .rA:hover {
+            background-color: #123;
+        }
+
+    .resultGroupProjectPath {
+        color: silver;
+    }
+
+    .rL:hover, .referenceLine:hover {
+        background-color: #333;
+    }
+
+    a b {
+        color: #2b91af;
+    }
+
+    a i {
+        background-color: #553;
+    }
+
+    .rO, .referenceOccurrence {
+        background-color: #aa0;
+    }
+
+    .rN, .resultGroupFileName {
+        background-color: #222;
+        color: gray;
+    }
+
+    .resultItem {
+        border-left-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
+
+        .resultItem:hover {
+            background-color: #222;
+        }
+
+    .referenceDisabled {
+        color: lightgray;
+    }
+
+    .typeDeclarationNode:focus, .tDN:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .cs:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .vb:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .csproj:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .vbproj:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .xaml:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .xml:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .resx:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .ts:focus {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    .selectedFilename {
+        background-color: #3399ff;
+        color: white;
+    }
+
+        .selectedFilename:link, .selectedFilename:visited, .selectedFilename:hover, .selectedFilename:active {
+            color: white;
+        }
+
+    .currentResult {
+        border-left-color: lightgray;
+        border-top-color: lightgray;
+        border-bottom-color: lightgray;
+        background-color: #222;
+    }
+
+        .currentResult:hover {
+            background-color: #222;
+        }
+
+    .resultKind {
+        color: #569CD6;
+    }
+
+    .resultDescription {
+        color: #555;
+    }
+
+    .rH {
+        background-color: #39487D;
+        color: white;
+    }
+
+    #ln, #glyph {
+        color: #2b91af;
+    }
+
+    .dH {
+        background: linear-gradient(to right, #232 0%,#000 100%);
+        color: gray;
+        opacity: 0.85;
+    }
+
+    .headerBody {
+        background: linear-gradient(to right, #789 0%,#012 80%,#000 100%);
+    }
+
+    #search-box {
+        background: black;
+        border-color: #555;
+    }
+
+    #logoText {
+        color: white;
+    }
+
+    #currentVersion {
+        color: #222;
+    }
+
+    #downloadButton {
+        background-color: #68217A;
+        color: white;
+    }
+
+    #feedbackButtonLink {
+        color: white;
+    }
+
+    #downloadButtonLink {
+        color: white;
+    }
+
+    #licenseButtonLink {
+        color: white;
+    }
+
+    #helpButtonLink {
+        color: white;
+    }
+
+    .result {
+        background-color: lightgoldenrodyellow;
+    }
+
+    .r {
+        border-color: transparent;
+    }
+
+    .unknownClassification {
+        color: hotpink;
+    }
+
+    .k, a.k {
+        color: #569CD6;
+    }
+
+    .t, a.t,
+    .l, .lineNumber {
+        color: #4EC9B0;
+    }
+
+    .c {
+        color: #57A64A;
+    }
+
+    .x, .e {
+        color: #808080;
+    }
+
+    .s {
+        color: #8C6A5C;
+    }
+
+    .xd {
+        color: #808080;
+    }
+
+    .xn {
+        color: #569CD6;
+    }
+
+    .xan {
+        color: #92CAF4;
+    }
+
+    .xav {
+        color: #C8C8C8;
+    }
+
+    .xer {
+        color: red;
+    }
+
+    .xcs {
+        color: #808080;
+    }
+
+    .xpi {
+        color: #808080;
+    }
+
+    .xld {
+        color: #6464B9;
+    }
+
+    .xln {
+        color: #844646;
+    }
+
+    .xlan {
+        color: #B96464;
+    }
+
+    .xlav {
+        color: #6464B9;
+    }
+
+    .xlaq {
+        color: #555555;
+    }
+
+    .xler {
+        color: #B96464;
+    }
+
+    .xlcs {
+        color: #C0C0C0;
+    }
+
+    .xlpi {
+        color: #C0C0C0;
+    }
+
+    .xlee {
+        color: #B96464;
+        background-color: #FFFEBF;
+    }
+
+    a.s, a.s:hover {
+        color: #8C6A5C;
+    }
+
+    p a, p a:link, p a:hover, p a:focus, p a:active,
+    ul a, ul a:link, ul a:hover, ul a:focus, ul a:active,
+    ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
+    .blueLink, .blueLink:link, .blueLink:hover, .blueLink:focus, .blueLink:active {
+        color: deepskyblue;
+    }
+
+        p a:visited,
+        ul a:visited,
+        .blueLink:visited {
+            color: deepskyblue;
+        }
+
+    .partialTypeLink {
+        color: deepskyblue;
+    }
+
+        .partialTypeLink:hover {
+            background-color: #333;
+        }
+
+    .documentOutlineButton {
+        border-color: transparent;
+        background-color: #000;
+        opacity: 0.9;
+    }
+
+        .documentOutlineButton:hover {
+            border-color: #eeccc0;
+            background-color: #000;
+        }
+
+    .projectExplorerButton {
+        border-color: transparent;
+        background-color: #000;
+        opacity: 0.9;
+    }
+
+        .projectExplorerButton:hover {
+            border-color: #90e6d4;
+            background-color: #000;
+        }
+
+    .namespaceExplorerButton {
+        border-color: transparent;
+        background-color: #000;
+        opacity: 0.9;
+    }
+
+        .namespaceExplorerButton:hover {
+            border-color: #e0e0e0;
+            background-color: #000;
+        }
+
+    .documentOutlineDiv:hover {
+        background-color: #345;
+    }
+
+    .tabChannel {
+        background-color: #102;
+    }
+
+    .activeTab {
+        background-color: #203;
+        color: white;
+    }
+
+    .inactiveTab {
+        background-color: #100020;
+        color: #777;
+    }
+
+        .inactiveTab:link, .inactiveTab:visited, .inactiveTab:hover, .inactiveTab:active {
+            color: #777;
+        }
+
+    #sourcesList li {
+        background-color: steelblue;
+        color: white;
+    }
+
+    .externalIndexLinks li {
+        background-color: purple;
+        color: white;
+    }
+
+        .externalIndexLinks li a {
+            color: white;
+        }
+
+    .msbuildlink {
+    }
+
+        .msbuildlink:hover {
+            background-color: #222;
+        }
+
+    .projectInfo {
+        color: #555;
+    }
+}

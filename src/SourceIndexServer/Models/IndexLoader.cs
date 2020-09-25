@@ -197,14 +197,14 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             ref double progress)
         {
             var masterIndexFile = Path.Combine(rootPath, "DeclaredSymbols.txt");
-            if (!File.Exists(masterIndexFile))
+            var huffmanFile = Path.Combine(rootPath, "Huffman.txt");
+            if (!File.Exists(masterIndexFile) || !File.Exists(huffmanFile))
             {
                 return;
             }
 
             using (Measure.Time("Read huffman tables"))
             {
-                var huffmanFile = Path.Combine(rootPath, "Huffman.txt");
                 huffman = Huffman.Read(huffmanFile);
             }
 
