@@ -1,4 +1,4 @@
-# SourceBrowser
+## SourceBrowser
 
 [![NuGet package](https://img.shields.io/nuget/v/SourceBrowser.svg)](https://nuget.org/packages/SourceBrowser)
 
@@ -32,7 +32,7 @@ Now also available on NuGet:
 
 **Note:** Visual Studio 2019 is required to build Source Browser.
 
-## Conceptual design
+## Conceptual Design
 
 At indexing time, C# and VB source code is analyzed using Roslyn and a lot of static hyperlinked HTML files are generated into the output directory. There is no database. The website is mostly static HTML where all the links, source code coloring etc. are precalculated at indexing time. All the hyperlinks are hardwired to be simple links bypassing the server. 
 
