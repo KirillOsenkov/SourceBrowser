@@ -9,7 +9,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     public partial class ProjectGenerator
     {
         /// <summary>
-        /// Since the only requirement on the ID strings we use in the a.html file
+        /// Since the only requirement on the ID strings we use in the A.html file
         /// is that there are no collisions (and even if there are, the failure
         /// would be rare and impact would be limited), we don't really need 16
         /// bytes per ID. Let's just store the first 8 bytes (I've actually calculated
