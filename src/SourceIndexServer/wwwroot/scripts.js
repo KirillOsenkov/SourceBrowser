@@ -158,7 +158,7 @@ function processHash() {
             redirectLocation(n, "/" + potentialFile + "/namespaces.html");
         }
     } else if (useSolutionExplorer) {
-        redirectLocation(n, "solutionexplorer.html");
+        redirectLocation(n, "SolutionExplorer.html");
     }
 }
 
