@@ -213,7 +213,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void GenerateIndex()
         {
-            Log.Write("Index.html...");
+            Log.Write("index.html...");
             var index = Path.Combine(ProjectDestinationFolder, "index.html");
             var sb = new StringBuilder();
             Markup.WriteProjectIndex(sb, Project.AssemblyName);
