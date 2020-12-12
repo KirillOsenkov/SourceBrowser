@@ -70,7 +70,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer
 
         public string GetUrl()
         {
-            return "/" + AssemblyName + "/a.html#" + Serialization.ULongToHexString(ID);
+            return "/" + AssemblyName + "/A.html#" + Serialization.ULongToHexString(ID);
         }
 
         public override bool Equals(object obj)

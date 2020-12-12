@@ -158,7 +158,7 @@ function processHash() {
             redirectLocation(n, "/" + potentialFile + "/namespaces.html");
         }
     } else if (useSolutionExplorer) {
-        redirectLocation(n, "solutionexplorer.html");
+        redirectLocation(n, "SolutionExplorer.html");
     }
 }
 
@@ -686,7 +686,7 @@ function redirect(map, prefixLength) {
     }
 }
 
-// multi-staged redirect a.html -> a0.html -> filePath.html (to reduce size of a.html)
+// multi-staged redirect A.html -> A0.html -> filePath.html (to reduce size of a.html)
 function redirectToNextLevelRedirectFile() {
     var anchor = document.location.hash;
     if (anchor) {
@@ -1055,7 +1055,7 @@ function redirectToIndex() {
 // this is called when the references file (/R/id.html) is loaded in the top frame
 function redirectToSymbolReferences() {
     var referencesFilePath = this.document.location.href;
-    var destination = referencesFilePath.replace("/R/", "/a.html" + "#");
+    var destination = referencesFilePath.replace("/R/", "/A.html" + "#");
 
     // strip off the ".html" suffix
     destination = destination.slice(0, destination.length - 5);

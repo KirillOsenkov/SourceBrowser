@@ -187,7 +187,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             if (Paths.SolutionDestinationFolder == null)
             {
-                Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "Index");
+                Paths.SolutionDestinationFolder = Path.Combine(Microsoft.SourceBrowser.Common.Paths.BaseAppFolder, "index");
             }
 
             var websiteDestination = Paths.SolutionDestinationFolder;

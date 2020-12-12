@@ -342,7 +342,7 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
         public static string GetResultsHtmlSuffix(bool emitSolutionBrowserLink)
         {
             var solutionExplorerLink = emitSolutionBrowserLink
-                ? @"<div class=""note"">Try also browsing the <a href=""solutionexplorer.html"" class=""blueLink"">solution explorer</a>.</div>"
+                ? @"<div class=""note"">Try also browsing the <a href=""SolutionExplorer.html"" class=""blueLink"">solution explorer</a>.</div>"
                 : null;
 
             return "</div></div>" + solutionExplorerLink + "</body></html>";
@@ -444,11 +444,11 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
             var result = symbol.Glyph;
             if (result == 196)
             {
-                return "CSharp";
+                return "csharp";
             }
             else if (result == 195)
             {
-                return "VB";
+                return "vb";
             }
             else if (result == 227)
             {
@@ -456,7 +456,7 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
             }
             else if (result == 228)
             {
-                return "TypeScript";
+                return "typescript";
             }
 
             return result.ToString();

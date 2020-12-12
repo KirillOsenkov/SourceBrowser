@@ -87,7 +87,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 Description == other.Description;
         }
 
-        public string GetUrl() => "/" + AssemblyName + "/a.html#" + Serialization.ULongToHexString(ID);
+        public string GetUrl() => "/" + AssemblyName + "/A.html#" + Serialization.ULongToHexString(ID);
 
         public override bool Equals(object obj)
         {
