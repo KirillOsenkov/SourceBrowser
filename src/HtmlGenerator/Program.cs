@@ -340,7 +340,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
                     foreach (var segment in segments)
+                    {
                         solutionFolder = solutionFolder.GetOrCreateFolder(segment);
+                    }
                 }
 
                 using (Disposable.Timing("Generating " + path))
