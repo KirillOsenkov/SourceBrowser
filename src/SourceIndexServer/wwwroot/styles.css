@@ -122,16 +122,22 @@ tr td.ex {
     padding: 6px 6px 6px 28px;
     margin-top: 16px;
     background-color: #e7f5ff;
-    background-image: url('content/icons/minus.png');
-    background-attachment: local;
-    background-repeat: no-repeat;
-    background-position: 10px 13px;
-    background-origin: border-box;
 }
 
-    .resultGroupHeader:hover {
-        background-color: #d4edff;
-    }
+.resultGroupHeader::before {
+    content: url(content/icons/minus.png);
+    float: left;
+    margin-left: -18px;
+    margin-top: 1px;
+}
+
+.resultGroupHeader.collapsed::before {
+    content: url(content/icons/plus.png);
+}
+
+.resultGroupHeader:hover {
+    background-color: #d4edff;
+}
 
 .resultGroupAssemblyName {
     font-size: larger;
@@ -142,18 +148,24 @@ tr td.ex {
     font-size: larger;
     font-weight: bold;
     background-color: #e7f5ff;
-    background-image: url('content/icons/minus.png');
-    background-attachment: local;
-    background-repeat: no-repeat;
-    background-position: 10px 14px;
-    background-origin: border-box;
     padding: 6px 6px 6px 28px;
     cursor: pointer;
 }
 
-    .rA:hover {
-        background-color: #d4edff;
-    }
+.rA::before {
+    content: url(content/icons/minus.png);
+    float: left;
+    margin-left: -18px;
+    margin-top: -2px;
+}
+
+.rA.collapsed::before {
+    content: url(content/icons/plus.png);
+}
+
+.rA:hover {
+    background-color: #d4edff;
+}
 
 .resultGroupProjectPath {
     font-size: smaller;
@@ -1095,6 +1107,10 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     * {
         background: transparent;
         color: #aaa;
+    }
+
+    .imagePlusMinus, .resultGroupHeader::before, .rA::before {
+        filter: invert(1);
     }
 
     html {
