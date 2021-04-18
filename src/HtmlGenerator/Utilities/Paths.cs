@@ -89,6 +89,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Directory.CreateDirectory(SolutionDestinationFolder);
         }
 
+        public static bool IsOrContains(string path, string possibleDescendent)
+        {
+            return EnsureTrailingSlash(possibleDescendent).StartsWith(EnsureTrailingSlash(path), StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Returns a path to <paramref name="filePath"/> if you start in a folder where the file
         /// <paramref name="relativeToPath"/> is located.
@@ -134,7 +139,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             StringBuilder result = new StringBuilder();
-            while (!EnsureTrailingSlash(filePath).StartsWith(EnsureTrailingSlash(relativeToPath), StringComparison.OrdinalIgnoreCase))
+            while (!IsOrContains(relativeToPath, filePath))
             {
                 result.Append(@"..\");
                 relativeToPath = Path.GetDirectoryName(relativeToPath);

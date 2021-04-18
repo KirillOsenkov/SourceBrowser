@@ -28,7 +28,8 @@ Now also available on NuGet:
  3. Pass a path to an .sln file or a .csproj file (or multiple paths separated by spaces) to create an index for them
  4. Pass /out:<path> to HtmlGenerator.exe to configure where to generate the website to. This path will be used in step 6 as your "physicalPath".
  5. Pass /in:<path> to pass a file with a list of full paths to projects and solutions to include in the index
- 6. Set SourceIndexServer project as startup and run/debug the website.
+ 6. Pass /root:<path> if you want to preserve relative .sln folders rather than merging all solutions. This folder must contain all specified .sln or .csproj paths.
+ 7. Set SourceIndexServer project as startup and run/debug the website.
 
 **Note:** Visual Studio 2019 is required to build Source Browser.
 
