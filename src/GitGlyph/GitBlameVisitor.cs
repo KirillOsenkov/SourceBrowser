@@ -87,7 +87,9 @@ namespace GitGlyph
                     {
                         var relativePath = MakeRelativeToRepository(path);
                         if (!Repository.Ignore.IsPathIgnored(relativePath))
+                        {
                             result = Repository.Blame(relativePath);
+                        }
                     }
                     else
                     {
