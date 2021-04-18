@@ -1109,6 +1109,10 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         color: #aaa;
     }
 
+    .imagePlusMinus, .resultGroupHeader::before, .rA::before {
+        filter: invert(1);
+    }
+
     html {
         background: black;
     }
