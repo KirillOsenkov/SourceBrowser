@@ -461,10 +461,10 @@ function ro() {
             var collapsible = this.nextSibling;
             if (collapsible.style.display == "none") {
                 collapsible.style.display = "block";
-                this.style.backgroundImage = "url(../../content/icons/minus.png)";
+                this.classList.remove('collapsed');
             } else {
                 collapsible.style.display = "none";
-                this.style.backgroundImage = "url(../../content/icons/plus.png)";
+                this.classList.add('collapsed');
             }
         };
     }
@@ -1066,11 +1066,11 @@ function redirectToSymbolReferences() {
 function toggle(header, id) {
     var element = document.getElementById(id);
     if (element.style.display == 'none') {
-        header.style.backgroundImage = "url(content/icons/minus.png)";
+        header.classList.remove("collapsed");
         element.style.display = 'block';
     }
     else {
-        header.style.backgroundImage = "url(content/icons/plus.png)";
+        header.classList.add("collapsed");
         element.style.display = 'none';
     }
 }
