@@ -55,7 +55,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public bool ExcludeTests { get; }
         public string RootPath { get; }
 
-        public static CommandLineOptions Parse(string[] args)
+        public static CommandLineOptions Parse(params string[] args)
         {
             var solutionDestinationFolder = (string)null;
             var projects = new List<string>();
