@@ -59,8 +59,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public static bool LoadPlugins { get; set; } = false;
-        public static bool ExcludeTests { get; set; } = false;
+        public static bool LoadPlugins { get; set; }
+        public static bool ExcludeTests { get; set; }
 
         private void SetupPluginAggregator()
         {
