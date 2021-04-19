@@ -45,14 +45,30 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
                 if (arg.StartsWith("/serverPath:"))
                 {
-                    var mapping = arg.Substring("/serverPath:".Length).StripQuotes();
-                    var parts = mapping.Split('=');
-                    if (parts.Length != 2)
+                    // Allowed forms:
+                    // /serverPath:a=b
+                    // /serverPath:"a=b" (for backwards compatibility)
+                    // /serverPath:"a=1"="b=2"
+                    // /serverPath:"a"="b" (for consistency to make it easy to produce a safe form)
+
+                    var match = Regex.Match(
+                        arg.Substring("/serverPath:".Length),
+                        @"\A(?:
+                            # Each side may be quoted or unquoted but may only contain '=' if quoted
+                            (?:(?<from>[^""=]*)|""(?<from>[^""]*)"")=(?:(?<to>[^""=]*)|""(?<to>[^""]*)"")
+                            |
+                            # Backwards compatibility, not advertised as an option because it doesn't allow '=' even though there are quotes
+                            ""(?<from>[^""=]*)=(?<to>[^""=]*)""
+                        )\Z", RegexOptions.IgnorePatternWhitespace);
+
+                    if (!match.Success)
                     {
-                        Log.Write($"Invalid Server Path: '{mapping}'", ConsoleColor.Red);
+                        Log.Write("Server path argument usage: /serverPath:\"path to local repository root\"=\"root URL\"" + Environment.NewLine +
+                                  "Quotes are optional if you have no spaces or equals signs but recommended. Paths relative to the local repository root will be appended to the root URL.", ConsoleColor.Red);
                         continue;
                     }
-                    serverPathMappings.Add(Path.GetFullPath(parts[0]), parts[1]);
+
+                    serverPathMappings.Add(Path.GetFullPath(match.Groups["from"].Value), match.Groups["to"].Value);
                     continue;
                 }
 
