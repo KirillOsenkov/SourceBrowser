@@ -133,7 +133,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return Path.GetFileName(filePath);
             }
 
-            if (relativeToPath.EndsWith("\\"))
+            if (relativeToPath.EndsWith("\\", StringComparison.Ordinal))
             {
                 relativeToPath = relativeToPath.TrimEnd('\\');
             }
@@ -148,7 +148,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             if (filePath.Length > relativeToPath.Length)
             {
                 filePath = filePath.Substring(relativeToPath.Length);
-                if (filePath.StartsWith("\\"))
+                if (filePath.StartsWith("\\", StringComparison.Ordinal))
                 {
                     filePath = filePath.Substring(1);
                 }
@@ -218,7 +218,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 result = "parent";
             }
-            else if (folderName.EndsWith(":"))
+            else if (folderName.EndsWith(":", StringComparison.Ordinal))
             {
                 result = folderName.TrimEnd(':');
             }
@@ -236,7 +236,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return !string.IsNullOrEmpty(folderName) &&
                 folderName != "." &&
                 folderName != ".." &&
-                !folderName.EndsWith(":");
+                !folderName.EndsWith(":", StringComparison.Ordinal);
         }
 
         public static string GetRelativePathInProject(SyntaxTree syntaxTree, Project project)
@@ -252,7 +252,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return path;
             }
 
-            if (!path.EndsWith("\\"))
+            if (!path.EndsWith("\\", StringComparison.Ordinal))
             {
                 path += "\\";
             }

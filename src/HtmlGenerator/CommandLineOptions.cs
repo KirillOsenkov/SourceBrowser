@@ -74,13 +74,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             foreach (var arg in args)
             {
-                if (arg.StartsWith("/out:"))
+                if (arg.StartsWith("/out:", StringComparison.Ordinal))
                 {
                     solutionDestinationFolder = Path.GetFullPath(arg.Substring("/out:".Length).StripQuotes());
                     continue;
                 }
 
-                if (arg.StartsWith("/serverPath:"))
+                if (arg.StartsWith("/serverPath:", StringComparison.Ordinal))
                 {
                     // Allowed forms:
                     // /serverPath:a=b
@@ -115,7 +115,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
-                if (arg.StartsWith("/in:"))
+                if (arg.StartsWith("/in:", StringComparison.Ordinal))
                 {
                     string inputPath = arg.Substring("/in:".Length).StripQuotes();
                     try
@@ -139,7 +139,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
-                if (arg.StartsWith("/p:"))
+                if (arg.StartsWith("/p:", StringComparison.Ordinal))
                 {
                     var match = Regex.Match(arg, "/p:(?<name>[^=]+)=(?<value>.+)");
                     if (match.Success)
@@ -170,7 +170,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
-                if (arg.StartsWith("/federation:"))
+                if (arg.StartsWith("/federation:", StringComparison.Ordinal))
                 {
                     string server = arg.Substring("/federation:".Length);
                     Log.Message($"Adding federation '{server}'.");
@@ -178,7 +178,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
-                if (arg.StartsWith("/offlinefederation:"))
+                if (arg.StartsWith("/offlinefederation:", StringComparison.Ordinal))
                 {
                     var match = Regex.Match(arg, "/offlinefederation:(?<server>[^=]+)=(?<file>.+)");
                     if (match.Success)
@@ -204,7 +204,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     continue;
                 }
 
-                if (arg.StartsWith("/noplugin:"))
+                if (arg.StartsWith("/noplugin:", StringComparison.Ordinal))
                 {
                     pluginBlacklist.Add(arg.Substring("/noplugin:".Length));
                     continue;

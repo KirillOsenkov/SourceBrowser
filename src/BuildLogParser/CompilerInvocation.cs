@@ -71,7 +71,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
 
         private string CutOutDocPath(string line)
         {
-            int index = line.IndexOf("/doc:");
+            int index = line.IndexOf("/doc:", StringComparison.Ordinal);
             if (index == -1)
             {
                 return line;
@@ -213,7 +213,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
 
         private string CutOutOutputPath(string line)
         {
-            int index = line.IndexOf("/out:");
+            int index = line.IndexOf("/out:", StringComparison.Ordinal);
             index += 5;
             int endOfOut = line.IndexOf(' ', index + 1);
             if (line[index] == '"')
@@ -333,7 +333,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             string previousPart = null;
             foreach (var part in parts)
             {
-                if (part.StartsWith("--"))
+                if (part.StartsWith("--", StringComparison.Ordinal))
                 {
                     previousPart = part;
                     continue;
@@ -345,7 +345,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                     continue;
                 }
 
-                if (part.StartsWith("@"))
+                if (part.StartsWith("@", StringComparison.Ordinal))
                 {
                     var responseFile = part.Substring(1);
                     if (File.Exists(responseFile))

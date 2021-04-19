@@ -136,7 +136,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
 
                 // need to try finding both folders and files
-                string other = title.StartsWith("{") ? title.TrimStart('{') : "{" + title;
+                string other = title.StartsWith("{", StringComparison.Ordinal) ? title.TrimStart('{') : "{" + title;
                 if (!Children.TryGetValue(title, out NamespaceTreeNode result) && !Children.TryGetValue(other, out result))
                 {
                     result = new NamespaceTreeNode(title);

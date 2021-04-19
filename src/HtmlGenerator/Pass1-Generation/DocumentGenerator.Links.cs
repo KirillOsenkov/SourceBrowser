@@ -286,13 +286,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var spanStart = range.ClassifiedSpan.TextSpan.Start;
             var spanEnd = range.ClassifiedSpan.TextSpan.End;
 
-            if (text.StartsWith("@"))
+            if (text.StartsWith("@", StringComparison.Ordinal))
             {
                 text = text.Substring(1);
                 spanStart++;
             }
 
-            if (text.StartsWith("\"") && text.EndsWith("\"") && text.Length >= 2)
+            if (text.StartsWith("\"", StringComparison.Ordinal) && text.EndsWith("\"", StringComparison.Ordinal) && text.Length >= 2)
             {
                 spanStart++;
                 spanEnd--;

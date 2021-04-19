@@ -151,7 +151,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             url = url.Replace(":", "");
             url = url.Replace(" ", "");
             url = url.Replace(@"\bin\", @"\bin_\");
-            if (url.StartsWith(@"\\"))
+            if (url.StartsWith(@"\\", StringComparison.Ordinal))
             {
                 url = url.Substring(2);
             }
@@ -433,7 +433,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 foreach (var attribute in hyperlinkInfo.Attributes)
                 {
                     const string typeScriptFilesR = "/TypeScriptFiles/R/";
-                    if (attribute.Key == "href" && attribute.Value.StartsWith(typeScriptFilesR))
+                    if (attribute.Key == "href" && attribute.Value.StartsWith(typeScriptFilesR, StringComparison.Ordinal))
                     {
                         var streamPosition = sb.Length + 7 + typeScriptFilesR.Length; // exact offset into <a href="HERE
                         ProjectGenerator.AddDeclaredSymbolToRedirectMap(

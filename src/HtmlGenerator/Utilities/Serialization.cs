@@ -135,7 +135,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public static string ReadValue(IEnumerable<string> lines, string name)
         {
             name += "=";
-            var line = lines.FirstOrDefault(l => l.StartsWith(name));
+            var line = lines.FirstOrDefault(l => l.StartsWith(name, StringComparison.Ordinal));
             if (line == null)
             {
                 return string.Empty;

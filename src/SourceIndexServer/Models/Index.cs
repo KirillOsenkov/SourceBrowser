@@ -351,7 +351,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             if (left.Name != null && right.Name != null)
             {
-                comparison = left.Name.CompareTo(right.Name);
+                comparison = string.Compare(left.Name, right.Name, StringComparison.Ordinal);
                 if (comparison != 0)
                 {
                     return comparison;
@@ -373,7 +373,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         /// </summary>
         private ushort MatchLevel(string candidate, string query)
         {
-            int indexOf = candidate.IndexOf(query);
+            int indexOf = candidate.IndexOf(query, StringComparison.Ordinal);
             int indexOfIgnoreCase = candidate.IndexOf(query, StringComparison.OrdinalIgnoreCase);
 
             if (indexOf == 0)

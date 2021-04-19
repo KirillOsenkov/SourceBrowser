@@ -124,7 +124,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                     continue;
                 }
 
-                if (invocation.OutputAssemblyPath.StartsWith(".") || invocation.OutputAssemblyPath.StartsWith("\\"))
+                if (invocation.OutputAssemblyPath.StartsWith(".", StringComparison.Ordinal) || invocation.OutputAssemblyPath.StartsWith("\\", StringComparison.Ordinal))
                 {
                     invocation.OutputAssemblyPath = Path.GetFullPath(
                         Path.Combine(
@@ -297,8 +297,8 @@ namespace Microsoft.SourceBrowser.BuildLogParser
         {
             if (line.Contains("Copying file from \"") || line.Contains("Moving file from \""))
             {
-                int from = line.IndexOf("\"") + 1;
-                int to = line.IndexOf("\" to \"");
+                int from = line.IndexOf('\\') + 1;
+                int to = line.IndexOf("\" to \"", StringComparison.Ordinal);
                 string intermediateAssemblyPath = line.Substring(from, to - from);
                 if (intermediateAssemblyPath.Contains(".."))
                 {
@@ -324,7 +324,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                     !outputAssemblyPath.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase) &&
                     !outputAssemblyPath.EndsWith(".XmlSerializers.dll", StringComparison.OrdinalIgnoreCase))
                 {
-                    int tempPlacingIndex = intermediateAssemblyPath.IndexOf(@"\\TempPlacing");
+                    int tempPlacingIndex = intermediateAssemblyPath.IndexOf(@"\\TempPlacing", StringComparison.Ordinal);
                     if (tempPlacingIndex > -1)
                     {
                         intermediateAssemblyPath = intermediateAssemblyPath.Remove(tempPlacingIndex, 13);
@@ -364,7 +364,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
 
         private bool ProcessDoneBuildingProject(string line)
         {
-            var doneBuildingProject = line.IndexOf("Done Building Project");
+            var doneBuildingProject = line.IndexOf("Done Building Project", StringComparison.Ordinal);
             if (doneBuildingProject > -1)
             {
                 string projectFilePath = ExtractProjectFilePath(line, doneBuildingProject);
@@ -621,7 +621,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
             var assemblyName = Path.GetFileNameWithoutExtension(reference);
             if (!assemblyNameToFilePathMap.TryGetValue(assemblyName, out string existing) ||
                 existing.Length > reference.Length ||
-                (existing.Length == reference.Length && string.Compare(existing, reference) < 0))
+                (existing.Length == reference.Length && string.Compare(existing, reference, StringComparison.Ordinal) < 0))
             {
                 assemblyNameToFilePathMap[assemblyName] = reference;
             }
@@ -651,7 +651,7 @@ namespace Microsoft.SourceBrowser.BuildLogParser
                 {
                     if (!notIndexedAssemblies.TryGetValue(assemblyName, out string existing) ||
                         binary.Length < existing.Length ||
-                        (binary.Length == existing.Length && binary.CompareTo(existing) > 0))
+                        (binary.Length == existing.Length && string.Compare(binary, existing, StringComparison.Ordinal) > 0))
                     {
                         // make sure we always prefer the .dll that has shortest file path on disk
                         // Not only to disambiguate in a stable fashion, but also it's a good heuristic

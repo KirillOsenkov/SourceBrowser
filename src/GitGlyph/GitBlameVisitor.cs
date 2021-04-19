@@ -83,7 +83,7 @@ namespace GitGlyph
             {
                 try
                 {
-                    if (path.StartsWith(Root))
+                    if (path.StartsWith(Root, StringComparison.Ordinal))
                     {
                         var relativePath = MakeRelativeToRepository(path);
                         if (!Repository.Ignore.IsPathIgnored(relativePath))

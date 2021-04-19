@@ -23,7 +23,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     throw new ArgumentNullException(nameof(server));
                 }
 
-                if (!server.EndsWith("/"))
+                if (!server.EndsWith("/", StringComparison.Ordinal))
                 {
                     server += "/";
                 }
@@ -98,7 +98,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private string GetAssemblyUrl(string server)
         {
             var url = server;
-            if (!url.EndsWith("/"))
+            if (!url.EndsWith("/", StringComparison.Ordinal))
             {
                 url += "/";
             }

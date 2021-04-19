@@ -82,18 +82,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var text = File.ReadAllText(fileName);
             const string startText = "<div id=\"rootFolder\"";
-            var start = text.IndexOf(startText) + startText.Length;
-            var end = text.IndexOf("<script>");
+            var start = text.IndexOf(startText, StringComparison.Ordinal) + startText.Length;
+            var end = text.IndexOf("<script>", StringComparison.Ordinal);
             text = text.Substring(start, end - start);
             text = "<div" + text;
             text = text.Replace("</div><div>", string.Format("</div><div class=\"folder\" data-assembly=\"{0}\">", assemblyName));
             text = text.Replace("projectCS", "projectCSInSolution");
             text = text.Replace("projectVB", "projectVBInSolution");
 
-            var projectInfoStart = text.IndexOf("<p class=\"projectInfo");
+            var projectInfoStart = text.IndexOf("<p class=\"projectInfo", StringComparison.Ordinal);
             if (projectInfoStart != -1)
             {
-                var projectInfoEnd = text.IndexOf("</p>", projectInfoStart) + 4;
+                var projectInfoEnd = text.IndexOf("</p>", projectInfoStart, StringComparison.Ordinal) + 4;
                 if (projectInfoEnd != -1)
                 {
                     text = text.Remove(projectInfoStart, projectInfoEnd - projectInfoStart);
