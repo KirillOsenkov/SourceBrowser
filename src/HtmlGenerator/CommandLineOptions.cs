@@ -187,7 +187,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         var assemblyListFileName = match.Groups["file"].Value;
                         offlineFederations[server] = assemblyListFileName;
                         Log.Message($"Adding federation '{server}' (offline from '{assemblyListFileName}').");
-                        continue;
                     }
                     continue;
                 }
@@ -228,7 +227,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 }
                 catch (Exception ex)
                 {
-                    Log.Write("Exception: " + ex.ToString(), ConsoleColor.Red);
+                    Log.Write("Exception: " + ex, ConsoleColor.Red);
                 }
             }
 
