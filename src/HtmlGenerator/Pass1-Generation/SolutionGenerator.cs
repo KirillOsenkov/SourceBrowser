@@ -59,8 +59,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        public static bool LoadPlugins { get; set; } = false;
-        public static bool ExcludeTests { get; set; } = false;
+        public static bool LoadPlugins { get; set; }
+        public static bool ExcludeTests { get; set; }
 
         private void SetupPluginAggregator()
         {
@@ -527,12 +527,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
         {
             var message = e.Diagnostic.Message;
-            if (message.StartsWith("Could not find file") || message.StartsWith("Could not find a part of the path"))
+            if (message.StartsWith("Could not find file", StringComparison.Ordinal) || message.StartsWith("Could not find a part of the path", StringComparison.Ordinal))
             {
                 return;
             }
 
-            if (message.StartsWith("The imported project "))
+            if (message.StartsWith("The imported project ", StringComparison.Ordinal))
             {
                 return;
             }

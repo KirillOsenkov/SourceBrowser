@@ -449,7 +449,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 writer.Flush();
                 long streamPosition = writer.BaseStream.Length;
 
-                streamPosition += html.IndexOf(hyperlinkInfo.Attributes["id"] + ".html");
+                streamPosition += html.IndexOf(hyperlinkInfo.Attributes["id"] + ".html", StringComparison.Ordinal);
                 projectGenerator.AddDeclaredSymbol(
                     hyperlinkInfo.DeclaredSymbol,
                     hyperlinkInfo.DeclaredSymbolId,

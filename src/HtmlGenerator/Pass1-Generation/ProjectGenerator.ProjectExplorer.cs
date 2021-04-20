@@ -52,7 +52,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 AddDocumentToFolder(root, otherFile, parts.Take(parts.Length - 1).ToArray());
             }
 
-            root.Sort((l, r) => Path.GetFileName(l).CompareTo(Path.GetFileName(r)));
+            root.Sort((l, r) => string.Compare(Path.GetFileName(l), Path.GetFileName(r), StringComparison.Ordinal));
             WriteRootFolder(root, sb);
         }
 
@@ -193,7 +193,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            if (subfolders[0].EndsWith(":"))
+            if (subfolders[0].EndsWith(":", StringComparison.Ordinal))
             {
                 return;
             }

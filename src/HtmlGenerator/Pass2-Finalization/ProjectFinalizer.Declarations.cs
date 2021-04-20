@@ -88,7 +88,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             for (int i = 0; i < lines.Length; i++)
             {
                 var line = lines[i];
-                if (line.StartsWith("="))
+                if (line.StartsWith("=", StringComparison.Ordinal))
                 {
                     symbolId = line.Substring(1);
                     bucket = new List<Tuple<string, long>>();
