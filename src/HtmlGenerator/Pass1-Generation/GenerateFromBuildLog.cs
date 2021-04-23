@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.VisualBasic;
-using Microsoft.SourceBrowser.BuildLogParser;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -15,34 +14,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public static readonly Dictionary<string, string> AssemblyNameToFilePathMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        public static void IndexLogFile(string logFile, string serverPath = null, string solutionRoot = null)
-        {
-            var invocations = LogAnalyzer.GetInvocations(
-                options: new LogAnalyzer.Options
-                {
-                    CheckForOrphans = false,
-                    CheckForMissingOutputBinary = false,
-                    SanityCheck = false
-                },
-                logFiles: new[]
-                {
-                    logFile
-                });
-
-            var buildlogInvocations = invocations.Select(i => new CompilerInvocation()
-            {
-                CommandLineArguments = i.CommandLine,
-                OutputAssemblyPath = i.OutputAssemblyPath,
-                ProjectFilePath = i.ProjectFilePath,
-                ServerPath = serverPath,
-                SolutionRoot = solutionRoot
-            });
-            foreach (var invocation in buildlogInvocations)
-            {
-                GenerateInvocation(invocation);
-            }
-        }
 
         public static void GenerateInvocation(CompilerInvocation invocation,
             IReadOnlyDictionary<string, string> serverPathMappings = null,
