@@ -19,7 +19,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var options = CommandLineOptions.Parse(args);
 
-            if (options.Properties.Count == 0)
+            if (options.Projects.Count == 0)
             {
                 PrintUsage();
                 return;
