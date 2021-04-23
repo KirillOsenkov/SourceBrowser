@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31213.239
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlGenerator", "src\HtmlGenerator\HtmlGenerator.csproj", "{3CB763A5-A0C0-46B0-AEF5-020E731253C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildLogParser", "src\BuildLogParser\BuildLogParser.csproj", "{57002F26-8D15-4CF7-A53D-61AE8CC5E836}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\Common\Common.csproj", "{F13CD277-E86B-4BC6-9E93-39ED055A46DB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitGlyph", "src\GitGlyph\GitGlyph.csproj", "{810A96AB-58EB-4403-9A1E-964F85958E62}"
@@ -35,10 +33,6 @@ Global
 		{3CB763A5-A0C0-46B0-AEF5-020E731253C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB763A5-A0C0-46B0-AEF5-020E731253C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB763A5-A0C0-46B0-AEF5-020E731253C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57002F26-8D15-4CF7-A53D-61AE8CC5E836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57002F26-8D15-4CF7-A53D-61AE8CC5E836}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57002F26-8D15-4CF7-A53D-61AE8CC5E836}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57002F26-8D15-4CF7-A53D-61AE8CC5E836}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F13CD277-E86B-4BC6-9E93-39ED055A46DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F13CD277-E86B-4BC6-9E93-39ED055A46DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F13CD277-E86B-4BC6-9E93-39ED055A46DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
