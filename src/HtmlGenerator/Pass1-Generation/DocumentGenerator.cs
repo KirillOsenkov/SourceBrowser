@@ -285,16 +285,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", "/#" + DocumentUrl, documentDisplayName);
             string projectLink = string.Format("Project: <a id=\"projectPath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a> ({2})", projectUrl, projectDisplayName, projectGenerator.AssemblyName);
 
-            string fileShareLink = GetFileShareLink();
-            if (fileShareLink != null)
-            {
-                fileShareLink = Markup.A(fileShareLink, "File", "_blank");
-            }
-            else
-            {
-                fileShareLink = "";
-            }
-
             string webLink = GetWebLink();
             if (webLink != null)
             {
@@ -306,7 +296,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             string firstRow = string.Format("<tr><td>{0}</td><td>{1}</td></tr>", documentLink, webLink);
-            string secondRow = string.Format("<tr><td>{0}</td><td>{1}</td></tr>", projectLink, fileShareLink);
+            string secondRow = string.Format("<tr><td>{0}</td></tr>", projectLink);
 
             Markup.WriteLinkPanel(writeLine, firstRow, secondRow);
         }
@@ -322,28 +312,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             return null;
-        }
-
-        private string GetDocumentPathFromSourceSolutionRoot()
-        {
-            string projectPath = Path.GetDirectoryName(projectGenerator.ProjectSourcePath);
-            string filePath = @"C:\" + Path.Combine(projectPath, documentRelativeFilePathWithoutHtmlExtension);
-            filePath = Path.GetFullPath(filePath);
-            filePath = filePath.Substring(3); // strip the artificial "C:\"
-            return filePath;
-        }
-
-        private string GetFileShareLink()
-        {
-            var networkShare = this.projectGenerator.SolutionGenerator.NetworkShare;
-            if (string.IsNullOrEmpty(networkShare))
-            {
-                return null;
-            }
-
-            string filePath = GetDocumentPathFromSourceSolutionRoot();
-            filePath = Path.Combine(networkShare, filePath);
-            return filePath;
         }
 
         private async Task GeneratePre(StreamWriter writer, int lineCount = 0)

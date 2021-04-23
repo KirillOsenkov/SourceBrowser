@@ -19,7 +19,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public string SolutionDestinationFolder { get; private set; }
         public string ProjectFilePath { get; private set; }
         public IReadOnlyDictionary<string, string> ServerPathMappings { get; set; }
-        public string NetworkShare { get; private set; }
         private Federation Federation { get; set; }
         public IEnumerable<string> PluginBlacklist { get; private set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -89,8 +88,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string commandLineArguments,
             string outputAssemblyPath,
             string solutionSourceFolder,
-            string solutionDestinationFolder,
-            string networkShare)
+            string solutionDestinationFolder)
         {
             this.ProjectFilePath = projectFilePath;
             string projectName = Path.GetFileNameWithoutExtension(projectFilePath);
@@ -98,7 +96,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 LanguageNames.VisualBasic : LanguageNames.CSharp;
             this.SolutionSourceFolder = solutionSourceFolder;
             this.SolutionDestinationFolder = solutionDestinationFolder;
-            this.NetworkShare = networkShare;
             string projectSourceFolder = Path.GetDirectoryName(projectFilePath);
             SetupPluginAggregator();
 
