@@ -46,9 +46,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
 
-            var file = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", url, displayName);
-            var row = string.Format("<tr><td>{0}</td></tr>", file);
-            Markup.WriteLinkPanel(s => sb.AppendLine(s), row);
+            var documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", url, displayName);
+
+            string webLink = GetWebLink();
+            if (webLink != null)
+            {
+                webLink = Markup.A(webLink, "Web&nbsp;Access", "_blank");
+            }
+            else
+            {
+                webLink = "";
+            }
+
+            Markup.WriteLinkPanel(s => sb.AppendLine(s), rows: string.Format("<tr><td>{0}</td><td>{1}</td></tr>", documentLink, webLink));
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix();
@@ -106,6 +116,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         protected virtual string GetAssemblyName()
         {
             return ProjectGenerator.AssemblyName;
+        }
+
+        private string GetWebLink()
+        {
+            var fullPath = Path.GetFullPath(sourceXmlFilePath);
+            var serverPathMapping = ProjectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
+            if (serverPathMapping.Key != null)
+            {
+                return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
+            }
+
+            return null;
         }
 
         protected void GenerateRange(ClassifiedRange range, StringBuilder sb)
