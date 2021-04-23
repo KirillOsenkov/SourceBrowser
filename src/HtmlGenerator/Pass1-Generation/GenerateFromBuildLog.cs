@@ -38,7 +38,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         invocation.OutputAssemblyPath,
                         invocation.SolutionRoot,
                         Paths.SolutionDestinationFolder,
-                        invocation.ServerPath,
                         invocation.NetworkShare);
                     solutionGenerator.ServerPathMappings = serverPathMappings;
                     solutionGenerator.GlobalAssemblyList = assemblyNames;
@@ -70,7 +69,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     OutputAssemblyPath = lines[i + 1],
                     CommandLineArguments = lines[i + 2],
                     NetworkShare = "",
-                    ServerPath = "",
                     SolutionRoot = "",
                 };
 
@@ -102,7 +100,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             public string ProjectDirectory => ProjectFilePath == null ? "" : Path.GetDirectoryName(ProjectFilePath);
             public string OutputAssemblyPath { get; set; }
             public string CommandLineArguments { get; set; }
-            public string ServerPath { get; set; }
             public string NetworkShare { get; set; }
             public string SolutionRoot { get; set; }
             public IEnumerable<string> TypeScriptFiles { get; set; }

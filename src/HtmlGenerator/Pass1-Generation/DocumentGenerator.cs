@@ -321,22 +321,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
             }
 
-            var serverPath = this.projectGenerator.SolutionGenerator.ServerPath;
-            if (string.IsNullOrEmpty(serverPath))
-            {
-                return null;
-            }
-
-            string filePath = GetDocumentPathFromSourceSolutionRoot();
-            filePath = filePath.Replace('\\', '/');
-
-            const string urlTemplate = "{0}{1}";
-
-            string url = string.Format(
-                urlTemplate,
-                serverPath,
-                filePath);
-            return url;
+            return null;
         }
 
         private string GetDocumentPathFromSourceSolutionRoot()
