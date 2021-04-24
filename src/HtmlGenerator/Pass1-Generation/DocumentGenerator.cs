@@ -278,15 +278,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void GenerateHeader(Action<string> writeLine)
         {
-            string documentDisplayName = documentRelativeFilePathWithoutHtmlExtension;
-            string projectDisplayName = projectGenerator.ProjectSourcePath;
-            string projectUrl = "/#" + Document.Project.AssemblyName;
-
             Markup.WriteLinkPanel(
                 writeLine,
-                (documentDisplayName, "/#" + DocumentUrl),
-                projectGenerator.GetWebAccessUrl(Document.FilePath),
-                (projectDisplayName, projectUrl, projectGenerator.AssemblyName));
+                fileLink: (Display: documentRelativeFilePathWithoutHtmlExtension, Url: "/#" + DocumentUrl),
+                webAccessUrl: projectGenerator.GetWebAccessUrl(Document.FilePath),
+                projectLink: (Display: projectGenerator.ProjectSourcePath, Url: "/#" + Document.Project.AssemblyName, projectGenerator.AssemblyName));
         }
 
         private async Task GeneratePre(StreamWriter writer, int lineCount = 0)
