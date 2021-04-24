@@ -242,5 +242,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string subfolder = Path.Combine(solutionDestinationPath, AssemblyName);
             return subfolder;
         }
+
+        public string GetWebAccessUrl(string sourceFilePath)
+        {
+            var fullPath = Path.GetFullPath(sourceFilePath);
+            var serverPathMapping = SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
+            if (serverPathMapping.Key != null)
+            {
+                return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
+            }
+
+            return null;
+        }
     }
 }
