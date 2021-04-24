@@ -282,23 +282,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string projectDisplayName = projectGenerator.ProjectSourcePath;
             string projectUrl = "/#" + Document.Project.AssemblyName;
 
-            string documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", "/#" + DocumentUrl, documentDisplayName);
-            string projectLink = string.Format("Project: <a id=\"projectPath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a> ({2})", projectUrl, projectDisplayName, projectGenerator.AssemblyName);
-
             string webLink = GetWebLink();
-            if (webLink != null)
-            {
-                webLink = Markup.A(webLink, "Web&nbsp;Access", "_blank");
-            }
-            else
-            {
-                webLink = "";
-            }
 
-            string firstRow = string.Format("<tr><td>{0}</td><td>{1}</td></tr>", documentLink, webLink);
-            string secondRow = string.Format("<tr><td>{0}</td></tr>", projectLink);
-
-            Markup.WriteLinkPanel(writeLine, firstRow, secondRow);
+            Markup.WriteLinkPanel(writeLine, (documentDisplayName, "/#" + DocumentUrl), webLink, (projectDisplayName, projectUrl, projectGenerator.AssemblyName));
         }
 
         private string GetWebLink()
