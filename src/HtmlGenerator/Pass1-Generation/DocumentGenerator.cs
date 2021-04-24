@@ -282,22 +282,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string projectDisplayName = projectGenerator.ProjectSourcePath;
             string projectUrl = "/#" + Document.Project.AssemblyName;
 
-            string webLink = GetWebLink();
-
-            Markup.WriteLinkPanel(writeLine, (documentDisplayName, "/#" + DocumentUrl), webLink, (projectDisplayName, projectUrl, projectGenerator.AssemblyName));
-        }
-
-        private string GetWebLink()
-        {
-            var fullPath = Path.GetFullPath(Document.FilePath);
-            var serverPathMapping =
-                projectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
-            if (serverPathMapping.Key != null)
-            {
-                return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
-            }
-
-            return null;
+            Markup.WriteLinkPanel(
+                writeLine,
+                (documentDisplayName, "/#" + DocumentUrl),
+                projectGenerator.GetWebAccessUrl(Document.FilePath),
+                (projectDisplayName, projectUrl, projectGenerator.AssemblyName));
         }
 
         private async Task GeneratePre(StreamWriter writer, int lineCount = 0)

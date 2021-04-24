@@ -55,7 +55,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
 
-            Markup.WriteLinkPanel(s => sb.AppendLine(s), fileLink: (displayName, url));
+            Markup.WriteLinkPanel(s => sb.AppendLine(s), fileLink: (displayName, url), ProjectGenerator.GetWebAccessUrl(sourceXmlFilePath));
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix();
