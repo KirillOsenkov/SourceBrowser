@@ -1324,10 +1324,6 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
         color: white;
     }
 
-    #currentVersion {
-        color: #222;
-    }
-
     #downloadButton {
         background-color: #68217A;
         color: white;
