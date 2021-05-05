@@ -179,6 +179,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 ["interface name"] = Constants.ClassificationTypeName,
                 ["enum name"] = Constants.ClassificationTypeName,
                 ["delegate name"] = Constants.ClassificationTypeName,
+                ["record name"] = Constants.ClassificationTypeName,
                 ["module name"] = Constants.ClassificationTypeName,
                 ["type parameter name"] = Constants.ClassificationTypeName,
                 ["preprocessor keyword"] = Constants.ClassificationPreprocessKeyword,
