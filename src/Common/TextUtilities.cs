@@ -175,12 +175,12 @@ namespace Microsoft.SourceBrowser.Common
                 return text;
             }
 
-            if (text.StartsWith("\"") && text.EndsWith("\"") && text.Length > 2)
+            if (text.StartsWith("\"", StringComparison.Ordinal) && text.EndsWith("\"", StringComparison.Ordinal) && text.Length > 2)
             {
                 text = text.Substring(1, text.Length - 2);
             }
 
-            if (text.StartsWith("'") && text.EndsWith("'") && text.Length > 2)
+            if (text.StartsWith("'", StringComparison.Ordinal) && text.EndsWith("'", StringComparison.Ordinal) && text.Length > 2)
             {
                 text = text.Substring(1, text.Length - 2);
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.SourceBrowser.Common;
@@ -241,6 +242,22 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             AssemblyName = SymbolIdService.GetAssemblyId(assemblyName);
             string subfolder = Path.Combine(solutionDestinationPath, AssemblyName);
             return subfolder;
+        }
+
+        public string GetWebAccessUrl(string sourceFilePath)
+        {
+            // Align with most gitignores as an approximation for knowing whether the file will exist in the source control repository.
+            if (!Regex.IsMatch(sourceFilePath, @"(?:[/\\]|\A)obj[/\\]"))
+            {
+                var fullPath = Path.GetFullPath(sourceFilePath);
+                var serverPathMapping = SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
+                if (serverPathMapping.Key != null)
+                {
+                    return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
+                }
+            }
+
+            return null;
         }
     }
 }

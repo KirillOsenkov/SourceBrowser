@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.VisualBasic;
-using Microsoft.SourceBrowser.BuildLogParser;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -15,34 +14,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public static readonly Dictionary<string, string> AssemblyNameToFilePathMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        public static void IndexLogFile(string logFile, string serverPath = null, string solutionRoot = null)
-        {
-            var invocations = LogAnalyzer.GetInvocations(
-                options: new LogAnalyzer.Options
-                {
-                    CheckForOrphans = false,
-                    CheckForMissingOutputBinary = false,
-                    SanityCheck = false
-                },
-                logFiles: new[]
-                {
-                    logFile
-                });
-
-            var buildlogInvocations = invocations.Select(i => new CompilerInvocation()
-            {
-                CommandLineArguments = i.CommandLine,
-                OutputAssemblyPath = i.OutputAssemblyPath,
-                ProjectFilePath = i.ProjectFilePath,
-                ServerPath = serverPath,
-                SolutionRoot = solutionRoot
-            });
-            foreach (var invocation in buildlogInvocations)
-            {
-                GenerateInvocation(invocation);
-            }
-        }
 
         public static void GenerateInvocation(CompilerInvocation invocation,
             IReadOnlyDictionary<string, string> serverPathMappings = null,
@@ -66,9 +37,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         invocation.CommandLineArguments,
                         invocation.OutputAssemblyPath,
                         invocation.SolutionRoot,
-                        Paths.SolutionDestinationFolder,
-                        invocation.ServerPath,
-                        invocation.NetworkShare);
+                        Paths.SolutionDestinationFolder);
                     solutionGenerator.ServerPathMappings = serverPathMappings;
                     solutionGenerator.GlobalAssemblyList = assemblyNames;
                     solutionGenerator.Generate(processedAssemblyList, solutionExplorerRoot);
@@ -98,8 +67,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     ProjectFilePath = lines[i],
                     OutputAssemblyPath = lines[i + 1],
                     CommandLineArguments = lines[i + 2],
-                    NetworkShare = "",
-                    ServerPath = "",
                     SolutionRoot = "",
                 };
 
@@ -131,8 +98,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             public string ProjectDirectory => ProjectFilePath == null ? "" : Path.GetDirectoryName(ProjectFilePath);
             public string OutputAssemblyPath { get; set; }
             public string CommandLineArguments { get; set; }
-            public string ServerPath { get; set; }
-            public string NetworkShare { get; set; }
             public string SolutionRoot { get; set; }
             public IEnumerable<string> TypeScriptFiles { get; set; }
 

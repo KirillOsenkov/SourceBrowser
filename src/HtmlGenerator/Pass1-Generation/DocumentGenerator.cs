@@ -278,87 +278,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private void GenerateHeader(Action<string> writeLine)
         {
-            string documentDisplayName = documentRelativeFilePathWithoutHtmlExtension;
-            string projectDisplayName = projectGenerator.ProjectSourcePath;
-            string projectUrl = "/#" + Document.Project.AssemblyName;
-
-            string documentLink = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", "/#" + DocumentUrl, documentDisplayName);
-            string projectLink = string.Format("Project: <a id=\"projectPath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a> ({2})", projectUrl, projectDisplayName, projectGenerator.AssemblyName);
-
-            string fileShareLink = GetFileShareLink();
-            if (fileShareLink != null)
-            {
-                fileShareLink = Markup.A(fileShareLink, "File", "_blank");
-            }
-            else
-            {
-                fileShareLink = "";
-            }
-
-            string webLink = GetWebLink();
-            if (webLink != null)
-            {
-                webLink = Markup.A(webLink, "Web&nbsp;Access", "_blank");
-            }
-            else
-            {
-                webLink = "";
-            }
-
-            string firstRow = string.Format("<tr><td>{0}</td><td>{1}</td></tr>", documentLink, webLink);
-            string secondRow = string.Format("<tr><td>{0}</td><td>{1}</td></tr>", projectLink, fileShareLink);
-
-            Markup.WriteLinkPanel(writeLine, firstRow, secondRow);
-        }
-
-        private string GetWebLink()
-        {
-            var fullPath = Path.GetFullPath(Document.FilePath);
-            var serverPathMapping =
-                projectGenerator.SolutionGenerator.ServerPathMappings.FirstOrDefault(p => fullPath.StartsWith(p.Key, StringComparison.OrdinalIgnoreCase));
-            if (serverPathMapping.Key != null)
-            {
-                return serverPathMapping.Value + fullPath.Substring(serverPathMapping.Key.Length).Replace('\\', '/');
-            }
-
-            var serverPath = this.projectGenerator.SolutionGenerator.ServerPath;
-            if (string.IsNullOrEmpty(serverPath))
-            {
-                return null;
-            }
-
-            string filePath = GetDocumentPathFromSourceSolutionRoot();
-            filePath = filePath.Replace('\\', '/');
-
-            const string urlTemplate = "{0}{1}";
-
-            string url = string.Format(
-                urlTemplate,
-                serverPath,
-                filePath);
-            return url;
-        }
-
-        private string GetDocumentPathFromSourceSolutionRoot()
-        {
-            string projectPath = Path.GetDirectoryName(projectGenerator.ProjectSourcePath);
-            string filePath = @"C:\" + Path.Combine(projectPath, documentRelativeFilePathWithoutHtmlExtension);
-            filePath = Path.GetFullPath(filePath);
-            filePath = filePath.Substring(3); // strip the artificial "C:\"
-            return filePath;
-        }
-
-        private string GetFileShareLink()
-        {
-            var networkShare = this.projectGenerator.SolutionGenerator.NetworkShare;
-            if (string.IsNullOrEmpty(networkShare))
-            {
-                return null;
-            }
-
-            string filePath = GetDocumentPathFromSourceSolutionRoot();
-            filePath = Path.Combine(networkShare, filePath);
-            return filePath;
+            Markup.WriteLinkPanel(
+                writeLine,
+                fileLink: (Display: documentRelativeFilePathWithoutHtmlExtension, Url: "/#" + DocumentUrl),
+                webAccessUrl: projectGenerator.GetWebAccessUrl(Document.FilePath),
+                projectLink: (Display: projectGenerator.ProjectSourcePath, Url: "/#" + Document.Project.AssemblyName, projectGenerator.AssemblyName));
         }
 
         private async Task GeneratePre(StreamWriter writer, int lineCount = 0)
@@ -449,7 +373,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 writer.Flush();
                 long streamPosition = writer.BaseStream.Length;
 
-                streamPosition += html.IndexOf(hyperlinkInfo.Attributes["id"] + ".html");
+                streamPosition += html.IndexOf(hyperlinkInfo.Attributes["id"] + ".html", StringComparison.Ordinal);
                 projectGenerator.AddDeclaredSymbol(
                     hyperlinkInfo.DeclaredSymbol,
                     hyperlinkInfo.DeclaredSymbolId,

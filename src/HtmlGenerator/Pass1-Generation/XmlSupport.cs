@@ -30,10 +30,19 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.destinationHtmlFilePath = destinationHtmlFilePath;
 
             sourceText = File.ReadAllText(sourceXmlFilePath);
+
+            string html = GetHtml(sourceXmlFilePath, destinationHtmlFilePath, displayName);
+
+            var folder = Path.GetDirectoryName(destinationHtmlFilePath);
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(destinationHtmlFilePath, html);
+        }
+
+        private string GetHtml(string sourceXmlFilePath, string destinationHtmlFilePath, string displayName)
+        {
             var lines = File.ReadAllLines(sourceXmlFilePath);
             lineLengths = sourceText.GetLineLengths();
             var lineCount = lines.Length;
-            var root = Parser.ParseText(sourceText);
 
             var sb = new StringBuilder();
 
@@ -46,61 +55,68 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
 
-            var file = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", url, displayName);
-            var row = string.Format("<tr><td>{0}</td></tr>", file);
-            Markup.WriteLinkPanel(s => sb.AppendLine(s), row);
+            Markup.WriteLinkPanel(
+                s => sb.AppendLine(s),
+                fileLink: (displayName, url),
+                webAccessUrl: ProjectGenerator.GetWebAccessUrl(sourceXmlFilePath),
+                projectLink: (ProjectGenerator.ProjectSourcePath, Url: "/#" + assemblyName, assemblyName));
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix();
             sb.AppendLine(table);
 
-            var ranges = new List<ClassifiedRange>();
-
-            ClassifierVisitor.Visit(
-                root,
-                0,
-                sourceText.Length,
-                (start, length, node, classification) =>
-                {
-                    var line = TextUtilities.GetLineFromPosition(start, sourceText);
-                    var lineText = sourceText.Substring(line.Item1, line.Item2);
-
-                    ranges.Add(
-                        new ClassifiedRange
-                        {
-                            Classification = classification,
-                            Node = node,
-                            Text = sourceText.Substring(start, length),
-                            LineText = lineText,
-                            LineStart = line.Item1,
-                            LineNumber = TextUtilities.GetLineNumber(start, lineLengths),
-                            Start = start,
-                            Length = length
-                        });
-                });
-
-            ranges = RangeUtilities.FillGaps(
-                sourceText,
-                ranges,
-                r => r.Start,
-                r => r.Length,
-                (s, l, t) => new ClassifiedRange
-                {
-                    Start = s,
-                    Length = l,
-                    Text = t.Substring(s, l)
-                }).ToList();
-            foreach (var range in ranges)
+            if (sourceText.Length > 1000000)
             {
-                GenerateRange(range, sb);
+                sb.AppendLine(Markup.HtmlEscape(sourceText));
+            }
+            else
+            {
+                var ranges = new List<ClassifiedRange>();
+
+                var root = Parser.ParseText(sourceText);
+                ClassifierVisitor.Visit(
+                    root,
+                    0,
+                    sourceText.Length,
+                    (start, length, node, classification) =>
+                    {
+                        var line = TextUtilities.GetLineFromPosition(start, sourceText);
+                        var lineText = sourceText.Substring(line.Item1, line.Item2);
+
+                        ranges.Add(
+                            new ClassifiedRange
+                            {
+                                Classification = classification,
+                                Node = node,
+                                Text = sourceText.Substring(start, length),
+                                LineText = lineText,
+                                LineStart = line.Item1,
+                                LineNumber = TextUtilities.GetLineNumber(start, lineLengths),
+                                Start = start,
+                                Length = length
+                            });
+                    });
+
+                ranges = RangeUtilities.FillGaps(
+                    sourceText,
+                    ranges,
+                    r => r.Start,
+                    r => r.Length,
+                    (s, l, t) => new ClassifiedRange
+                    {
+                        Start = s,
+                        Length = l,
+                        Text = t.Substring(s, l)
+                    }).ToList();
+                foreach (var range in ranges)
+                {
+                    GenerateRange(range, sb);
+                }
             }
 
             var suffix = Markup.GetDocumentSuffix();
             sb.AppendLine(suffix);
-
-            var folder = Path.GetDirectoryName(destinationHtmlFilePath);
-            Directory.CreateDirectory(folder);
-            File.WriteAllText(destinationHtmlFilePath, sb.ToString());
+            return sb.ToString();
         }
 
         protected virtual string GetAssemblyName()

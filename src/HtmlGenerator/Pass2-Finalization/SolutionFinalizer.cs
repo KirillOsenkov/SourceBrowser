@@ -137,7 +137,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 lines.TryGetValue(r, out int index2);
                 if (index1 == 0 || index2 == 0)
                 {
-                    return l.CompareTo(r);
+                    return string.Compare(l, r, StringComparison.Ordinal);
                 }
                 else
                 {

@@ -89,6 +89,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Directory.CreateDirectory(SolutionDestinationFolder);
         }
 
+        public static bool IsOrContains(string path, string possibleDescendent)
+        {
+            return EnsureTrailingSlash(possibleDescendent).StartsWith(EnsureTrailingSlash(path), StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Returns a path to <paramref name="filePath"/> if you start in a folder where the file
         /// <paramref name="relativeToPath"/> is located.
@@ -128,13 +133,13 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return Path.GetFileName(filePath);
             }
 
-            if (relativeToPath.EndsWith("\\"))
+            if (relativeToPath.EndsWith("\\", StringComparison.Ordinal))
             {
                 relativeToPath = relativeToPath.TrimEnd('\\');
             }
 
             StringBuilder result = new StringBuilder();
-            while (!EnsureTrailingSlash(filePath).StartsWith(EnsureTrailingSlash(relativeToPath), StringComparison.OrdinalIgnoreCase))
+            while (!IsOrContains(relativeToPath, filePath))
             {
                 result.Append(@"..\");
                 relativeToPath = Path.GetDirectoryName(relativeToPath);
@@ -143,7 +148,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             if (filePath.Length > relativeToPath.Length)
             {
                 filePath = filePath.Substring(relativeToPath.Length);
-                if (filePath.StartsWith("\\"))
+                if (filePath.StartsWith("\\", StringComparison.Ordinal))
                 {
                     filePath = filePath.Substring(1);
                 }
@@ -213,7 +218,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 result = "parent";
             }
-            else if (folderName.EndsWith(":"))
+            else if (folderName.EndsWith(":", StringComparison.Ordinal))
             {
                 result = folderName.TrimEnd(':');
             }
@@ -231,7 +236,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return !string.IsNullOrEmpty(folderName) &&
                 folderName != "." &&
                 folderName != ".." &&
-                !folderName.EndsWith(":");
+                !folderName.EndsWith(":", StringComparison.Ordinal);
         }
 
         public static string GetRelativePathInProject(SyntaxTree syntaxTree, Project project)
@@ -247,7 +252,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return path;
             }
 
-            if (!path.EndsWith("\\"))
+            if (!path.EndsWith("\\", StringComparison.Ordinal))
             {
                 path += "\\";
             }

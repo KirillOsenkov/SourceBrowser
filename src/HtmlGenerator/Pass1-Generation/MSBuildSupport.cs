@@ -29,7 +29,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             // need these because IIS refuses to render static files that have \bin\ in the path
             url = url.Replace(@"\bin\", @"\bin_\");
             url = url.Replace(@"\Bin\", @"\Bin_\");
-            if (url.StartsWith(@"\\"))
+            if (url.StartsWith(@"\\", StringComparison.Ordinal))
             {
                 url = url.Substring(2);
             }
@@ -131,7 +131,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 var taskName = element.Attributes.FirstOrDefault(a => a.Key == "TaskName").Value;
                 if (taskName != null)
                 {
-                    int lastDot = taskName.LastIndexOf(".");
+                    int lastDot = taskName.LastIndexOf('.');
                     if (lastDot > -1)
                     {
                         taskName = taskName.Substring(lastDot + 1);
@@ -203,7 +203,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             bool isUsage)
         {
             var propertyName = text.Trim();
-            var leadingTriviaWidth = text.IndexOf(propertyName);
+            var leadingTriviaWidth = text.IndexOf(propertyName, StringComparison.Ordinal);
             var trailingTriviaWidth = text.Length - propertyName.Length - leadingTriviaWidth;
 
             if (propertyName.IndexOfAny(complexCharsInProperties) != -1)
@@ -258,7 +258,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var itemName = text.Trim();
 
-            var leadingTriviaWidth = text.IndexOf(itemName);
+            var leadingTriviaWidth = text.IndexOf(itemName, StringComparison.Ordinal);
             var trailingTriviaWidth = text.Length - itemName.Length - leadingTriviaWidth;
 
             if (itemName.IndexOfAny(complexCharsInProperties) != -1)
@@ -306,7 +306,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             bool isUsage)
         {
             var targetName = text.Trim();
-            var leadingTriviaWidth = text.IndexOf(targetName);
+            var leadingTriviaWidth = text.IndexOf(targetName, StringComparison.Ordinal);
             var trailingTriviaWidth = text.Length - targetName.Length - leadingTriviaWidth;
 
             var href =
@@ -350,7 +350,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             bool isUsage)
         {
             var trimmedText = text.Trim();
-            var leadingTriviaWidth = text.IndexOf(trimmedText);
+            var leadingTriviaWidth = text.IndexOf(trimmedText, StringComparison.Ordinal);
             var trailingTriviaWidth = text.Length - trimmedText.Length - leadingTriviaWidth;
 
             var href =
@@ -388,7 +388,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var element = range.Node == null ? null : range.Node.ParentElement;
             if (element != null &&
-                element.Name?.EndsWith("DependsOn") == true &&
+                element.Name?.EndsWith("DependsOn", StringComparison.Ordinal) == true &&
                 element.Parent?.Name == "PropertyGroup")
             {
                 return ProcessExpressions(range, text, isRootProject, ProcessSemicolonSeparatedList);
@@ -525,7 +525,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private string ProcessExpressions(ClassifiedRange range, string text, bool isRootProject, Func<ClassifiedRange, string, bool, int, string> customStringProcessor = null)
         {
             var parts = MSBuildExpressionParser.SplitStringByPropertiesAndItems(text);
-            if (parts.Count() == 1 && !text.StartsWith("$(") && !text.StartsWith("@("))
+            if (parts.Count() == 1 && !text.StartsWith("$(", StringComparison.Ordinal) && !text.StartsWith("@(", StringComparison.Ordinal))
             {
                 var processed = text;
                 if (customStringProcessor != null)
@@ -542,7 +542,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             int lengthSoFar = 0;
             foreach (var part in parts)
             {
-                if (part.StartsWith("$(") && part.EndsWith(")") && part.Length > 3)
+                if (part.StartsWith("$(", StringComparison.Ordinal) && part.EndsWith(")", StringComparison.Ordinal) && part.Length > 3)
                 {
                     var propertyName = part.Substring(2, part.Length - 3);
                     string suffix = "";
@@ -568,8 +568,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     sb.Append("$(" + url + Markup.HtmlEscape(suffix) + ")");
                 }
                 else if (
-                    part.StartsWith("@(") &&
-                    (part.EndsWith(")") || part.EndsWith("-") || part.EndsWith(",")) &&
+                    part.StartsWith("@(", StringComparison.Ordinal) &&
+                    (part.EndsWith(")", StringComparison.Ordinal) || part.EndsWith("-", StringComparison.Ordinal) || part.EndsWith(",", StringComparison.Ordinal)) &&
                     !part.Contains("%") &&
                     part.Length > 3)
                 {

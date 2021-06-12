@@ -227,14 +227,28 @@ Don't use this page directly, pass #symbolId to get redirected.
             writer.WriteLine(contents);
         }
 
-        public static void WriteLinkPanel(Action<string> writeLine, params string[] rows)
+        public static void WriteLinkPanel(
+            Action<string> writeLine,
+            (string Display, string Url) fileLink,
+            string webAccessUrl = null,
+            (string Display, string Url, string AssemblyName)? projectLink = null)
         {
             writeLine("<div class=\"dH\">");
             writeLine("<table style=\"width: 100%\">");
 
-            foreach (var row in rows)
+            string fileCellContents = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", fileLink.Url, fileLink.Display);
+
+            var webAccessCellContents = webAccessUrl is object
+                ? A(webAccessUrl, "Web&nbsp;Access", "_blank")
+                : null;
+
+            writeLine(string.Format("<tr><td>{0}</td><td>{1}</td></tr>", fileCellContents, webAccessCellContents));
+
+            if (projectLink is object)
             {
-                writeLine(row);
+                string projectCellContents = string.Format("Project: <a id=\"projectPath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a> ({2})", projectLink.Value.Url, projectLink.Value.Display, projectLink.Value.AssemblyName);
+
+                writeLine(string.Format("<tr><td>{0}</td></tr>", projectCellContents));
             }
 
             writeLine("</table>");

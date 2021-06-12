@@ -61,8 +61,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static int FindNextExpressionStart(string text, int startFrom = 0)
         {
-            var result = text.IndexOf("$(", startFrom);
-            int itemStart = text.IndexOf("@(", startFrom);
+            var result = text.IndexOf("$(", startFrom, StringComparison.Ordinal);
+            int itemStart = text.IndexOf("@(", startFrom, StringComparison.Ordinal);
             if (itemStart >= 0 && (result == -1 || itemStart < result))
             {
                 result = itemStart;

@@ -151,7 +151,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             url = url.Replace(":", "");
             url = url.Replace(" ", "");
             url = url.Replace(@"\bin\", @"\bin_\");
-            if (url.StartsWith(@"\\"))
+            if (url.StartsWith(@"\\", StringComparison.Ordinal))
             {
                 url = url.Substring(2);
             }
@@ -189,9 +189,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var url = "/#" + assemblyName + "/" + displayName.Replace('\\', '/');
             displayName = @"\\" + displayName;
 
-            var file = string.Format("File: <a id=\"filePath\" class=\"blueLink\" href=\"{0}\" target=\"_top\">{1}</a><br/>", url, displayName);
-            var row = string.Format("<tr><td>{0}</td></tr>", file);
-            Markup.WriteLinkPanel(s => sb.AppendLine(s), row);
+            Markup.WriteLinkPanel(s => sb.AppendLine(s), fileLink: (displayName, url));
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix();
@@ -433,7 +431,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 foreach (var attribute in hyperlinkInfo.Attributes)
                 {
                     const string typeScriptFilesR = "/TypeScriptFiles/R/";
-                    if (attribute.Key == "href" && attribute.Value.StartsWith(typeScriptFilesR))
+                    if (attribute.Key == "href" && attribute.Value.StartsWith(typeScriptFilesR, StringComparison.Ordinal))
                     {
                         var streamPosition = sb.Length + 7 + typeScriptFilesR.Length; // exact offset into <a href="HERE
                         ProjectGenerator.AddDeclaredSymbolToRedirectMap(

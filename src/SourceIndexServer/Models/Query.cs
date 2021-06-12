@@ -135,7 +135,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
                 // is it a file name?
                 var lastPartLower = lastPart.ToLowerInvariant();
-                if (supportedFileExtensions.Any(extension => extension.StartsWith(lastPartLower)))
+                if (supportedFileExtensions.Any(extension => extension.StartsWith(lastPartLower, StringComparison.Ordinal)))
                 {
                     var fileInterpretation = new Interpretation();
                     fileInterpretation.CoreSearchTerm = dottedNameText;
@@ -190,7 +190,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             foreach (var prefix in prefixes)
             {
-                if (interpretation.CoreSearchTerm.StartsWith(prefix))
+                if (interpretation.CoreSearchTerm.StartsWith(prefix, StringComparison.Ordinal))
                 {
                     var clone = interpretation.Clone();
                     clone.CoreSearchTerm = clone.CoreSearchTerm.Substring(prefix.Length);
@@ -215,7 +215,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
                 return text;
             }
 
-            if (text.StartsWith("\"") && text.EndsWith("\"") && text.Length > 1)
+            if (text.StartsWith("\"", StringComparison.Ordinal) && text.EndsWith("\"", StringComparison.Ordinal) && text.Length > 1)
             {
                 text = text.Substring(1, text.Length - 2);
                 isQuoted = true;
