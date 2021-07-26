@@ -1316,7 +1316,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     #search-box {
-        background: black;
+        background-color: black;
         border-color: #555;
     }
 
