@@ -165,6 +165,15 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         }
 
         [TestMethod]
+        public void TestHex()
+        {
+            var foo = Serialization.ULongToHexString(12199771775727863114);
+            var res = SourceIndexServer.Controllers.SymbolsController.TryParseHexStringToULong(foo, out var result);
+            foo = Serialization.ULongToHexString(5369725591829040809);
+            res = SourceIndexServer.Controllers.SymbolsController.TryParseHexStringToULong(foo, out result);
+        }
+
+        [TestMethod]
         public void TestFilteringByOtherWords()
         {
             Test(

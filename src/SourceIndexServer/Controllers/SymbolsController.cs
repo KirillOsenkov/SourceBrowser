@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -84,12 +85,34 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
                 return false;
             }
 
-            if (ulong.TryParse(text, out id))
+            if (TryParseHexStringToULong(text, out id))
             {
                 return true;
             }
 
             id = GetMD5HashULong(text, 16);
+            return true;
+        }
+
+        public static bool TryParseHexStringToULong(string text, out ulong id)
+        {
+            id = 0;
+
+            if (text == null || text.Length != 16)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (!byte.TryParse(text.Substring(14 - i * 2, 2), NumberStyles.AllowHexSpecifier, provider: null, out byte hexByte))
+                {
+                    return false;
+                }
+
+                id = id << 8 | hexByte;
+            }
+
             return true;
         }
 
