@@ -187,6 +187,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
                 index.indexFinishedPopulating = true;
                 index.huffman = huffman;
                 index.symbols = new List<IndexEntry>(input.Select(kvp => new IndexEntry(kvp.Key, huffman.CompressToNative(kvp.Value))));
+                index.PopulateSymbolsById();
                 var query = index.Get(pattern);
                 var resultSymbols = query.ResultSymbols;
                 Assert.IsNotNull(resultSymbols);
@@ -219,6 +220,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
                 index.indexFinishedPopulating = true;
                 index.huffman = huffman;
                 index.symbols = testData.Select(dsi => new IndexEntry(dsi)).ToList();
+                index.PopulateSymbolsById();
                 var query = index.Get(queryString);
                 var actualHtml = new ResultsHtmlGenerator(query).Generate(index: index);
                 Assert.AreEqual(expectedHtml, actualHtml);
@@ -229,6 +231,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         {
             var index = new Index();
             index.symbols = new List<IndexEntry>(input.Select(s => new IndexEntry(s)));
+            index.PopulateSymbolsById();
             var foundSymbols = index.FindSymbols(pattern);
             if ((expectedResults == null || expectedResults.Length == 0) && foundSymbols == null)
             {
