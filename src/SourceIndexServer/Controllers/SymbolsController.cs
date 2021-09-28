@@ -41,7 +41,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Controllers
             return Content(result, "text/html", Encoding.UTF8);
         }
 
-        [HttpGet("api/symbolurl")]
+        [HttpGet("/api/symbolurl")]
         public IActionResult GetSymbolUrl(string symbolId)
         {
             try
