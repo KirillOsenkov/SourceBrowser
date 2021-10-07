@@ -194,7 +194,7 @@ tr td.ex {
 a b {
     font-weight: normal;
     margin-right: 12px;
-    color: #2b91af;
+    color: #247b95;
 }
 
 a i {
@@ -562,7 +562,7 @@ a i {
     margin-left: 16px;
     margin-right: 24px;
     margin-top: 0;
-    color: #2b91af;
+    color: #247b95;
     text-align: right;
     vertical-align: top;
 }
@@ -737,7 +737,7 @@ a i {
 
 .t, a.t,
 .l, .lineNumber {
-    color: #2b91af;
+    color: #247b95;
 }
 
 .c {
@@ -997,7 +997,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
 .projectInfo {
-    color: lightgray;
+    color: #747474;
 }
 
 @media only screen and (max-width: 462px) {
@@ -1193,7 +1193,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     a b {
-        color: #2b91af;
+        color: #247b95;
     }
 
     a i {
@@ -1302,7 +1302,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     #ln, #glyph {
-        color: #2b91af;
+        color: #247b95;
     }
 
     .dH {
