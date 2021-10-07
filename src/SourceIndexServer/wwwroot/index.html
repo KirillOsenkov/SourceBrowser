@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Source Browser</title>
@@ -12,7 +12,8 @@
     <frame name="h"
            src="header.html"
            scrolling="no"
-           noresize="noresize">
+           noresize="noresize"
+           aria-label="header">
         <frameset id="splitter"
                   cols="504,*"
                   frameborder="1"
@@ -23,12 +24,14 @@
                    id="n"
                    src="results.html"
                    border="0"
-                   frameborder="0">
+                   frameborder="0"
+                   aria-label="search-results">
             <frame name="s"
                    id="s"
                    src="overview.html"
                    border="0"
-                   frameborder="0">
+                   frameborder="0"
+                   aria-label="content">
         </frameset>
 </frameset>
 </html>
