@@ -1,4 +1,8 @@
-﻿body {
+﻿html {
+    display: flex;
+}
+
+body {
     font-family: Segoe UI, Tahoma, Helvetica, sans-serif;
     cursor: text;
     margin: 0px;
