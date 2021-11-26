@@ -155,3 +155,13 @@ class B : A, System.ICloneable
 
     protected internal override event Action Event;
 }
+
+class TargetedTypeNewTest
+{
+    public TargetedTypeNewTest(B b) { }
+
+    static TargetedTypeNewTest Create()
+    {
+        return new(new());
+    }
+}
