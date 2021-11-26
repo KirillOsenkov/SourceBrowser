@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <AnalysisLevel>5</AnalysisLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
 </Project>
