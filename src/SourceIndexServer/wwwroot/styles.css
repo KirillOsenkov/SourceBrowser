@@ -7,6 +7,7 @@ body {
     cursor: text;
     margin: 0px;
     padding: 0px;
+    flex: 1;
 }
 
 .body, p, ul, ol, h1, h2, h3 {
