@@ -345,7 +345,7 @@ Don't use this page directly, pass #symbolId to get redirected.
 <script src=""scripts.js""></script>
 </head>
 <body onload=""onResultsLoad();"">
-<div id=""symbols"">
+<div id=""symbols"" aria-live=""polite"">
 <div class=""note"">
 Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class=""blueLink"" onclick=""populateSearchBox('assembly '); return false;"">filter the assembly list</a>.
 </div>
@@ -380,7 +380,8 @@ Enter a type or member name or <a href=""/#q=assembly%20"" target=""_top"" class
             string list = string.Join(Environment.NewLine,
                 filePaths
                 .OrderBy(filePath => Paths.StripExtension(filePath))
-                .Select(filePath => "<a href=\"../" + filePath + ".html#" + symbolId + "\"><div class=\"partialTypeLink\">" + filePath + "</div></a>"));
+                .Select((filePath, index) =>
+                    $"<div class=\"partialTypeLink\"><a{(index == 0 ? $" id=\"{symbolId}\"" : "")} href=\"../{filePath}.html#{symbolId}\">{filePath}</a></div>"));
             string content = string.Format(
                 partialTypeDisambiguationFileTemplate,
                 Paths.GetCssPathFromFile(solutionDestinationFolder, disambiguationFileName),
