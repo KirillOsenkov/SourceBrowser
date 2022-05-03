@@ -7,13 +7,14 @@
 </head>
 <body class="headerBody" onload="onHeaderLoad();">
     <span id="searchBoxAndImages">
-        <img id="dotnetLogo" src="content/icons/dotnet.png" width="38" height="38" />
+        <img id="dotnetLogo" src="content/icons/dotnet.png" width="38" height="38" role="presentation" />
         <input type="text"
                name="name"
                maxlength="260"
                id="search-box"
                value=""
-               tabindex="1" />
+               tabindex="1"
+               aria-label="search"/>
         <a id="logoText" href="/" target="_top">Source&nbsp;Browser</a>
         <span id="headerMenu">
             <a id="helpButtonLink" href="overview.html" target="s">

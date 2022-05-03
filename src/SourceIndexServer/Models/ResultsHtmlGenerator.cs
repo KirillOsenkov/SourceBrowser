@@ -75,7 +75,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Properties");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Properties");
             string count = query.ResultMSBuildProperties.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -84,7 +84,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             string header = "MSBuild properties that match '" + query.OriginalString + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", header);
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "MSBuild Properties");
 
             foreach (var text in query.ResultMSBuildProperties)
@@ -109,7 +109,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Items");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Items");
             string count = query.ResultMSBuildItems.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -118,7 +118,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             string header = "MSBuild items that match '" + query.OriginalString + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", header);
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "MSBuild Items");
 
             foreach (var text in query.ResultMSBuildItems)
@@ -143,7 +143,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Targets");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Targets");
             string count = query.ResultMSBuildTargets.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -152,7 +152,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             string header = "MSBuild targets that match '" + query.OriginalString + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", header);
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "MSBuild Targets");
 
             foreach (var text in query.ResultMSBuildTargets)
@@ -177,7 +177,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Tasks");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "MSBuild Tasks");
             string count = query.ResultMSBuildTasks.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -186,7 +186,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             string header = "MSBuild tasks that match '" + query.OriginalString + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", header);
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "MSBuild Tasks");
 
             foreach (var text in query.ResultMSBuildTasks)
@@ -297,7 +297,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Assemblies");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Assemblies");
             string count = query.ResultAssemblies.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -313,7 +313,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             string assemblyHeader = "Assemblies " + assemblySearchTerm + "(" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", assemblyHeader);
             //WriteLine(sb, "<div class=\"resultGroupProjectPath\">{0}</div>", Markup.HtmlEscape(symbolsInAssembly.First().ProjectFilePath));
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "Assemblies");
 
             foreach (var assembly in query.ResultAssemblies)
@@ -342,7 +342,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Projects");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Projects");
             string count = query.ResultProjects.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -352,7 +352,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             string assemblyHeader = "Projects in '" + query.GetSearchTermForProjectSearch() + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", assemblyHeader);
             //WriteLine(sb, "<div class=\"resultGroupProjectPath\">{0}</div>", Markup.HtmlEscape(symbolsInAssembly.First().ProjectFilePath));
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "Projects");
 
             foreach (var project in query.ResultProjects)
@@ -376,7 +376,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             }
 
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Guids");
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", "Guids");
             string count = query.ResultGuids.Count.ToString();
             if (count == Index.MaxRawResults.ToString())
             {
@@ -385,7 +385,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             string guidHeader = "Guids that match '" + query.OriginalString + "' (" + count + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", guidHeader);
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", "Guids");
 
             foreach (var guidText in query.ResultGuids)
@@ -429,12 +429,12 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         private void WriteAssembly(IGrouping<string, DeclaredSymbolInfo> symbolsInAssembly)
         {
             WriteLine("<div class=\"resultGroup\">");
-            WriteLine("<div class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", symbolsInAssembly.Key);
+            WriteLine("<a href=\"javascript:void(0)\" class=\"resultGroupHeader\" onClick=\"toggle(this, '{0}');\">", symbolsInAssembly.Key);
             string assemblyHeader = symbolsInAssembly.Key;
             ////assemblyHeader = assemblyHeader + " (" + symbolsInAssembly.Count().ToString() + ")";
             WriteLine("<div class=\"resultGroupAssemblyName\">{0}</div>", assemblyHeader);
             WriteLine("<div class=\"resultGroupProjectPath\">{0}</div>", Markup.HtmlEscape(symbolsInAssembly.First().ProjectFilePath));
-            WriteLine("</div>");
+            WriteLine("</a>");
             WriteLine("<div id=\"{0}\">", symbolsInAssembly.Key);
 
             foreach (var symbol in symbolsInAssembly)
