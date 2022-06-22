@@ -56,7 +56,7 @@
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.507" />
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.46" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.10.230" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
