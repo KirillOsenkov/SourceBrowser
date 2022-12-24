@@ -9,12 +9,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         public static dynamic GetSemanticFactsService(Document document)
         {
-            return GetService(document, "Microsoft.CodeAnalysis.LanguageServices.ISemanticFactsService", "Microsoft.CodeAnalysis.Workspaces");
+            return GetService(document, "Microsoft.CodeAnalysis.LanguageService.ISemanticFactsService", "Microsoft.CodeAnalysis.Workspaces");
         }
 
         public static dynamic GetSyntaxFactsService(Document document)
         {
-            return GetService(document, "Microsoft.CodeAnalysis.LanguageServices.ISyntaxFactsService", "Microsoft.CodeAnalysis.Workspaces");
+            return GetService(document, "Microsoft.CodeAnalysis.LanguageService.ISyntaxFactsService", "Microsoft.CodeAnalysis.Workspaces");
         }
 
         public static object GetMetadataAsSourceService(Document document)
@@ -33,7 +33,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var languageServicesType = typeof(HostLanguageServices);
             var genericMethod = languageServicesType.GetMethod("GetService", BindingFlags.Public | BindingFlags.Instance);
             var closedGenericMethod = genericMethod.MakeGenericMethod(serviceType);
-            var result = closedGenericMethod.Invoke(languageServices, new object[0]);
+            var result = closedGenericMethod.Invoke(languageServices, Array.Empty<object>());
             if (result == null)
             {
                 throw new NullReferenceException("Unable to get language service: " + serviceType.FullName + " for " + language);
@@ -44,13 +44,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static object GetService(Document document, string serviceType, string assemblyName)
         {
-            var assembly = typeof(Document).Assembly;
-            var documentExtensions = assembly.GetType("Microsoft.CodeAnalysis.Shared.Extensions.DocumentExtensions");
             var serviceAssembly = Assembly.Load(assemblyName);
             var serviceInterfaceType = serviceAssembly.GetType(serviceType);
-            var getLanguageServiceMethod = documentExtensions.GetMethod("GetLanguageService", new Type[] { typeof(Document) });
-            getLanguageServiceMethod = getLanguageServiceMethod.MakeGenericMethod(serviceInterfaceType);
-            var service = getLanguageServiceMethod.Invoke(null, new object[] { document });
+            var genericMethod = typeof(LanguageServices).GetMethod(nameof(LanguageServices.GetService), BindingFlags.Public | BindingFlags.Instance);
+            var closedGenericMethod = genericMethod.MakeGenericMethod(serviceInterfaceType);
+            var service = closedGenericMethod.Invoke(document.Project.Services, Array.Empty<object>());
             return service;
         }
     }
