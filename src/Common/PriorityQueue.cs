@@ -1,6 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
+// WARNING: this class has a bug!
+// See here for an explanation:
+// https://github.com/dotnet/wpf/blob/bcd972664606974adc09f7f1b8c7a9a14c33c899/src/Microsoft.DotNet.Wpf/src/Shared/MS/Internal/LegacyPriorityQueue.cs#L21
+// I don't care enough to switch to the new implementation, but it's important to leave this notice here.
+// We copied the old code before the fix was made in the WPF sources.
+
 namespace Microsoft.SourceBrowser.Common
 {
     /// <summary>

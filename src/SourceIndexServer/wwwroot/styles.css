@@ -1,8 +1,13 @@
-﻿body {
+﻿html {
+    display: flex;
+}
+
+body {
     font-family: Segoe UI, Tahoma, Helvetica, sans-serif;
     cursor: text;
     margin: 0px;
     padding: 0px;
+    flex: 1;
 }
 
 .body, p, ul, ol, h1, h2, h3 {
@@ -12,7 +17,7 @@
 h1 {
     font-family: 'Segoe UI Light', 'Segoe UI', Tahoma, Helvetica, sans-serif;
     font-weight: 100;
-    background-color: deepskyblue;
+    background-color: #0099ce;
     color: white;
     padding: 16px;
 }
@@ -71,14 +76,14 @@ table.ex {
     border-right-width: 0px;
 }
 
-thead td.ex {
-    background-color: deepskyblue;
+thead th.ex {
+    background-color: #007ba6;
     color: white;
     border-style: solid;
-    border-color: deepskyblue;
+    border-color: #0099ce;
 }
 
-tr td.ex {
+tr .ex {
     vertical-align: top;
     border-style: solid;
     border-color: lightgray;
@@ -122,6 +127,7 @@ tr td.ex {
     padding: 6px 6px 6px 28px;
     margin-top: 16px;
     background-color: #e7f5ff;
+    display: block;
 }
 
 .resultGroupHeader::before {
@@ -194,7 +200,7 @@ tr td.ex {
 a b {
     font-weight: normal;
     margin-right: 12px;
-    color: #2b91af;
+    color: #247b95;
 }
 
 a i {
@@ -562,7 +568,7 @@ a i {
     margin-left: 16px;
     margin-right: 24px;
     margin-top: 0;
-    color: #2b91af;
+    color: #247b95;
     text-align: right;
     vertical-align: top;
 }
@@ -737,7 +743,7 @@ a i {
 
 .t, a.t,
 .l, .lineNumber {
-    color: #2b91af;
+    color: #247b95;
 }
 
 .c {
@@ -997,7 +1003,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
 .projectInfo {
-    color: lightgray;
+    color: #747474;
 }
 
 @media only screen and (max-width: 462px) {
@@ -1193,7 +1199,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     a b {
-        color: #2b91af;
+        color: #247b95;
     }
 
     a i {
@@ -1302,7 +1308,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     #ln, #glyph {
-        color: #2b91af;
+        color: #247b95;
     }
 
     .dH {
@@ -1316,7 +1322,7 @@ ol a, ol a:link, ol a:hover, ol a:focus, ol a:active,
     }
 
     #search-box {
-        background: black;
+        background-color: black;
         border-color: #555;
     }
 

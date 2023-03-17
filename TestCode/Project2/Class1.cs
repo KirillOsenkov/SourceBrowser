@@ -83,7 +83,7 @@ class Class<U> : I1
 
     public class NestedGeneric<T>
     {
-        public T GetT(U u) { }
+        public T GetT(U u) { throw null; }
     }
 
     void I1.Foo()
@@ -145,7 +145,12 @@ class B : A, System.ICloneable
         var b = new B();
     }
 
-    protected override string Name
+    public object Clone()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override string Name
     {
         get
         {
@@ -154,4 +159,14 @@ class B : A, System.ICloneable
     }
 
     protected internal override event Action Event;
+}
+
+class TargetedTypeNewTest
+{
+    public TargetedTypeNewTest(B b) { }
+
+    static TargetedTypeNewTest Create()
+    {
+        return new(new());
+    }
 }

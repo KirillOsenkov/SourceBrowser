@@ -34,6 +34,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
             assemblies.Clear();
             projects.Clear();
             symbols.Clear();
+            symbolsById.Clear();
             guids.Clear();
             projectToAssemblyIndexMap.Clear();
             msbuildProperties.Clear();
@@ -47,6 +48,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         public List<AssemblyInfo> assemblies = new List<AssemblyInfo>();
         public List<string> projects = new List<string>();
         public List<IndexEntry> symbols = new List<IndexEntry>();
+        public Dictionary<ulong, int> symbolsById = new Dictionary<ulong, int>();
         public List<string> guids = new List<string>();
         public Dictionary<string, int> projectToAssemblyIndexMap = new Dictionary<string, int>();
         public List<string> msbuildProperties = new List<string>();
@@ -58,6 +60,15 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
         public bool indexFinishedPopulating = false;
         public double progress = 0.0;
         public string loadErrorMessage = null;
+
+        public void PopulateSymbolsById()
+        {
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                var symbol = symbols[i];
+                symbolsById[symbol.ID] = i;
+            }
+        }
 
         public Query Get(string queryString)
         {
@@ -446,6 +457,7 @@ namespace Microsoft.SourceBrowser.SourceIndexServer.Models
 
             this.huffman = null;
             this.symbols = null;
+            this.symbolsById = null;
             this.assemblies = null;
             this.projects = null;
         }

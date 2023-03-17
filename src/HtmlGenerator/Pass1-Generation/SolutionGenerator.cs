@@ -122,11 +122,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static MSBuildWorkspace CreateWorkspace(ImmutableDictionary<string, string> propertiesOpt = null)
         {
             propertiesOpt = propertiesOpt ?? ImmutableDictionary<string, string>.Empty;
-
-            // Explicitly add "CheckForSystemRuntimeDependency = true" property to correctly resolve facade references.
-            // See https://github.com/dotnet/roslyn/issues/560
-            propertiesOpt = propertiesOpt.Add("CheckForSystemRuntimeDependency", "true");
-            propertiesOpt = propertiesOpt.Add("VisualStudioVersion", "15.0");
             propertiesOpt = propertiesOpt.Add("AlwaysCompileMarkupFilesInSeparateDomain", "false");
 
             var w = MSBuildWorkspace.Create(properties: propertiesOpt);

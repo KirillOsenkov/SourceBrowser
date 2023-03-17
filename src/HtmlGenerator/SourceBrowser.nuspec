@@ -23,7 +23,6 @@
     <file src="*.exe.config" target="tools" />
     <file src="*.dll" target="tools" />
     <file src="TypeScriptSupport\*.*" target="tools\TypeScriptSupport" />
-    <file src="web\*.*" target="tools\web" />
-    <file src="web\**\*.*" target="tools\web" />
+    <file src="web\**\*" target="tools\web" />
   </files>
 </package>

@@ -92,6 +92,8 @@ function processHash() {
             return;
         }
 
+        anchor = decodeComma(anchor);
+
         var hashParts = anchor.split(anchorSplitChar);
         if (anchor.indexOf(anchorSplitChar) == -1 && anchor.indexOf("#") > -1) {
             // keep old URLs working for compat
@@ -658,6 +660,9 @@ function redirect(map, prefixLength) {
     var anchor = document.location.hash;
     if (anchor) {
         anchor = anchor.slice(1);
+
+        anchor = decodeComma(anchor);
+
         var hashParts = anchor.split(anchorSplitChar);
         var anchorHasReferencesSuffix = false;
         if (hashParts.length > 1 && hashParts[hashParts.length - 1] == "references") {
@@ -691,6 +696,9 @@ function redirectToNextLevelRedirectFile() {
     var anchor = document.location.hash;
     if (anchor) {
         anchor = anchor.slice(1);
+
+        anchor = decodeComma(anchor);
+
         var hashParts = anchor.split(anchorSplitChar);
         var anchorHasReferencesSuffix = false;
         if (hashParts.length > 1 && hashParts[hashParts.length - 1] == "references") {
@@ -1227,6 +1235,12 @@ function setPageTitle(title) {
     if (top && top.document) {
         top.document.title = title;
     }
+}
+
+function decodeComma(text) {
+    text = text.replace("%2c", ",");
+    text = text.replace("%2C", ",");
+    return text;
 }
 
 function getDisplayableLineNumber(text) {

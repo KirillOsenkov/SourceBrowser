@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using CS = Microsoft.CodeAnalysis.CSharp;
 using VB = Microsoft.CodeAnalysis.VisualBasic;
 
@@ -50,7 +51,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
 
             // now that we've passed the empty array allocation check, disable all further new keywords
-            if (range.ClassificationType == Constants.ClassificationKeyword && text == "new")
+            // except for target-typed 'new' expressions
+            if (range.ClassificationType == Constants.ClassificationKeyword && text == "new" &&
+                !(token.Parent is ImplicitObjectCreationExpressionSyntax))
             {
                 return null;
             }

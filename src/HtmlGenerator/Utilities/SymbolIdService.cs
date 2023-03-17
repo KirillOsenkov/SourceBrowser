@@ -21,7 +21,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static string GetSymbolString(ISymbol symbol)
         {
-
             if (symbol.Kind == SymbolKind.Parameter ||
                 symbol.Kind == SymbolKind.Local)
             {
