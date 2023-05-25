@@ -166,7 +166,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 .ToArray());
 
             string fileName;
-            if (document.FilePath != null)
+            if (document.FilePath != null && !document.GetLinkedDocumentIds().Any())
             {
                 fileName = Path.GetFileName(document.FilePath);
             }
