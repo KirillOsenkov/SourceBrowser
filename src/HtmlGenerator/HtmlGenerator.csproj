@@ -10,6 +10,7 @@
     <DebugType>embedded</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <NoWarn>$(NoWarn);VSTHRD002;VSTHRD103</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <NuGetPackageId>SourceBrowser</NuGetPackageId>

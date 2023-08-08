@@ -38,7 +38,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.Document = document;
         }
 
-        public async Task Generate()
+        public async Task GenerateAsync()
         {
             if (Configuration.CalculateRoslynSemantics)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     append: false,
                     encoding: Encoding.UTF8))
                 {
-                    await GenerateHtml(streamWriter);
+                    await GenerateHtmlAsync(streamWriter);
                 }
             }
             else
@@ -121,7 +121,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 using (var memoryStream = new MemoryStream())
                 using (var streamWriter = new StreamWriter(memoryStream))
                 {
-                    await GeneratePre(streamWriter);
+                    await GeneratePreAsync(streamWriter);
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.relativePathToRoot = Paths.CalculateRelativePathToRoot(documentDestinationFilePath, SolutionDestinationFolder);
         }
 
-        private async Task GenerateHtml(StreamWriter writer)
+        private async Task GenerateHtmlAsync(StreamWriter writer)
         {
             var title = Document.Name;
             var lineCount = Text.Lines.Count;
@@ -148,21 +148,21 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
             // pass a value larger than 0 to generate line numbers in JavaScript (to reduce HTML size)
             var prefix = Markup.GetDocumentPrefix(title, relativePathToRoot, pregenerateLineNumbers ? 0 : lineCount);
-            writer.Write(prefix);
+            await writer.WriteAsync(prefix);
             GenerateHeader(writer.WriteLine);
 
-            var ranges = (await classifier.Classify(Document, Text))?.ToArray();
+            var ranges = (await classifier.ClassifyAsync(Document, Text))?.ToArray();
 
             // pass a value larger than 0 to generate line numbers statically at HTML generation time
             var table = Markup.GetTablePrefix(
                 DocumentUrl,
                 pregenerateLineNumbers ? lineCount : 0,
                 GenerateGlyphs(ranges));
-            writer.WriteLine(table);
+            await writer.WriteLineAsync(table);
 
             GeneratePre(ranges, writer, lineCount);
             var suffix = Markup.GetDocumentSuffix();
-            writer.WriteLine(suffix);
+            await writer.WriteLineAsync(suffix);
         }
 
         private ISymbol GetSymbolForRange(Classification.Range r)
@@ -285,9 +285,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 projectLink: (Display: projectGenerator.ProjectSourcePath, Url: "/#" + Document.Project.AssemblyName, projectGenerator.AssemblyName));
         }
 
-        private async Task GeneratePre(StreamWriter writer, int lineCount = 0)
+        private async Task GeneratePreAsync(StreamWriter writer, int lineCount = 0)
         {
-            var ranges = await classifier.Classify(Document, Text);
+            var ranges = await classifier.ClassifyAsync(Document, Text);
             GeneratePre(ranges, writer, lineCount);
         }
 

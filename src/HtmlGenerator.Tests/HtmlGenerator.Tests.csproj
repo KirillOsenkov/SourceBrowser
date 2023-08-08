@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <NoWarn>$(NoWarn);VSTHRD002;VSTHRD103</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
