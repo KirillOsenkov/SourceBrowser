@@ -254,7 +254,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     SemanticModel.GetDeclaredSymbol(typeDeclaration) is INamedTypeSymbol derivedType &&
                     referencedSymbol is INamedTypeSymbol baseSymbol)
                 {
-                    if (baseSymbol.TypeKind == TypeKind.Class && baseSymbol.Equals(derivedType.BaseType))
+                    if (baseSymbol.TypeKind == TypeKind.Class && baseSymbol.Equals(derivedType.BaseType, SymbolEqualityComparer.Default))
                     {
                         kind = ReferenceKind.DerivedType;
                     }

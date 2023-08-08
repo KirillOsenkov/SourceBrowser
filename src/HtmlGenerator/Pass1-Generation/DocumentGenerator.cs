@@ -58,7 +58,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 this.getBindableParentDelegate = (Func<SyntaxToken, SyntaxNode>)
                     Delegate.CreateDelegate(typeof(Func<SyntaxToken, SyntaxNode>), SyntaxFactsService, getBindableParent);
 
-                this.DeclaredSymbols = new HashSet<ISymbol>();
+                this.DeclaredSymbols = new HashSet<ISymbol>(SymbolEqualityComparer.Default);
 
                 Interlocked.Increment(ref projectGenerator.DocumentCount);
                 Interlocked.Add(ref projectGenerator.LinesOfCode, Text.Lines.Count);

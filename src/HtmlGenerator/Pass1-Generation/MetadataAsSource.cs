@@ -90,7 +90,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         addSourceToAsync = ReflectAddSourceToAsync(metadataAsSourceService);
                     }
 
-                    var texts = new Dictionary<INamedTypeSymbol, string>();
+                    var texts = new Dictionary<INamedTypeSymbol, string>(SymbolEqualityComparer.Default);
 
                     Parallel.ForEach(
                         types,

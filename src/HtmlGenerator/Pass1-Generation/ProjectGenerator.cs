@@ -35,8 +35,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.SolutionGenerator = solutionGenerator;
             this.Project = project;
             this.ProjectFilePath = project.FilePath ?? solutionGenerator.ProjectFilePath;
-            this.DeclaredSymbols = new Dictionary<ISymbol, string>();
-            this.BaseMembers = new Dictionary<ISymbol, ISymbol>();
+            this.DeclaredSymbols = new Dictionary<ISymbol, string>(SymbolEqualityComparer.Default);
+            this.BaseMembers = new Dictionary<ISymbol, ISymbol>(SymbolEqualityComparer.Default);
             this.ImplementedInterfaceMembers = new MultiDictionary<ISymbol, ISymbol>();
             this.assemblyAttributesFileName = MetadataAsSource.GeneratedAssemblyAttributesFileName + (project.Language == LanguageNames.CSharp ? ".cs" : ".vb");
             PluginSymbolVisitors = SolutionGenerator.PluginAggregator?.ManufactureSymbolVisitors(project).ToArray();
