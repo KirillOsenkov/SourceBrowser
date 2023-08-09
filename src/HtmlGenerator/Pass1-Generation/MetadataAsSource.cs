@@ -16,7 +16,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
     {
         private static Func<Document, ISymbol, CancellationToken, Task<Document>> addSourceToAsync = null;
 
-        private static Func<Document, ISymbol, CancellationToken, Task<Document>> ReflectAddSourceToAsync(object service)
+        private static Func<Document, ISymbol, CancellationToken, Task<Document>> ReflectAddSourceTo(object service)
         {
             var assembly = Assembly.Load("Microsoft.CodeAnalysis.Features");
             var type = assembly.GetType("Microsoft.CodeAnalysis.MetadataAsSource.IMetadataAsSourceService");
@@ -87,10 +87,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     var metadataAsSourceService = WorkspaceHacks.GetMetadataAsSourceService(tempDocument);
                     if (addSourceToAsync == null)
                     {
-                        addSourceToAsync = ReflectAddSourceToAsync(metadataAsSourceService);
+                        addSourceToAsync = ReflectAddSourceTo(metadataAsSourceService);
                     }
 
-                    var texts = new Dictionary<INamedTypeSymbol, string>();
+                    var texts = new Dictionary<INamedTypeSymbol, string>(SymbolEqualityComparer.Default);
 
                     Parallel.ForEach(
                         types,

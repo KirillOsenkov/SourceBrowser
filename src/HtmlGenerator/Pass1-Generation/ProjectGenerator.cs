@@ -35,8 +35,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.SolutionGenerator = solutionGenerator;
             this.Project = project;
             this.ProjectFilePath = project.FilePath ?? solutionGenerator.ProjectFilePath;
-            this.DeclaredSymbols = new Dictionary<ISymbol, string>();
-            this.BaseMembers = new Dictionary<ISymbol, ISymbol>();
+            this.DeclaredSymbols = new Dictionary<ISymbol, string>(SymbolEqualityComparer.Default);
+            this.BaseMembers = new Dictionary<ISymbol, ISymbol>(SymbolEqualityComparer.Default);
             this.ImplementedInterfaceMembers = new MultiDictionary<ISymbol, ISymbol>();
             this.assemblyAttributesFileName = MetadataAsSource.GeneratedAssemblyAttributesFileName + (project.Language == LanguageNames.CSharp ? ".cs" : ".vb");
             PluginSymbolVisitors = SolutionGenerator.PluginAggregator?.ManufactureSymbolVisitors(project).ToArray();
@@ -81,7 +81,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.OtherFiles = new List<string>();
         }
 
-        public async Task Generate()
+        public async Task GenerateAsync()
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                             {
                                 while (partition.MoveNext())
                                 {
-                                  await GenerateDocument(partition.Current);
+                                  await GenerateDocumentAsync(partition.Current);
                                 }
                             }
                         }));
@@ -167,7 +167,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     GenerateIndex();
                 }
 
-                var compilation = Project.GetCompilationAsync().Result;
+                var compilation = await Project.GetCompilationAsync();
                 var diagnostics = compilation.GetDiagnostics().Select(d => d.ToString()).ToArray();
                 if (diagnostics.Length > 0)
                 {
@@ -198,17 +198,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             NamespaceExplorer.WriteNamespaceExplorer(this.AssemblyName, symbols, ProjectDestinationFolder);
         }
 
-        private Task GenerateDocument(Document document)
+        private async Task GenerateDocumentAsync(Document document)
         {
             try
             {
                 var documentGenerator = new DocumentGenerator(this, document);
-                return documentGenerator.Generate();
+                await documentGenerator.GenerateAsync();
             }
             catch (Exception e)
             {
                 Log.Exception(e, "Document generation failed for: " + (document.FilePath ?? document.ToString()));
-                return Task.FromResult(e);
+                throw;
             }
         }
 

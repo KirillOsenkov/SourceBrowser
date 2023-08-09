@@ -11,7 +11,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public partial class Classification
     {
-        public async Task<IEnumerable<Range>> Classify(Document document, SourceText text)
+        public async Task<IEnumerable<Range>> ClassifyAsync(Document document, SourceText text)
         {
             var span = TextSpan.FromBounds(0, text.Length);
 

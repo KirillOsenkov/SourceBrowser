@@ -324,7 +324,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     CurrentAssemblyName = project.AssemblyName;
 
                     var generator = new ProjectGenerator(this, project);
-                    generator.Generate().GetAwaiter().GetResult();
+                    generator.GenerateAsync().GetAwaiter().GetResult();
 
                     File.AppendAllText(Paths.ProcessedAssemblies, project.AssemblyName + Environment.NewLine, Encoding.UTF8);
                 }

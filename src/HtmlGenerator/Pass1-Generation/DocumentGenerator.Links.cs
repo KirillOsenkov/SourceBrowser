@@ -354,11 +354,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         {
             var declaringType = declaredSymbol.ContainingType;
             var interfaces = declaringType.AllInterfaces;
+            var comparer = SymbolEqualityComparer.Default;
             foreach (var implementedInterface in interfaces)
             {
                 foreach (var member in implementedInterface.GetMembers())
                 {
-                    if (declaringType.FindImplementationForInterfaceMember(member) == declaredSymbol)
+                    if (comparer.Equals(declaringType.FindImplementationForInterfaceMember(member), declaredSymbol))
                     {
                         ProcessReference(
                             range,

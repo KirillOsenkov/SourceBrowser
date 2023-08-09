@@ -4,6 +4,11 @@
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
+    <!-- 
+        The following packages do not have netstandard2.0 versions and hence produce NU1701 
+        warnings: Microsoft.Build, Microsoft.VisualStudio.Setup
+    -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
     <DefineConstants>$(DefineConstants);NET472</DefineConstants>

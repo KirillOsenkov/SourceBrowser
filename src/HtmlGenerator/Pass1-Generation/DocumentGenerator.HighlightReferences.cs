@@ -5,7 +5,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public partial class DocumentGenerator
     {
-        private readonly Dictionary<ISymbol, int> localIds = new Dictionary<ISymbol, int>();
+        private readonly Dictionary<ISymbol, int> localIds = new Dictionary<ISymbol, int>(SymbolEqualityComparer.Default);
 
         private HtmlElementInfo HighlightDefinition(ISymbol declaredSymbol)
         {
