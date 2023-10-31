@@ -51,6 +51,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.solution = CreateSolution(solutionFilePath, properties, doNotIncludeReferencedProjects);
             this.Federation = federation ?? new Federation();
             this.PluginBlacklist = pluginBlacklist ?? Enumerable.Empty<string>();
+            this.IncludeSourceGeneratedDocuments = includeSourceGeneratedDocuments;
 
             if (LoadPlugins)
             {
