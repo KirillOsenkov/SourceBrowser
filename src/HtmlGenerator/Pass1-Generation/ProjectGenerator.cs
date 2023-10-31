@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.SourceBrowser.Common;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
@@ -81,6 +82,23 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             this.OtherFiles = new List<string>();
         }
 
+        private async IAsyncEnumerable<Document> GetDocumentsAsync()
+        {
+            foreach(var d in Project.Documents)
+            {
+                yield return d;
+            }
+
+            if (SolutionGenerator.IncludeSourceGeneratedDocuments)
+            {
+                var generatedDocuments = await Project.GetSourceGeneratedDocumentsAsync();
+                foreach(var document in generatedDocuments)
+                {
+                    yield return document;
+                }
+            }
+        }
+
         public async Task GenerateAsync()
         {
             try
@@ -124,7 +142,14 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     Directory.CreateDirectory(ProjectDestinationFolder);
                 }
 
-                var documents = Project.Documents.Where(IncludeDocument).ToList();
+                List<Document> documents = new();
+                await foreach(var d in GetDocumentsAsync())
+                {
+                    if (IncludeDocument(d))
+                    {
+                        documents.Add(d);
+                    }
+                }
 
                 var generationTasks = Partitioner.Create(documents)
                     .GetPartitions(Environment.ProcessorCount)

@@ -22,7 +22,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             IReadOnlyList<string> pluginBlacklist,
             bool loadPlugins,
             bool excludeTests,
-            string rootPath)
+            string rootPath,
+            bool includeSourceGeneratedDocuments)
         {
             SolutionDestinationFolder = solutionDestinationFolder;
             Projects = projects;
@@ -38,6 +39,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             LoadPlugins = loadPlugins;
             ExcludeTests = excludeTests;
             RootPath = rootPath;
+            IncludeSourceGeneratedDocuments = includeSourceGeneratedDocuments;
         }
 
         public string SolutionDestinationFolder { get; }
@@ -45,6 +47,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public IReadOnlyDictionary<string, string> Properties { get; }
         public bool EmitAssemblyList { get; }
         public bool DoNotIncludeReferencedProjects { get; }
+        public bool IncludeSourceGeneratedDocuments { get; }
         public bool Force { get; }
         public bool NoBuiltInFederations { get; }
         public IReadOnlyDictionary<string, string> OfflineFederations { get; }
@@ -70,6 +73,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var pluginBlacklist = new List<string>();
             var loadPlugins = false;
             var excludeTests = false;
+            var includeSourceGeneratedDocuments = true;
             var rootPath = (string)null;
 
             foreach (var arg in args)
@@ -214,6 +218,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     excludeTests = true;
                     continue;
                 }
+                
+                if (arg == "/excludeSourceGeneratedDocuments")
+                {
+                    includeSourceGeneratedDocuments = false;
+                    continue;
+                }
 
                 if (arg.StartsWith("/root:", StringComparison.Ordinal))
                 {
@@ -258,7 +268,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 pluginBlacklist,
                 loadPlugins,
                 excludeTests,
-                rootPath);
+                rootPath,
+                includeSourceGeneratedDocuments);
         }
 
         private static void AddProject(List<string> projects, string path)

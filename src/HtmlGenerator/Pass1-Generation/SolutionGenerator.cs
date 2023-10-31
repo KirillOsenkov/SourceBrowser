@@ -20,6 +20,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         public string ProjectFilePath { get; private set; }
         public IReadOnlyDictionary<string, string> ServerPathMappings { get; set; }
         private Federation Federation { get; set; }
+        public bool IncludeSourceGeneratedDocuments { get; }
+
         public IEnumerable<string> PluginBlacklist { get; private set; }
         private readonly HashSet<string> typeScriptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public MEF.PluginAggregator PluginAggregator;
@@ -39,7 +41,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             Federation federation = null,
             IReadOnlyDictionary<string, string> serverPathMappings = null,
             IEnumerable<string> pluginBlacklist = null,
-            bool doNotIncludeReferencedProjects = false)
+            bool doNotIncludeReferencedProjects = false,
+            bool includeSourceGeneratedDocuments = true)
         {
             this.SolutionSourceFolder = Path.GetDirectoryName(solutionFilePath);
             this.SolutionDestinationFolder = solutionDestinationFolder;
