@@ -15,9 +15,9 @@
   <PropertyGroup>
     <NuGetPackageId>SourceBrowser</NuGetPackageId>
     <NuSpecFile>$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
-    <NuGetVersion>1.0.44</NuGetVersion>
+    <NuGetVersion>1.0.45</NuGetVersion>
     <NuGetVersionRoslyn>4.8.0</NuGetVersionRoslyn>
-    <NuGetVersionMSBuild>16.10.0</NuGetVersionMSBuild>
+    <NuGetVersionMSBuild>17.5.0</NuGetVersionMSBuild>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
@@ -52,10 +52,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(NuGetVersionRoslyn)" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.787" />
-    <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.46" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.2.169" />
+    <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.88" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.10.230" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
