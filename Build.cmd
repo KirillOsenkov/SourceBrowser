@@ -1,1 +1,0 @@
-msbuild /r /m /bl
