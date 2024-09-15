@@ -23,4 +23,4 @@ jobs:
           dotnet-version: 8.0.x
       - run: dotnet build
       - run: dotnet test --no-build
-      - run: ./GenerateTestSite.ps1
+      - run: ./GenerateTestSite.ps1 /force
