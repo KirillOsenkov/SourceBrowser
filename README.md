@@ -19,8 +19,8 @@ Now also available on NuGet:
  
 ## Instructions to generate and run a test website
  
- 1. GenerateTestSite.cmd
- 2. RunTestSite.cmd
+ 1. GenerateTestSite.ps1
+ 2. RunTestSite.ps1
 
 ## In Visual Studio 2019:
  1. Open SourceBrowser.sln.
