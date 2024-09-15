@@ -56,13 +56,11 @@
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.93" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\MEF\MEF.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <Target Name="PublishWebsite" AfterTargets="CoreBuild" BeforeTargets="BuildNuGet">
     <MSBuild Targets="Publish" Projects="$(MSBuildThisFileDirectory)..\SourceIndexServer\SourceIndexServer.csproj" Properties="PublishDir=$(TargetDir)\Web;Configuration=Release" RemoveProperties="TargetFramework" />
