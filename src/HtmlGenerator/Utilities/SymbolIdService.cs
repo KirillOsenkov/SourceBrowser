@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
-using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
@@ -334,6 +333,97 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     // We don't want any overlays
                     return StandardGlyphItem.GlyphItemPublic;
             }
+        }
+
+        private enum StandardGlyphGroup
+        {
+            GlyphGroupClass = 0,
+            GlyphGroupConstant = 6,
+            GlyphGroupDelegate = 12,
+            GlyphGroupEnum = 18,
+            GlyphGroupEnumMember = 24,
+            GlyphGroupEvent = 30,
+            GlyphGroupException = 36,
+            GlyphGroupField = 42,
+            GlyphGroupInterface = 48,
+            GlyphGroupMacro = 54,
+            GlyphGroupMap = 60,
+            GlyphGroupMapItem = 66,
+            GlyphGroupMethod = 72,
+            GlyphGroupOverload = 78,
+            GlyphGroupModule = 84,
+            GlyphGroupNamespace = 90,
+            GlyphGroupOperator = 96,
+            GlyphGroupProperty = 102,
+            GlyphGroupStruct = 108,
+            GlyphGroupTemplate = 114,
+            GlyphGroupTypedef = 120,
+            GlyphGroupType = 126,
+            GlyphGroupUnion = 132,
+            GlyphGroupVariable = 138,
+            GlyphGroupValueType = 144,
+            GlyphGroupIntrinsic = 150,
+            GlyphGroupJSharpMethod = 156,
+            GlyphGroupJSharpField = 162,
+            GlyphGroupJSharpClass = 168,
+            GlyphGroupJSharpNamespace = 174,
+            GlyphGroupJSharpInterface = 180,
+            GlyphGroupError = 186,
+            GlyphBscFile = 191,
+            GlyphAssembly = 192,
+            GlyphLibrary = 193,
+            GlyphVBProject = 194,
+            GlyphCoolProject = 196,
+            GlyphCppProject = 199,
+            GlyphDialogId = 200,
+            GlyphOpenFolder = 201,
+            GlyphClosedFolder = 202,
+            GlyphArrow = 203,
+            GlyphCSharpFile = 204,
+            GlyphCSharpExpansion = 205,
+            GlyphKeyword = 206,
+            GlyphInformation = 207,
+            GlyphReference = 208,
+            GlyphRecursion = 209,
+            GlyphXmlItem = 210,
+            GlyphJSharpProject = 211,
+            GlyphJSharpDocument = 212,
+            GlyphForwardType = 213,
+            GlyphCallersGraph = 214,
+            GlyphCallGraph = 215,
+            GlyphWarning = 216,
+            GlyphMaybeReference = 217,
+            GlyphMaybeCaller = 218,
+            GlyphMaybeCall = 219,
+            GlyphExtensionMethod = 220,
+            GlyphExtensionMethodInternal = 221,
+            GlyphExtensionMethodFriend = 222,
+            GlyphExtensionMethodProtected = 223,
+            GlyphExtensionMethodPrivate = 224,
+            GlyphExtensionMethodShortcut = 225,
+            GlyphXmlAttribute = 226,
+            GlyphXmlChild = 227,
+            GlyphXmlDescendant = 228,
+            GlyphXmlNamespace = 229,
+            GlyphXmlAttributeQuestion = 230,
+            GlyphXmlAttributeCheck = 231,
+            GlyphXmlChildQuestion = 232,
+            GlyphXmlChildCheck = 233,
+            GlyphXmlDescendantQuestion = 234,
+            GlyphXmlDescendantCheck = 235,
+            GlyphCompletionWarning = 236,
+            GlyphGroupUnknown = 237
+        }
+    
+        private enum StandardGlyphItem
+        {
+            GlyphItemPublic,
+            GlyphItemInternal,
+            GlyphItemFriend,
+            GlyphItemProtected,
+            GlyphItemPrivate,
+            GlyphItemShortcut,
+            TotalGlyphItems
         }
     }
 }

@@ -29,7 +29,6 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             SolutionGenerator.LoadPlugins = options.LoadPlugins;
             SolutionGenerator.ExcludeTests = options.ExcludeTests;
 
-            AssertTraceListener.Register();
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler.HandleFirstChanceException;
 
             // This loads the real MSBuild from the toolset so that all targets and SDKs can be found

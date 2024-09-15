@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>HtmlGenerator</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Microsoft.SourceBrowser.HtmlGenerator</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>embedded</DebugType>
@@ -54,7 +54,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.2.337" />
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.93" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="17.11.260" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
