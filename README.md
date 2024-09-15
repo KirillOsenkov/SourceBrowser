@@ -12,10 +12,10 @@ Of course Source Browser allows you to browse its own source code:
 Now also available on NuGet:
 [https://www.nuget.org/packages/SourceBrowser](https://www.nuget.org/packages/SourceBrowser)
 
-## Instructions to Build (requires Visual Studio 2019):
+## Instructions to Build:
  1. git clone https://github.com/KirillOsenkov/SourceBrowser
  2. cd SourceBrowser
- 3. Build.cmd
+ 3. dotnet build
  
 ## Instructions to generate and run a test website
  
