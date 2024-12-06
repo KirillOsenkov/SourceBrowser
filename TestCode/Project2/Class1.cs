@@ -178,3 +178,9 @@ class TypeWithPrimaryConstructor(A a, B b)
 }
 
 class EmptyType;
+
+class TypeWithAllowsRefStruct<T>
+    where T : allows ref struct
+{
+    public static T Return(T value) => value;
+}
