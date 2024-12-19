@@ -22,6 +22,8 @@
     <file src="*.exe" target="tools" />
     <file src="*.exe.config" target="tools" />
     <file src="*.dll" target="tools" />
+    <file src="BuildHost-net472\*.*" target="tools\BuildHost-net472" />
+    <file src="BuildHost-netcore\*.*" target="tools\BuildHost-netcore" />
     <file src="TypeScriptSupport\*.*" target="tools\TypeScriptSupport" />
     <file src="web\**\*" target="tools\web" />
   </files>
