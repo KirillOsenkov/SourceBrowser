@@ -54,7 +54,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.3.45" />
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.93" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.10.230" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="17.14.249" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="System.Memory" Version="4.6.0" />
