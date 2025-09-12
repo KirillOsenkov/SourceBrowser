@@ -35,9 +35,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             var fullPath = project.FilePath;
             IEnumerable<string> folders = null;
 
-            // it is possible that the solution has more projects than mentioned in the .sln file
+            // it is possible that the solution has more projects than mentioned in the .sln/.slnx file
             // because Roslyn might add more projects from project references that aren't mentioned
-            // in the .sln
+            // in the .sln/.slnx
             projectToSolutionFolderMap?.TryGetValue(fullPath, out folders);
             AddProjectToFolder(root, project, folders);
         }
@@ -57,7 +57,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static Dictionary<string, IEnumerable<string>> GetProjectToSolutionFolderMap(string solutionFilePath)
         {
-            if (!solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
+            if (!solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) &&
+                !solutionFilePath.EndsWith(".slnx", StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }

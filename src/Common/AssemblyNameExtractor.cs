@@ -22,7 +22,8 @@ namespace Microsoft.SourceBrowser.Common
                 return null;
             }
 
-            if (projectOrSolutionFilePath.EndsWith(".sln", System.StringComparison.OrdinalIgnoreCase))
+            if (projectOrSolutionFilePath.EndsWith(".sln", System.StringComparison.OrdinalIgnoreCase) ||
+                projectOrSolutionFilePath.EndsWith(".slnx", System.StringComparison.OrdinalIgnoreCase))
             {
                 return GetAssemblyNamesFromSolution(projectOrSolutionFilePath);
             }

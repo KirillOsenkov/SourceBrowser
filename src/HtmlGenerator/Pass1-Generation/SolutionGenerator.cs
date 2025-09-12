@@ -452,7 +452,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             try
             {
                 Solution solution = null;
-                if (solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
+                if (solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ||
+                    solutionFilePath.EndsWith(".slnx", StringComparison.OrdinalIgnoreCase))
                 {
                     properties = AddSolutionProperties(properties, solutionFilePath);
                     var workspace = CreateWorkspace(properties);
