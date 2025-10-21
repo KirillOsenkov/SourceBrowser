@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Build.Evaluation;
+using Microsoft.VisualStudio.SolutionPersistence;
+using Microsoft.VisualStudio.SolutionPersistence.Model;
+using Microsoft.VisualStudio.SolutionPersistence.Serializer;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Evaluation;
 
 namespace Microsoft.SourceBrowser.Common
 {
@@ -15,7 +19,7 @@ namespace Microsoft.SourceBrowser.Common
         private static readonly Regex assemblyNameRegex = new Regex(@"<(?:Module)?AssemblyName>((\w|\.|\$|\(|\)|-)+)</(?:Module)?AssemblyName>", RegexOptions.Compiled);
         private static readonly Regex rootNamespaceRegex = new Regex(@"<RootNamespace>((\w|\.)+)</RootNamespace>", RegexOptions.Compiled);
 
-        public static IEnumerable<string> GetAssemblyNames(string projectOrSolutionFilePath)
+        public static async Task<IEnumerable<string>> GetAssemblyNamesAsync(string projectOrSolutionFilePath, CancellationToken cancellationToken)
         {
             if (!File.Exists(projectOrSolutionFilePath))
             {
@@ -25,7 +29,7 @@ namespace Microsoft.SourceBrowser.Common
             if (projectOrSolutionFilePath.EndsWith(".sln", System.StringComparison.OrdinalIgnoreCase) ||
                 projectOrSolutionFilePath.EndsWith(".slnx", System.StringComparison.OrdinalIgnoreCase))
             {
-                return GetAssemblyNamesFromSolution(projectOrSolutionFilePath);
+                return await GetAssemblyNamesFromSolutionAsync(projectOrSolutionFilePath, cancellationToken);
             }
             else if (projectOrSolutionFilePath.EndsWith(".dll", System.StringComparison.OrdinalIgnoreCase) ||
                      projectOrSolutionFilePath.EndsWith(".exe", System.StringComparison.OrdinalIgnoreCase))
@@ -107,20 +111,20 @@ namespace Microsoft.SourceBrowser.Common
             return projectFileName;
         }
 
-        public static IEnumerable<string> GetAssemblyNamesFromSolution(string solutionFilePath)
+        public static async Task<IEnumerable<string>> GetAssemblyNamesFromSolutionAsync(string solutionFilePath, CancellationToken cancellationToken)
         {
-            var solution = SolutionFile.Parse(solutionFilePath);
-            var assemblies = new List<string>(solution.ProjectsInOrder.Count);
-            foreach (var project in solution.ProjectsInOrder)
-            {
-                if (project.ProjectType == SolutionProjectType.SolutionFolder)
-                {
-                    continue;
-                }
+            string solutionDirectory = Path.GetDirectoryName(solutionFilePath);
 
+            ISolutionSerializer serializer = SolutionSerializers.GetSerializerByMoniker(solutionFilePath);
+            SolutionModel solutionModel = await serializer.OpenAsync(solutionFilePath, cancellationToken);
+
+            var assemblies = new List<string>(solutionModel.SolutionProjects.Count);
+            foreach (var projectModel in solutionModel.SolutionProjects)
+            {
                 try
                 {
-                    string assembly = GetAssemblyNameFromProject(project.AbsolutePath);
+                    string projectFilePath = Path.Combine(solutionDirectory, projectModel.FilePath);
+                    string assembly = GetAssemblyNameFromProject(projectFilePath);
                     assemblies.Add(assembly);
                 }
                 catch

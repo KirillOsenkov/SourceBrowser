@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
+using Microsoft.SourceBrowser.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -7,15 +10,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Build.Locator;
-using Microsoft.CodeAnalysis;
-using Microsoft.SourceBrowser.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     public class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var options = CommandLineOptions.Parse(args);
 
@@ -69,8 +71,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     federation.AddFederation(entry.Key, entry.Value);
                 }
 
-                IndexSolutions(options.Projects, options.Properties, federation, options.ServerPathMappings, options.PluginBlacklist, options.DoNotIncludeReferencedProjects, options.RootPath,
-                    options.IncludeSourceGeneratedDocuments);
+                using (var cts = new CancellationTokenSource())
+                {
+                    Console.CancelKeyPress += (sender, eventArgs) =>
+                    {
+                        Console.WriteLine("Cancellation requested...");
+                        cts.Cancel();
+                        eventArgs.Cancel = true;
+                    };
+
+                    await IndexSolutionsAsync(options.Projects, options.Properties, federation, options.ServerPathMappings, options.PluginBlacklist, cts.Token, options.DoNotIncludeReferencedProjects, options.RootPath,
+                        options.IncludeSourceGeneratedDocuments);
+                }
                 FinalizeProjects(options.EmitAssemblyList, federation);
                 WebsiteFinalizer.Finalize(websiteDestination, options.EmitAssemblyList, federation);
             }
@@ -99,7 +111,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         private static readonly Folder<ProjectSkeleton> mergedSolutionExplorerRoot = new Folder<ProjectSkeleton>();
 
-        private static IEnumerable<string> GetAssemblyNames(string filePath)
+        private static async Task<IEnumerable<string>> GetAssemblyNamesAsync(string filePath, CancellationToken cancellationToken)
         {
             if (filePath.EndsWith(".binlog", System.StringComparison.OrdinalIgnoreCase) ||
                 filePath.EndsWith(".buildlog", System.StringComparison.OrdinalIgnoreCase))
@@ -108,15 +120,16 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return invocations.Select(i => Path.GetFileNameWithoutExtension(i.Parsed.OutputFileName)).ToArray();
             }
 
-            return AssemblyNameExtractor.GetAssemblyNames(filePath);
+            return await AssemblyNameExtractor.GetAssemblyNamesAsync(filePath, cancellationToken);
         }
 
-        private static void IndexSolutions(
+        private static async Task IndexSolutionsAsync(
             IEnumerable<string> solutionFilePaths,
             IReadOnlyDictionary<string, string> properties,
             Federation federation,
             IReadOnlyDictionary<string, string> serverPathMappings,
             IEnumerable<string> pluginBlacklist,
+            CancellationToken cancellationToken,
             bool doNotIncludeReferencedProjects = false,
             string rootPath = null,
             bool includeSourceGeneratedDocuments = true)
@@ -127,7 +140,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             {
                 using (Disposable.Timing("Reading assembly names from " + path))
                 {
-                    foreach (var assemblyName in GetAssemblyNames(path))
+                    foreach (var assemblyName in await GetAssemblyNamesAsync(path, cancellationToken))
                     {
                         assemblyNames.Add(assemblyName);
                     }
@@ -159,8 +172,9 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         var invocations = BinLogCompilerInvocationsReader.ExtractInvocations(path);
                         foreach (var invocation in invocations)
                         {
-                            GenerateFromBuildLog.GenerateInvocation(
+                            await GenerateFromBuildLog.GenerateInvocationAsync(
                                 invocation,
+                                cancellationToken,
                                 serverPathMappings,
                                 processedAssemblyList,
                                 assemblyNames,
@@ -170,9 +184,10 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         continue;
                     }
 
-                    using (var solutionGenerator = new SolutionGenerator(
+                    using (var solutionGenerator = await SolutionGenerator.CreateAsync(
                         path,
                         Paths.SolutionDestinationFolder,
+                        cancellationToken,
                         properties: properties.ToImmutableDictionary(),
                         federation: federation,
                         serverPathMappings: serverPathMappings,
@@ -181,7 +196,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         includeSourceGeneratedDocuments: includeSourceGeneratedDocuments))
                     {
                         solutionGenerator.GlobalAssemblyList = assemblyNames;
-                        solutionGenerator.Generate(processedAssemblyList, solutionFolder);
+                        await solutionGenerator.GenerateAsync(cancellationToken, processedAssemblyList, solutionFolder);
                     }
                 }
 

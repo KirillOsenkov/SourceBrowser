@@ -27,7 +27,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         protected override string GetDocumentationForSymbol(
             string documentationMemberID,
             CultureInfo preferredCulture,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             members.TryGetValue(documentationMemberID, out string result);
             return result;

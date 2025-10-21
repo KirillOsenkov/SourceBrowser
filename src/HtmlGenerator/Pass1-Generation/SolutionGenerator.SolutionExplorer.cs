@@ -1,20 +1,25 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.VisualStudio.SolutionPersistence;
+using Microsoft.VisualStudio.SolutionPersistence.Model;
+using Microsoft.VisualStudio.SolutionPersistence.Serializer;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Microsoft.Build.Construction;
-using Microsoft.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using Folder = Microsoft.SourceBrowser.HtmlGenerator.Folder<Microsoft.SourceBrowser.HtmlGenerator.ProjectSkeleton>;
 
 namespace Microsoft.SourceBrowser.HtmlGenerator
 {
     partial class SolutionGenerator
     {
-        public void AddProjectsToSolutionExplorer(Folder root, IEnumerable<Project> projects)
+        public async Task AddProjectsToSolutionExplorerAsync(Folder root, IEnumerable<Project> projects, CancellationToken cancellationToken)
         {
             Dictionary<string, IEnumerable<string>> projectToSolutionFolderMap = null;
             if (!Configuration.FlattenSolutionExplorer)
             {
-                projectToSolutionFolderMap = GetProjectToSolutionFolderMap(ProjectFilePath);
+                projectToSolutionFolderMap = await GetProjectToSolutionFolderMapAsync(ProjectFilePath, cancellationToken);
             }
 
             foreach (var project in projects)
@@ -55,7 +60,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             }
         }
 
-        private static Dictionary<string, IEnumerable<string>> GetProjectToSolutionFolderMap(string solutionFilePath)
+        private static async Task<Dictionary<string, IEnumerable<string>>> GetProjectToSolutionFolderMapAsync(string solutionFilePath, CancellationToken cancellationToken)
         {
             if (!solutionFilePath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) &&
                 !solutionFilePath.EndsWith(".slnx", StringComparison.OrdinalIgnoreCase))
@@ -63,19 +68,17 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return null;
             }
 
-            var solutionFile = SolutionFile.Parse(solutionFilePath);
+            string solutionDirectory = Path.GetDirectoryName(solutionFilePath);
+
+            ISolutionSerializer serializer = SolutionSerializers.GetSerializerByMoniker(solutionFilePath);
+            SolutionModel solutionModel = await serializer.OpenAsync(solutionFilePath, cancellationToken);
 
             var result = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var project in solutionFile.ProjectsInOrder)
+            foreach (var projectModel in solutionModel.SolutionProjects)
             {
-                if (project.ProjectType == SolutionProjectType.SolutionFolder)
-                {
-                    continue;
-                }
-
-                var path = GetAbsoluteFilePath(project);
-                var parentFolderChain = GetParentFolderChain(solutionFile, project);
+                var path = GetAbsoluteFilePath(solutionDirectory, projectModel);
+                var parentFolderChain = GetParentFolderChain(solutionModel, projectModel);
 
                 result.Add(path, parentFolderChain);
             }
@@ -83,26 +86,27 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return result;
         }
 
-        private static string GetAbsoluteFilePath(ProjectInSolution project)
+        private static string GetAbsoluteFilePath(string solutionDirectory, SolutionProjectModel projectModel)
         {
-            var path = project.AbsolutePath;
-            if (string.IsNullOrEmpty(path))
+            var projectFilePath = projectModel.FilePath;
+
+            if (string.IsNullOrEmpty(projectFilePath))
             {
-                path = project.ProjectName;
+                projectFilePath = projectModel.DisplayName;
             }
 
-            return path;
+            return Path.Combine(solutionDirectory, projectFilePath);
         }
 
-        private static List<string> GetParentFolderChain(SolutionFile solutionFile, ProjectInSolution project)
+        private static List<string> GetParentFolderChain(SolutionModel solutionModel, SolutionProjectModel projectModel)
         {
             var parentFolderChain = new List<string>();
-            var parentGuid = project.ParentProjectGuid;
+            var folderModel = projectModel.Parent;
 
-            while (!string.IsNullOrEmpty(parentGuid) && solutionFile.ProjectsByGuid.TryGetValue(parentGuid, out ProjectInSolution parentFolder) && parentFolder != null)
+            while (folderModel is not null)
             {
-                parentFolderChain.Add(parentFolder.ProjectName);
-                parentGuid = parentFolder.ParentProjectGuid;
+                parentFolderChain.Add(folderModel.Name);
+                folderModel = folderModel.Parent;
             }
 
             parentFolderChain.Reverse();

@@ -14,7 +14,8 @@
     <DefineConstants>$(DefineConstants);NET472</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="17.14.8" />
+    <PackageReference Include="Microsoft.Build" Version="17.14.28" />
+    <PackageReference Include="Microsoft.VisualStudio.SolutionPersistence" Version="1.0.52" />
     <PackageReference Include="System.Reactive" Version="6.0.2" />
   </ItemGroup>
 </Project>

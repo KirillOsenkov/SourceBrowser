@@ -17,7 +17,7 @@
     <NuSpecFile>$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
     <NuGetVersion>1.0.47</NuGetVersion>
     <NuGetVersionRoslyn>4.14.0</NuGetVersionRoslyn>
-    <NuGetVersionMSBuild>17.14.8</NuGetVersionMSBuild>
+    <NuGetVersionMSBuild>17.14.28</NuGetVersionMSBuild>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
