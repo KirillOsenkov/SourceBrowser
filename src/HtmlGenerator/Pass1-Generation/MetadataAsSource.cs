@@ -34,7 +34,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return MetadataReference.CreateFromFile(assemblyFilePath, documentation: documentationProvider);
         }
 
-        public static Solution LoadMetadataAsSourceSolution(string assemblyFilePath)
+        public static async Task<Solution> LoadMetadataAsSourceSolutionAsync(string assemblyFilePath, CancellationToken cancellationToken)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     }
 
                     var projectWithReference = project.AddMetadataReference(metadataReference);
-                    var compilation = projectWithReference.GetCompilationAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                    var compilation = await projectWithReference.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
                     var assemblyOrModuleSymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
                     IAssemblySymbol assemblySymbol = assemblyOrModuleSymbol as IAssemblySymbol;
                     IModuleSymbol moduleSymbol = assemblyOrModuleSymbol as IModuleSymbol;
