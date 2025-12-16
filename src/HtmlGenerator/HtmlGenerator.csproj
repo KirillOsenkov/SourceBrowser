@@ -15,9 +15,6 @@
   <PropertyGroup>
     <NuGetPackageId>SourceBrowser</NuGetPackageId>
     <NuSpecFile>$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
-    <NuGetVersion>1.0.47</NuGetVersion>
-    <NuGetVersionRoslyn>4.14.0</NuGetVersionRoslyn>
-    <NuGetVersionMSBuild>17.14.28</NuGetVersionMSBuild>
   </PropertyGroup>
   <ItemGroup>
     <NuGetInput Include="$(MSBuildThisFile)" />
@@ -39,9 +36,10 @@
     <PackageReference Include="ManagedEsent" Version="2.0.0" />
     <PackageReference Include="Microsoft.Build" Version="$(NuGetVersionMSBuild)" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Framework" Version="$(NuGetVersionMSBuild)" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.11.2" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(NuGetVersionMSBuild)" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(NuGetVersionMSBuild)" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.NET.StringTools" Version="$(NuGetVersionMSBuild)" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(NuGetVersionRoslyn)" />
@@ -52,10 +50,11 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="$(NuGetVersionRoslyn)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(NuGetVersionRoslyn)" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.3.45" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.3.113" />
     <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.93" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="17.14.249" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="17.14.40254" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>

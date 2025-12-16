@@ -180,7 +180,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             solution = DisambiguateSameNameLinkedFiles(solution);
             solution = DeduplicateProjectReferences(solution);
 
-            solution.Workspace.WorkspaceFailed += WorkspaceFailed;
+            solution.Workspace.RegisterWorkspaceFailedHandler(args => WorkspaceFailed(args, solution.Workspace));
 
             return solution;
         }
@@ -485,7 +485,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     properties = AddSolutionProperties(properties, solutionFilePath);
                     var workspace = CreateWorkspace(properties);
                     workspace.SkipUnrecognizedProjects = true;
-                    workspace.WorkspaceFailed += WorkspaceFailed;
+                    workspace.RegisterWorkspaceFailedHandler(args => WorkspaceFailed(args, workspace));
                     solution = await workspace.OpenSolutionAsync(solutionFilePath, cancellationToken: cancellationToken);
                     solution = DeduplicateProjectReferences(solution);
                     this.workspace = workspace;
@@ -495,7 +495,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     solutionFilePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase))
                 {
                     var workspace = CreateWorkspace(properties);
-                    workspace.WorkspaceFailed += WorkspaceFailed;
+                    workspace.RegisterWorkspaceFailedHandler(args => WorkspaceFailed(args, workspace));
                     solution = (await workspace.OpenProjectAsync(solutionFilePath, cancellationToken: cancellationToken)).Solution;
                     solution = DeduplicateProjectReferences(solution);
                     if (doNotIncludeReferencedProjects)
@@ -517,7 +517,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                     solution = await MetadataAsSource.LoadMetadataAsSourceSolutionAsync(solutionFilePath, cancellationToken);
                     if (solution != null)
                     {
-                        solution.Workspace.WorkspaceFailed += WorkspaceFailed;
+                        solution.Workspace.RegisterWorkspaceFailedHandler(args => WorkspaceFailed(args, solution.Workspace));
                         workspace = solution.Workspace;
                     }
                 }
@@ -543,7 +543,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             return properties;
         }
 
-        private static void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
+        private static void WorkspaceFailed(WorkspaceDiagnosticEventArgs e, Workspace workspace)
         {
             var message = e.Diagnostic.Message;
             if (message.StartsWith("Could not find file", StringComparison.Ordinal) || message.StartsWith("Could not find a part of the path", StringComparison.Ordinal))
@@ -561,7 +561,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 return;
             }
 
-            var project = ((Workspace)sender).CurrentSolution.Projects.FirstOrDefault();
+            var project = workspace.CurrentSolution.Projects.FirstOrDefault();
             if (project != null)
             {
                 message = message + " Project: " + project.Name;

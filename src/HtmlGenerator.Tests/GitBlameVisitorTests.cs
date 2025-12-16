@@ -39,7 +39,7 @@ namespace HtmlGenerator.Tests
 
                 string htmlResult = visitor.Visit(null, context);
 
-                Assert.IsTrue(htmlResult.Contains(expectedSecondLineSha1));
+                Assert.Contains(expectedSecondLineSha1, htmlResult);
             }
             finally
             {
