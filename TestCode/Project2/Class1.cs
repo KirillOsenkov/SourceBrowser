@@ -11,6 +11,19 @@ public static class Extensions
         var s1 = new string(new char[0]);
         var s2 = new string(' ', 42);
     }
+
+    extension(string s)
+    {
+        public int ExtensionProperty => s.Length;
+        public void ExtensionBlockMethod()
+            => Console.WriteLine(s.Length);
+    }
+
+    extension(string)
+    {
+        public static string NewLineExtension => "\r\n";
+        public static void ExtensionBlockClassMethod() { }
+    }
 }
 
 #if TESTDEFINE
@@ -36,6 +49,12 @@ public class ExtensionUsage
     {
         "".ExtensionMethod();
         Extensions.ExtensionMethod("");
+        "".ExtensionBlockMethod();
+        Extensions.ExtensionBlockMethod("");
+        _ = "".ExtensionProperty;
+        _ = Extensions.get_ExtensionProperty("");
+        _ = string.NewLineExtension;
+        string.ExtensionBlockClassMethod();
     }
 
     ~ExtensionUsage()
@@ -102,6 +121,7 @@ class Abc : I1
     public virtual void M() { }
     protected virtual string Name { get; set; }
     protected internal virtual event Action Event;
+    public string Field { get => field ?? "(not initialized)"; set => field = value ?? string.Empty; }
 
     public static readonly Guid guid = new Guid(@"AAAAAAAA-C126-4A4F-BF36-4B1E3AF4D376");
     public static readonly Guid guid2 = new Guid("{BBBBBBBB-C126-4A4F-BF36-4B1E3AF4D376}");
