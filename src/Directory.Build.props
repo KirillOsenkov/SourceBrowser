@@ -5,4 +5,10 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NuGetVersion>1.0.47</NuGetVersion>
+    <NuGetVersionRoslyn>5.0.0</NuGetVersionRoslyn>
+    <NuGetVersionMSBuild>18.0.2</NuGetVersionMSBuild>
+  </PropertyGroup>
+
 </Project>

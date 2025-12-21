@@ -29,7 +29,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 text != "new" &&
                 text != "[" &&
                 text != "partial" &&
-                text != "Partial")
+                text != "Partial" &&
+                text != "extension")
             {
                 return null;
             }

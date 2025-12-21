@@ -156,7 +156,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
         private void Verify(List<DeclaredSymbolInfo> matches, params DeclaredSymbolInfo[] expected)
         {
             Assert.IsNotNull(matches);
-            Assert.AreEqual(matches.Count, expected.Length);
+            Assert.HasCount(expected.Length, matches);
             for (int i = 0; i < matches.Count; i++)
             {
                 Assert.AreEqual(expected[i].AssemblyName, matches[i].AssemblyName);

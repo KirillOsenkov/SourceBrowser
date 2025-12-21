@@ -44,7 +44,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator.Tests
                 syntactic.Select(p => new ClassifiedRange(text, p.Key, p.Value)).ToArray(),
                 semantic.Select(p => new ClassifiedRange(text, p.Key, p.Value)).ToArray(),
                 text);
-            Assert.AreEqual(expectedOutput.Count, result.Length, "Lengths aren't same");
+            Assert.HasCount(expectedOutput.Count, result, "Lengths aren't same");
             for (int i = 0; i < expectedOutput.Count; i++)
             {
                 Assert.AreEqual(expectedArray[i].Key, result[i].start);

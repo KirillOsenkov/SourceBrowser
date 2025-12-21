@@ -9,13 +9,13 @@
 
   <ItemGroup>
     <PackageReference Include="ManagedEsent" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Build" Version="17.14.28" />
+    <PackageReference Include="Microsoft.Build" Version="$(NuGetVersionMSBuild)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.14.0" />
-    <PackageReference Include="System.Composition" Version="9.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.0.0" />
+    <PackageReference Include="System.Composition" Version="10.0.1" />
   </ItemGroup>
 </Project>
