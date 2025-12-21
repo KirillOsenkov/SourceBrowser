@@ -15,6 +15,12 @@ public static class Extensions
     extension(string s)
     {
         public int ExtensionProperty => s.Length;
+        public int ExtensionPropertyWithGetSet
+        {
+            get => 42;
+            set => _ = value;
+        }
+        
         public void ExtensionBlockMethod()
             => Console.WriteLine(s.Length);
     }
@@ -49,12 +55,22 @@ public class ExtensionUsage
     {
         "".ExtensionMethod();
         Extensions.ExtensionMethod("");
+        
         "".ExtensionBlockMethod();
         Extensions.ExtensionBlockMethod("");
+        
         _ = "".ExtensionProperty;
         _ = Extensions.get_ExtensionProperty("");
+        
+        _ = "".ExtensionPropertyWithGetSet;
+        _ = Extensions.get_ExtensionPropertyWithGetSet("");
+        Extensions.set_ExtensionPropertyWithGetSet("", 42);
+        
         _ = string.NewLineExtension;
+        _ = Extensions.get_NewLineExtension();
+        
         string.ExtensionBlockClassMethod();
+        Extensions.ExtensionBlockClassMethod();
     }
 
     ~ExtensionUsage()

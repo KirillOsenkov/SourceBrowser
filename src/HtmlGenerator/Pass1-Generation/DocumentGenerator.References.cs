@@ -311,6 +311,11 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 {
                     return ProcessReference(range, symbol.ContainingSymbol, ReferenceKind.Instantiation);
                 }
+
+                if (MapExtensionImplementationToDefinition(methodSymbol?.OriginalDefinition) is { } extensionMethodDefinition)
+                {
+                    return ProcessReference(range, extensionMethodDefinition, ReferenceKind.Reference);
+                }
             }
 
             if (symbol.Kind == SymbolKind.Local ||
@@ -456,6 +461,51 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
         private static bool IsThisParameter(ISymbol symbol)
         {
             return symbol?.Kind == SymbolKind.Parameter && ((IParameterSymbol)symbol).IsThis;
+        }
+
+        private static ISymbol MapExtensionImplementationToDefinition(IMethodSymbol methodSymbol)
+        {
+            // https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md#lowering
+
+            if (methodSymbol is not { IsImplicitlyDeclared: true, ContainingType: { MightContainExtensionMethods: true } containingType })
+            {
+                return null;
+            }
+
+            foreach (var nestedType in containingType.GetTypeMembers())
+            {
+                if (!nestedType.IsExtension)
+                {
+                    continue;
+                }
+
+                foreach (var extensionMember in nestedType.GetMembers())
+                {
+                    if (extensionMember.Kind == SymbolKind.Method && extensionMember is IMethodSymbol { AssociatedExtensionImplementation: { } methodImplementationSymbol })
+                    {
+                        if (SymbolEqualityComparer.Default.Equals(methodSymbol, methodImplementationSymbol))
+                        {
+                            return extensionMember;
+                        }
+                    }
+                    else if (extensionMember.Kind == SymbolKind.Property && extensionMember is IPropertySymbol propertySymbol)
+                    {
+                        if (propertySymbol.GetMethod?.AssociatedExtensionImplementation is { } getMethodImplementationSymbol &&
+                            SymbolEqualityComparer.Default.Equals(methodSymbol, getMethodImplementationSymbol))
+                        {
+                            return extensionMember;
+                        }
+
+                        if (propertySymbol.SetMethod?.AssociatedExtensionImplementation is { } setMethodImplementationSymbol &&
+                            SymbolEqualityComparer.Default.Equals(methodSymbol, setMethodImplementationSymbol))
+                        {
+                            return extensionMember;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public HtmlElementInfo GenerateHyperlink(
