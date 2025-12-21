@@ -30,6 +30,14 @@ public static class Extensions
         public static string NewLineExtension => "\r\n";
         public static void ExtensionBlockClassMethod() { }
     }
+    
+    extension<T1, T2>(IReadOnlyDictionary<T1, T2> dict)
+    {
+        public void GenericExtension<T3, T4>(T1 a, T2 b, T3 c, T4 d) { }
+
+        public static int operator *(IReadOnlyDictionary<T1, T2> left, IReadOnlyDictionary<T2, T1> right) => 42;
+        public void operator *=(T2 value) { }
+    }
 }
 
 #if TESTDEFINE
@@ -71,6 +79,16 @@ public class ExtensionUsage
         
         string.ExtensionBlockClassMethod();
         Extensions.ExtensionBlockClassMethod();
+        
+        new Dictionary<int, string>().GenericExtension(1, "two", 3.0f, 4.0);
+        Extensions.GenericExtension(new Dictionary<int, decimal>(), 42, 42m, 42f, 42.0);
+        
+        _ = new Dictionary<int, string>() * new Dictionary<string, int>();
+        Extensions.op_Multiply(new Dictionary<int, string>(), new Dictionary<string, int>());
+        
+        var dict = new Dictionary<int, string>();
+        dict *= "foo";
+        Extensions.op_MultiplicationAssignment(dict, "bar");
     }
 
     ~ExtensionUsage()
@@ -86,9 +104,27 @@ interface I4 : IEnumerable<I2> { }
 
 public partial class Partial
 {
+    public partial Partial(int arg);
     partial void Foo();
 
     internal const string Internal = "Friend";
+
+    public partial event Action PartialEvent;
+}
+
+partial class Partial
+{
+    public partial Partial(int arg) { }
+    public partial event Action PartialEvent { add { } remove { } }
+}
+
+class PartialUsage
+{
+    void M()
+    {
+        var p = new Partial(42);
+        p.PartialEvent += () => { };
+    }
 }
 
 namespace Acme
@@ -148,6 +184,13 @@ class Abc : I1
         var a = Name;
         Name = a;
         this.Name = a;
+    }
+
+    public void M(Abc abc)
+    {
+        _ = nameof(Class<>);
+        abc?.Name = "Abc";
+        Event += () => { };
     }
 }
 
