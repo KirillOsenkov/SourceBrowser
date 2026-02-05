@@ -1217,6 +1217,8 @@ function setFolderImage(folder, div, firstChild, pathToIcons, folderIcon) {
         folder.src = pathToIcons + "192.png";
     } else if (text === 'Properties') {
         folder.src = pathToIcons + "102.png";
+    } else if (text === 'Generated') {
+        folder.src = pathToIcons + "generated.png";
     } else if (div.className == "projectCSInSolution") {
         folder.src = pathToIcons + "196.png";
     } else if (div.className == "projectVBInSolution") {
