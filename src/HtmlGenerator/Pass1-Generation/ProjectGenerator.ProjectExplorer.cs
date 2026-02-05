@@ -78,6 +78,12 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 WriteReferences(sb);
             }
 
+            if (folder.Folders != null && folder.Folders.TryGetValue("Generated", out Folder<string> generated))
+            {
+                WriteFolder(generated, sb);
+                folder.Folders.Remove("Generated");
+            }
+
             WriteFolders(folder, sb);
             WriteDocuments(folder, sb);
             sb.AppendLine("</div>");

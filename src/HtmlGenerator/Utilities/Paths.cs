@@ -161,7 +161,18 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
 
         public static string GetRelativeFilePathInProject(Document document)
         {
-            string result = Path.Combine(document.Folders
+            var folders = document.Folders;
+
+            if (folders.Count == 0 && document.FilePath != null && document is SourceGeneratedDocument)
+            {
+                var parts = document.FilePath.Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 3) // Last 3 directories: generator assembly name, generator full class name, hint name
+                {
+                    folders = ["Generated", ..parts.Skip(parts.Length - 3).Take(2)];
+                }
+            }
+            
+            string result = Path.Combine(folders
                 .Select(SanitizeFolder)
                 .ToArray());
 
