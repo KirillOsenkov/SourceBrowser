@@ -178,7 +178,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                                 serverPathMappings,
                                 processedAssemblyList,
                                 assemblyNames,
-                                solutionFolder);
+                                solutionFolder,
+                                includeSourceGeneratedDocuments: includeSourceGeneratedDocuments);
                         }
                         
                         continue;

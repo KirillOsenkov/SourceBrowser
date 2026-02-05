@@ -22,7 +22,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             IReadOnlyDictionary<string, string> serverPathMappings = null,
             HashSet<string> processedAssemblyList = null,
             HashSet<string> assemblyNames = null,
-            Folder<ProjectSkeleton> solutionExplorerRoot = null)
+            Folder<ProjectSkeleton> solutionExplorerRoot = null,
+            bool includeSourceGeneratedDocuments = true)
         {
             try
             {
@@ -40,7 +41,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                         invocation.CommandLineArguments,
                         invocation.OutputAssemblyPath,
                         invocation.SolutionRoot,
-                        Paths.SolutionDestinationFolder);
+                        Paths.SolutionDestinationFolder,
+                        includeSourceGeneratedDocuments);
                     solutionGenerator.ServerPathMappings = serverPathMappings;
                     solutionGenerator.GlobalAssemblyList = assemblyNames;
                     await solutionGenerator.GenerateAsync(cancellationToken, processedAssemblyList, solutionExplorerRoot);

@@ -117,7 +117,8 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
             string commandLineArguments,
             string outputAssemblyPath,
             string solutionSourceFolder,
-            string solutionDestinationFolder)
+            string solutionDestinationFolder,
+            bool includeSourceGeneratedDocuments)
         {
             this.ProjectFilePath = projectFilePath;
             string projectName = Path.GetFileNameWithoutExtension(projectFilePath);
@@ -125,6 +126,7 @@ namespace Microsoft.SourceBrowser.HtmlGenerator
                 LanguageNames.VisualBasic : LanguageNames.CSharp;
             this.SolutionSourceFolder = solutionSourceFolder;
             this.SolutionDestinationFolder = solutionDestinationFolder;
+            this.IncludeSourceGeneratedDocuments = includeSourceGeneratedDocuments;
             string projectSourceFolder = Path.GetDirectoryName(projectFilePath);
             SetupPluginAggregator();
 
