@@ -7,6 +7,9 @@ Source browser website generator that powers https://referencesource.microsoft.c
 > [!WARNING]
 > **This project is soft-archived.** Unfortunately at this point I'm unlikely to take even the basic PRs. I've given this project everything I could give over 13 years and I'm afraid I have nothing else left.
 
+> [!TIP]
+> The good news is that tannergooding is carrying this project forward at https://github.com/tannergooding/SourceBrowser. Lots of perf and other improvements there. Thanks Tanner!
+
 Create and host your own static HTML website to browse your C#/VB/MSBuild/TypeScript source code. **Note** that it does require an ASP.NET Core website for hosting (symbol index is kept server-side), so [without ASP.NET Core the search function doesn't work](https://github.com/KirillOsenkov/SourceBrowser/wiki/Architecture#server-side).
 
 Of course Source Browser allows you to browse its own source code:
